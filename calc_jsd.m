@@ -1,0 +1,145 @@
+function jsd = calc_jsd(diffs1,diffs2)
+%--------------------------------------------------------------------
+% Used to calculate the Jensen-Shannon Distances of two pdfs.
+%
+% function jsd = calc_jsd(dcts1,dcts2)
+% pdf1: first pdf to compare
+% pdf2: second pdf to compare
+% example: [result]=findfeatures('s1.pgm',35); 
+%
+%--------------------------------------------------------------------
+
+    % Create common x for pdfs
+    %Generate x points for PDF
+    combined_data = [diffs1 diffs2];
+    xmin = min(combined_data) - 3 * std(combined_data);
+    xmax = max(combined_data) + 3 * std(combined_data);
+    num_points = 500;
+    x_common = linspace(xmin, xmax, num_points);
+    p.x = x_common; %Set common x for pdfs
+    
+    % Generate pdfs from dcts
+    p1=gkdeb(diffs1, p);
+    
+    p2=gkdeb(diffs2, p);
+    
+    jsd = jensenshannon(p1.pdf, p2.pdf);
+end
+
+function js_distance = jensenshannon(p, q)%, base=None, *, axis=0, keepdims=False)
+% (Ported from from scipy.spatial.distance's jensenshannon function)
+%{
+    Compute the Jensen-Shannon distance (metric) between
+    % two probability arrays. This is the square root
+    % of the Jensen-Shannon divergence.
+    
+    % The Jensen-Shannon distance between two probability
+    %   vectors `p` and `q` is defined as,
+    
+        .. math::
+    
+           \\sqrt{\\frac{D(p \\parallel m) + D(q \\parallel m)}{2}}
+    
+        where :math:`m` is the pointwise mean of :math:`p` and :math:`q`
+        and :math:`D` is the Kullback-Leibler divergence.
+    
+        This routine will normalize `p` and `q` if they don't sum to 1.0.
+    
+        Parameters
+        ----------
+        p : (N,) array_like
+            left probability vector
+        q : (N,) array_like
+            right probability vector
+        base : double, optional
+            the base of the logarithm used to compute the output
+            if not given, then the routine uses the default base of
+            scipy.stats.entropy.
+        axis : int, optional
+            Axis along which the Jensen-Shannon distances are computed. The default
+            is 0.
+    
+            .. versionadded:: 1.7.0
+        keepdims : bool, optional
+            If this is set to `True`, the reduced axes are left in the
+            result as dimensions with size one. With this option,
+            the result will broadcast correctly against the input array.
+            Default is False.
+    
+            .. versionadded:: 1.7.0
+    
+        Returns
+        -------
+        js : double or ndarray
+            The Jensen-Shannon distances between `p` and `q` along the `axis`.
+    
+        Notes
+        -----
+    
+        .. versionadded:: 1.2.0
+    
+        Examples
+        --------
+        >>> from scipy.spatial import distance
+        >>> import numpy as np
+        >>> distance.jensenshannon([1.0, 0.0, 0.0], [0.0, 1.0, 0.0], 2.0)
+        1.0
+        >>> distance.jensenshannon([1.0, 0.0], [0.5, 0.5])
+        0.46450140402245893
+        >>> distance.jensenshannon([1.0, 0.0, 0.0], [1.0, 0.0, 0.0])
+        0.0
+        >>> a = np.array([[1, 2, 3, 4],
+        ...               [5, 6, 7, 8],
+        ...               [9, 10, 11, 12]])
+        >>> b = np.array([[13, 14, 15, 16],
+        ...               [17, 18, 19, 20],
+        ...               [21, 22, 23, 24]])
+        >>> distance.jensenshannon(a, b, axis=0)
+        array([0.1954288, 0.1447697, 0.1138377, 0.0927636])
+        >>> distance.jensenshannon(a, b, axis=1)
+        array([0.1402339, 0.0399106, 0.0201815])
+%}
+
+    p = p / sum(p, 2);
+    q = q / sum(q, 2);
+    m = (p + q) / 2.0;
+    %left = rel_entr(p, m);
+    %right = rel_entr(q, m);
+    left = rel_entr_matlab(p,m);
+    right = rel_entr_matlab(q,m);
+    left_sum = sum(left, 2);
+    right_sum = sum(right, 2);
+    js = left_sum + right_sum;
+    if exist('base','var')
+        js = js / log(base);
+    end
+    js_distance = sqrt(js / 2.0);
+end
+
+function output = rel_entr_matlab(p, q)
+%REL_ENTR_MATLAB Computes the element-wise relative entropy.
+%   output = REL_ENTR_MATLAB(p, q) computes the element-wise relative 
+%   entropy, x log(x/y), for corresponding elements of p and q.
+%
+%   If p(i) > 0 and q(i) > 0, output(i) = p(i) * log(p(i) / q(i)).
+%   If p(i) = 0 and q(i) >= 0, output(i) = 0.
+%   Otherwise, output(i) = Inf (or NaN depending on how log(0) is handled).
+
+    % Initialize output with zeros
+    output = zeros(size(p));
+
+    % Find elements where p > 0 and q > 0
+    idx_pos = (p > 0) & (q > 0);
+    output(idx_pos) = p(idx_pos) .* log(p(idx_pos) ./ q(idx_pos));
+
+    % Handle cases where p = 0 and q >= 0 (output is already 0 from initialization)
+    % No specific action needed here as zeros(size(p)) already sets these to 0.
+
+    % Handle cases where q = 0 and p > 0 (results in Inf)
+    idx_inf = (p > 0) & (q == 0);
+    output(idx_inf) = Inf;
+    
+    % Handle other invalid cases (e.g., q < 0)
+    idx_nan = (q < 0);
+    output(idx_nan) = NaN; % Or Inf, depending on desired behavior for invalid inputs
+end
