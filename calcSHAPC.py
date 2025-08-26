@@ -141,13 +141,13 @@ if __name__ == "__main__":
     algorithm = "RPSnet"
     dataset = "cifar10"
 
-    first_last_only = True
+    first_last_only = False
     if first_last_only:
-        filepath = "shap_values_first_last.npy"
-        savepath = "shapc_vals_first_last"
+        filepath = "shap_values_first_last_1000.npy"
+        savepath = "shapc_vals_first_last_1000"
     else:
-        filepath = "shap_values_full.npy"
-        savepath = "shapc_vals_full"
+        filepath = "shap_values_full_1000.npy"
+        savepath = "shapc_vals_full_1000"
 
     # Load the SHAP Values
     shap_values_loaded = np.load(f"analysis/{algorithm}/{dataset}/{filepath}", allow_pickle=True)  # ['shap_dict']
