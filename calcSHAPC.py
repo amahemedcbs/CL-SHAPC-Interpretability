@@ -11,7 +11,6 @@ import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 
 
-
 def normalize_shap_value(shap_val):
     # If the input was (1, C, H, W), the output will be (1, C, H, W).
     # We want (H, W, C) for a single image for simpler indexing later.
@@ -136,65 +135,70 @@ def _calculate_single_channel_shapc(s_tau, m_tau, s_t, m_t):
 
 if __name__ == "__main__":
 
+    algorithms = ["iTAML", "RPSnet", "DGR", "foster", "memo", "der"]
+    dataset = "cifar100"
 
-    num_sessions = 5
-    algorithm = "RPSnet"
-    dataset = "cifar10"
+    if dataset != "mnist":
+        algorithms.remove("DGR")
 
-    first_last_only = False
-    if first_last_only:
-        filepath = "shap_values_first_last_1000.npy"
-        savepath = "shapc_vals_first_last_1000"
-    else:
-        filepath = "shap_values_full_1000.npy"
-        savepath = "shapc_vals_full_1000"
+    for alg in algorithms:
+        algorithm = alg
+        num_sessions = 10 if dataset == "cifar100" else 5
 
-    # Load the SHAP Values
-    shap_values_loaded = np.load(f"analysis/{algorithm}/{dataset}/{filepath}", allow_pickle=True)  # ['shap_dict']
-    num_imgs = len(shap_values_loaded[()].keys())
-    shap_dict = {}
-    for i in range(num_imgs):
-        shap_dict[f'{i}'] = shap_values_loaded[()][f'{i}']
+        first_last_only = True
+        if first_last_only:
+            filepath = "shap_values_first_last_1000.npy"
+            savepath = "shapc_vals_first_last_1000"
+        else:
+            filepath = "shap_values_full_1000.npy"
+            savepath = "shapc_vals_full_1000"
 
-    shapc_dict = {}
-    for sample in tqdm(range(num_imgs), desc="Progress"):
-        start_sess = shap_dict[f'{sample}']['true_label'] // 2
-        # If the sample is from the last task skip
-        if start_sess >= num_sessions-1: continue
+        # Load the SHAP Values
+        shap_values_loaded = np.load(f"analysis/{algorithm}/{dataset}/{filepath}", allow_pickle=True)  # ['shap_dict']
+        num_imgs = len(shap_values_loaded[()].keys())
+        shap_dict = {}
+        for i in range(num_imgs):
+            shap_dict[f'{i}'] = shap_values_loaded[()][f'{i}']
 
-        if first_last_only: range1 = [start_sess]
-        else: range1 = range(start_sess, num_sessions-1)
+        shapc_dict = {}
+        for sample in tqdm(range(num_imgs), desc="Progress"):
+            start_sess = shap_dict[f'{sample}']['true_label'] // 2
+            # If the sample is from the last task skip
+            if start_sess >= num_sessions-1: continue
 
-        for ses in range1:
-            #print("Ses:", ses)
-            #print("Sample:", sample)
-            shap_value1 = shap_dict[f'{sample}'][f'ses{ses}']['shap_values']
-            shap_value1 = normalize_shap_value(shap_value1)
+            if first_last_only: range1 = [start_sess]
+            else: range1 = range(start_sess, num_sessions-1)
 
-            if first_last_only: range2 = [4]
-            else: range2 = range(ses+1, num_sessions)
+            for ses in range1:
+                #print("Ses:", ses)
+                #print("Sample:", sample)
+                shap_value1 = shap_dict[f'{sample}'][f'ses{ses}']['shap_values']
+                shap_value1 = normalize_shap_value(shap_value1)
 
-            for j in range2:
+                if first_last_only: range2 = [4]
+                else: range2 = range(ses+1, num_sessions)
 
-                shap_value2 = shap_dict[f'{sample}'][f'ses{j}']['shap_values']
-                shap_value2 = normalize_shap_value(shap_value2)
+                for j in range2:
+
+                    shap_value2 = shap_dict[f'{sample}'][f'ses{j}']['shap_values']
+                    shap_value2 = normalize_shap_value(shap_value2)
 
 
-                # --- Step 2: Compute Important Feature Area Masks ---
-                #print("\nComputing important feature masks...")
-                # Using percentile threshold, e.g., top 30% most important features
-                p_tau = get_important_feature_area(shap_value1, percentile=70)
-                p_t = get_important_feature_area(shap_value2, percentile=70)
-                #print(f"Shape of mask for tau: {p_tau.shape}")
-                #print(f"Shape of mask for t: {p_t.shape}")
-                # You might want to visualize these masks to check if they make sense
+                    # --- Step 2: Compute Important Feature Area Masks ---
+                    #print("\nComputing important feature masks...")
+                    # Using percentile threshold, e.g., top 30% most important features
+                    p_tau = get_important_feature_area(shap_value1, percentile=70)
+                    p_t = get_important_feature_area(shap_value2, percentile=70)
+                    #print(f"Shape of mask for tau: {p_tau.shape}")
+                    #print(f"Shape of mask for t: {p_t.shape}")
+                    # You might want to visualize these masks to check if they make sense
 
-                # --- Step 3: Calculate SHAPC ---
-                #print("\nCalculating SHAP Value Consistency (SHAPC)...")
-                shapc_value = calculate_shapc(shap_value1, p_tau, shap_value2, p_t)
-                #print(f"SHAP Value Consistency (SHAPC) for sample x between task tau and task t: {shapc_value:.4f}")
-                if f'sc{ses}{j}' not in shapc_dict: shapc_dict[f'sc{ses}{j}'] = {}
-                shapc_dict[f'sc{ses}{j}'][f'sample{sample}'] = shapc_value
-    save_path = f"analysis/{algorithm}/{dataset}/{savepath}.mat"
-    scipy.io.savemat(save_path, shapc_dict)
-    pass
+                    # --- Step 3: Calculate SHAPC ---
+                    #print("\nCalculating SHAP Value Consistency (SHAPC)...")
+                    shapc_value = calculate_shapc(shap_value1, p_tau, shap_value2, p_t)
+                    #print(f"SHAP Value Consistency (SHAPC) for sample x between task tau and task t: {shapc_value:.4f}")
+                    if f'sc{ses}{j}' not in shapc_dict: shapc_dict[f'sc{ses}{j}'] = {}
+                    shapc_dict[f'sc{ses}{j}'][f'sample{sample}'] = shapc_value
+        save_path = f"analysis/{algorithm}/{dataset}/{savepath}.mat"
+        scipy.io.savemat(save_path, shapc_dict)
+        pass

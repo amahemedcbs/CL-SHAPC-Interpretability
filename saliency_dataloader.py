@@ -97,7 +97,7 @@ class SalDataloader:
                 if labels[num] == desired_classes[i]:
                     sal_idx.append(num)
                     sal_labels.append(desired_classes[i])
-                if imgs_per_class > 100:
+                if imgs_per_class > 99:
                     num += 1
                 else:
                     num += 4
