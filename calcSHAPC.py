@@ -135,15 +135,20 @@ def _calculate_single_channel_shapc(s_tau, m_tau, s_t, m_t):
 
 if __name__ == "__main__":
 
-    algorithms = ["iTAML", "RPSnet", "DGR", "foster", "memo", "der"]
-    dataset = "cifar100"
+    #algorithms = ["iTAML", "RPSnet", "DGR", "foster", "memo", "der"]
+    algorithms = ["RPSnet"]
+    dataset = "mnist"
 
-    if dataset != "mnist":
+    inclass = False
+    cls = 7
+
+    if len(algorithms) > 1 and dataset != "mnist":
         algorithms.remove("DGR")
 
     for alg in algorithms:
         algorithm = alg
         num_sessions = 10 if dataset == "cifar100" else 5
+        cls_per_task = 10 if dataset == "cifar100" else 2
 
         first_last_only = True
         if first_last_only:
@@ -162,7 +167,10 @@ if __name__ == "__main__":
 
         shapc_dict = {}
         for sample in tqdm(range(num_imgs), desc="Progress"):
-            start_sess = shap_dict[f'{sample}']['true_label'] // 2
+            # If computing inclass shapc and the sample is from the wrong class
+            if inclass and shap_dict[f'{sample}']['true_label'] != cls: continue
+
+            start_sess = shap_dict[f'{sample}']['true_label'] // cls_per_task
             # If the sample is from the last task skip
             if start_sess >= num_sessions-1: continue
 
@@ -173,32 +181,47 @@ if __name__ == "__main__":
                 #print("Ses:", ses)
                 #print("Sample:", sample)
                 shap_value1 = shap_dict[f'{sample}'][f'ses{ses}']['shap_values']
+                if dataset == "mnist" and algorithm == "RPSnet":
+                    shap_value1 = shap_value1.reshape(28,28,1)
+                    shap_value1 = np.expand_dims(shap_value1, 0)
+                    shap_value1 = np.expand_dims(shap_value1, 0)
+                    #print("Reshaping shap1...")
                 shap_value1 = normalize_shap_value(shap_value1)
 
-                if first_last_only: range2 = [4]
+                if first_last_only: range2 = [num_sessions-1]
                 else: range2 = range(ses+1, num_sessions)
 
                 for j in range2:
 
                     shap_value2 = shap_dict[f'{sample}'][f'ses{j}']['shap_values']
+                    if dataset == "mnist" and algorithm == "RPSnet":
+                        shap_value2 = shap_value2.reshape(28, 28, 1)
+                        shap_value2 = np.expand_dims(shap_value2, 0)
+                        shap_value2 = np.expand_dims(shap_value2, 0)
+                        #print("Reshaping shap2...")
                     shap_value2 = normalize_shap_value(shap_value2)
 
 
                     # --- Step 2: Compute Important Feature Area Masks ---
-                    #print("\nComputing important feature masks...")
-                    # Using percentile threshold, e.g., top 30% most important features
+                    # Using percentile threshold, top 30% most important features
                     p_tau = get_important_feature_area(shap_value1, percentile=70)
                     p_t = get_important_feature_area(shap_value2, percentile=70)
                     #print(f"Shape of mask for tau: {p_tau.shape}")
                     #print(f"Shape of mask for t: {p_t.shape}")
                     # You might want to visualize these masks to check if they make sense
 
+                    # Add this check
+                    if np.array_equal(p_tau, p_t):
+                        print(f"Sample {sample}, sessions {ses}-{j}: Masks are identical! SHAPC will be 100.")
+
                     # --- Step 3: Calculate SHAPC ---
-                    #print("\nCalculating SHAP Value Consistency (SHAPC)...")
                     shapc_value = calculate_shapc(shap_value1, p_tau, shap_value2, p_t)
                     #print(f"SHAP Value Consistency (SHAPC) for sample x between task tau and task t: {shapc_value:.4f}")
                     if f'sc{ses}{j}' not in shapc_dict: shapc_dict[f'sc{ses}{j}'] = {}
                     shapc_dict[f'sc{ses}{j}'][f'sample{sample}'] = shapc_value
-        save_path = f"analysis/{algorithm}/{dataset}/{savepath}.mat"
+        if inclass:
+            save_path = f"analysis/{algorithm}/{dataset}/{savepath}_cls{cls}.mat"
+        else:
+            save_path = f"analysis/{algorithm}/{dataset}/{savepath}.mat"
         scipy.io.savemat(save_path, shapc_dict)
         pass

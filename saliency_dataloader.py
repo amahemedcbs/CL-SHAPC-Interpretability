@@ -13,6 +13,8 @@ class SalDataloader:
         self.args = args
         self.algorithm = args.algorithm
         self.dataset = args.dataset
+        self.mean = None
+        self.std = None
     
     def get_indices(self, dataset, class_name):
         indices = []
@@ -104,7 +106,8 @@ class SalDataloader:
                     #num += 16
 
         sal_imgs = images[sal_idx]
-    
+
+        self.mean, self.std = mean, std
         return sal_imgs, torch.tensor(sal_labels), saliency_set.classes, mean, std
     
     def load_validation_data(self):
@@ -233,3 +236,6 @@ class SalDataloader:
                 # If the subset already exceeds the capacity, randomly sample from it
                 indices = random.sample(range(len(subset)), capacity)
                 subset = Subset(subset, indices)
+
+    def denormalize(self, img):
+        return img * self.std[:, None, None] + self.mean[:, None, None]

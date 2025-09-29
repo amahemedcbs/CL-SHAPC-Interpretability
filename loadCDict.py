@@ -1,4 +1,5 @@
 ### Load compare dict
+import shap
 import torch
 import scipy.io
 import numpy as np
@@ -6,36 +7,64 @@ from matplotlib.pyplot import imshow
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 
+# Custom Imports
+from saliency_generator import SalGenArgs, iTAMLArgs, MnistArgs
+import saliency_dataloader as sdl
 
-algorithm = "der"
-dataset = "cifar10"
-distill = True
+
+
+algorithm = "RPSnet"
+dataset = "mnist"
 num = 10 if dataset == "cifar100" else 5
-num_imgs = 20
-ses = 0
-ind = 5
 
-### Import colormap ###
-colors = []
-for j in np.linspace(1, 0, 100):
-    colors.append((30.0 / 255, 136.0 / 255, 229.0 / 255, j))
-for j in np.linspace(0, 1, 100):
-    colors.append((255.0 / 255, 13.0 / 255, 87.0 / 255, j))
-red_transparent_blue = LinearSegmentedColormap.from_list("red_transparent_blue", colors)
-#######################
-#compare_dict = torch.load(f"SaliencyMaps/{algorithm}/{dataset}/compare_dict_sess{ses}.pt")
-#print(compare_dict[ind-1])
 
-shap_values_loaded = np.load("./shap_values_first_last.npy", allow_pickle=True)#['shap_dict']
+if algorithm == "iTAML":
+   SalGenArgs.args = iTAMLArgs
+else: SalGenArgs.args = MnistArgs
+
+if dataset == "cifar100":
+    SalGenArgs.class_per_task = 10
+    SalGenArgs.num_class = 100
+else:
+    SalGenArgs.class_per_task = 2
+    SalGenArgs.num_class = 10
+
+SalGenArgs.algorithm = algorithm
+SalGenArgs.dataset = dataset
+SalGenArgs.args.dataset = SalGenArgs.dataset
+SalGenArgs.args.num_class = SalGenArgs.num_class
+
+
+shap_values_loaded = np.load(f"analysis/{algorithm}/{dataset}/shap_values_first_last_1000.npy", allow_pickle=True)  # ['shap_dict']
+num_imgs = len(shap_values_loaded[()].keys())
 shap_dict = {}
 for i in range(num_imgs):
     shap_dict[f'{i}'] = shap_values_loaded[()][f'{i}']
 
-sample = 0
-test = shap_dict[f'{sample}'][f'ses{ses}']['shap_values']
-#print(shap_dict[f'{sample}'][f'ses{ses}']['shap_values'])
-test_tp = np.transpose(test.squeeze(), (1, 2, 0))
-im = imshow(test_tp, cmap=red_transparent_blue)
-cbar = plt.colorbar(im)
-plt.show()
+
+sample = 95
+test_sample = shap_dict[f'{sample}']
+test_sess = list(test_sample.keys())
+print(test_sess)
+ses = int(test_sess[0][-1])
+test_shaps = [shap_dict[f'{sample}'][f'ses{ses}']['shap_values'].reshape(28,28,1),
+              shap_dict[f'{sample}']['ses4']['shap_values'].reshape(28,28,1)]
+
+# Get test dataset
+sal_dataloader = sdl.SalDataloader(SalGenArgs)
+if dataset == "cifar100":
+    test_imgs, test_labels, _, STD, MEAN = sal_dataloader.load_data(range(ses * 10, (ses * 10) + 10), 100,
+                                                                  shuffle=True, batch_size=10000)
+else:
+    test_imgs, test_labels, _, STD, MEAN = sal_dataloader.load_data([ses*2, (ses*2)+1], 100,
+                                                              shuffle=True, batch_size=10000)
+print("Len of sal_imgs:", len(test_imgs))
+
+# Get test image
+test_img = test_imgs[sample-(ses*200)]
+if dataset != "mnist":
+    test_img = sal_dataloader.denormalize(test_img)
+test_img_np = np.transpose(test_img.numpy(), [1, 2, 0])
+
+shap.image_plot(np.stack(test_shaps), np.stack([test_img_np,test_img_np]))
 pass
