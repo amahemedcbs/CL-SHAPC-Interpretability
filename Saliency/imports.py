@@ -318,7 +318,7 @@ class SalGenArgs:
 # PyCIL Imports
 from Saliency.PyCIL.models import foster
 from Saliency.PyCIL.utils import factory
-from Saliency.PyCIL.utils.inc_net import FOSTERNet, AdaptiveNet, DERNet
+from Saliency.PyCIL.utils.inc_net import FOSTERNet, AdaptiveNet, DERNet, IncrementalNet
 fosterArgs = {'config': './exps/fostertest.json', 'prefix': 'cil', 'dataset': 'cifar100',
               'memory_size': 2000, 'memory_per_class': 20, 'fixed_memory': True,
               'shuffle': False, 'init_cls': 10, 'increment': 10, 'model_name': 'foster',
@@ -339,7 +339,12 @@ memoArgs = {"prefix": "benchmark", "dataset": "cifar100", "memory_size": 2000,
             "alpha_aux" : 1.0}
 
 derArgs = {"prefix": "reproduce", "dataset": "cifar10", "memory_size": 2000,
-           "memory_per_class": 20, "fixed_memory": False, "shuffle": False,"init_cls": 2,
+           "memory_per_class": 20, "fixed_memory": False, "shuffle": False, "init_cls": 2,
            "increment": 2, "model_name": "der", "convnet_type": "resnet32",
            "device": ["0"], "seed": [1993]}
+
+icarlArgs = {"prefix": "reproduce", "dataset": "cifar100", "memory_size": 2000,
+             "memory_per_class": 20, "fixed_memory": False, "shuffle": False, "init_cls": 2,
+             "increment": 2, "model_name": "icarl", "convnet_type": "resnet32",
+             "device": ["0"], "seed": [1993]}
 
