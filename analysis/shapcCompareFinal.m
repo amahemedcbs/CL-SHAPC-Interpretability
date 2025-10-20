@@ -1,5 +1,5 @@
 % SHAPC-Mean and SHAPC-Var Comparison
-algs = ["iTAML", "RPSnet", "DGR", "foster", "memo", "der"];
+algs = ["iTAML", "RPSnet", "DGR", "foster", "memo", "der", "icarl"];
 dataset = 'cifar10';
 if dataset == "cifar100"
     num_sessions = 10;
@@ -73,7 +73,7 @@ first_last_1000_times = column_data3;
 shapc_table_first_last_1000 = table(column_data1, column_data2, column_data3, ...
     'VariableNames', columns, 'RowNames', rows);
 sorted_shapc_first_last_1000 = sortrows(shapc_table_first_last_1000, {'SHAPC-Mean (%)'}, {'ascend'});
-disp(sorted_shapc_first_last_1000) %[output:4bb44988]
+disp(sorted_shapc_first_last_1000) %[output:59d1fe53]
 
 
 %[appendix]{"version":"1.0"}
@@ -81,6 +81,6 @@ disp(sorted_shapc_first_last_1000) %[output:4bb44988]
 %[metadata:view]
 %   data: {"layout":"onright","rightPanelPercent":55.9}
 %---
-%[output:4bb44988]
-%   data: {"dataType":"text","outputData":{"text":"              <strong>Accuracy (%)<\/strong>    <strong>SHAPC-Mean (%)<\/strong>    <strong>Time (hrs)<\/strong>\n              <strong>____________<\/strong>    <strong>______________<\/strong>    <strong>__________<\/strong>\n\n    <strong>RPSnet<\/strong>       61.35            23.217          6.9869  \n    <strong>foster<\/strong>       71.61            28.713         0.50417  \n    <strong>memo  <\/strong>       88.36            29.583         0.68417  \n    <strong>iTAML <\/strong>       93.45            31.073         0.57083  \n    <strong>der   <\/strong>          89            41.909          1.5094  \n\n","truncated":false}}
+%[output:59d1fe53]
+%   data: {"dataType":"text","outputData":{"text":"              <strong>Accuracy (%)<\/strong>    <strong>SHAPC-Mean (%)<\/strong>    <strong>Time (hrs)<\/strong>\n              <strong>____________<\/strong>    <strong>______________<\/strong>    <strong>__________<\/strong>\n\n    <strong>RPSnet<\/strong>       61.35            23.217          6.9869  \n    <strong>foster<\/strong>       71.61            28.713         0.50417  \n    <strong>memo  <\/strong>       88.36            29.583         0.68417  \n    <strong>iTAML <\/strong>       93.45            31.073         0.57083  \n    <strong>icarl <\/strong>       86.45            31.202         0.15694  \n    <strong>der   <\/strong>          89            41.909          1.5094  \n\n","truncated":false}}
 %---

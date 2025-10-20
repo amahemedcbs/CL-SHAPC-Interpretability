@@ -136,8 +136,8 @@ def _calculate_single_channel_shapc(s_tau, m_tau, s_t, m_t):
 if __name__ == "__main__":
 
     #algorithms = ["iTAML", "RPSnet", "DGR", "foster", "memo", "der"]
-    algorithms = ["RPSnet"]
-    dataset = "mnist"
+    algorithms = ["icarl"]
+    dataset = "cifar10"
 
     inclass = False
     cls = 7
@@ -159,6 +159,7 @@ if __name__ == "__main__":
             savepath = "shapc_vals_full_1000"
 
         # Load the SHAP Values
+        #shap_values_loaded = np.load(f"analysis/noshuffle/{algorithm}/{filepath}", allow_pickle=True)  # ['shap_dict']
         shap_values_loaded = np.load(f"analysis/{algorithm}/{dataset}/{filepath}", allow_pickle=True)  # ['shap_dict']
         num_imgs = len(shap_values_loaded[()].keys())
         shap_dict = {}

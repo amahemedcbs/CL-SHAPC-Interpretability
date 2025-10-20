@@ -129,9 +129,13 @@ class IncrementalNet(BaseNet):
     def __init__(self, args, pretrained, gradcam=False):
         super().__init__(args, pretrained)
         self.gradcam = gradcam
+        self.shap = False
         if hasattr(self, "gradcam") and self.gradcam:
             self._gradcam_hooks = [None, None]
             self.set_gradcam_hook()
+
+    def set_shap(self, mode):
+        self.shap = mode
 
     def update_fc(self, nb_classes):
         fc = self.generate_fc(self.feature_dim, nb_classes)
@@ -167,8 +171,8 @@ class IncrementalNet(BaseNet):
         if hasattr(self, "gradcam") and self.gradcam:
             out["gradcam_gradients"] = self._gradcam_gradients
             out["gradcam_activations"] = self._gradcam_activations
-
-        return out
+        if self.shap: return out['logits']
+        else: return out
 
     def unset_gradcam_hook(self):
         self._gradcam_hooks[0].remove()

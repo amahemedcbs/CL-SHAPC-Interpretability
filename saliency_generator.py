@@ -111,6 +111,17 @@ def load_model(algorithm, dataset, ses, **kwargs):
                     model.update_fc(SalGenArgs.class_per_task * (i + 1))
             else:
                 model.update_fc(SalGenArgs.class_per_task * (ses + 1))
+        case "icarl":
+            model_path = f"Saliency/{algorithm}/{dataset}/{algorithm}_ses_{ses}.pth"
+            if dataset == "mnist":
+                icarlArgs['convnet_type'] = "resnet32mnist"
+            model = IncrementalNet(icarlArgs, False)
+            # Update the model architecture to match the task
+            if ses > 0:
+                for i in range(ses + 1):
+                    model.update_fc(SalGenArgs.class_per_task * (i + 1))
+            else:
+                model.update_fc(SalGenArgs.class_per_task * (ses + 1))
 
 
     model_data = torch.load(model_path, map_location=device, weights_only=False)

@@ -12,6 +12,7 @@ import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 from tqdm import tqdm
 
+from load_meta_model import load_meta_models
 # Custom Imports
 from saliency_generator import load_model
 from saliency_generator import SalGenArgs, iTAMLArgs, MnistArgs
@@ -95,20 +96,28 @@ setup_args(algorithm,dataset)
 print(f"Alg: {algorithm}\nDataset: {dataset}\nFirst/Last: {first_last_only}")
 num_tasks = 10 if dataset == "cifar100" else 5
 cls_per_task = 10 if dataset == "cifar100" else 2
-models = [load_model(algorithm, dataset, i, args=SalGenArgs.args) for i in range(num_tasks)]
+
+
+pycil_algs = ["der", "foster", "memo", "icarl"]
 
 # Configures models depending on the algorithm chosen
 if algorithm == "iTAML":
+    models = []
+    for i in range(num_tasks):
+        models.extend(load_meta_models(dataset, i))
     for model in models: model.set_saliency(True)
-elif algorithm == "RPSnet":
-    infer_paths = []
-    lasts = [-1] * len(models)
-    for i in range(len(models)):
-        infer_paths.append(generate_path(i, SalGenArgs.dataset, SalGenArgs.args))
-        models[i].shap_path = infer_paths[i]
-        models[i].set_shap(True)
-elif algorithm == "der" or algorithm == "foster" or algorithm == "memo":
-    for model in models: model.set_shap(True)
+
+else:
+    models = [load_model(algorithm, dataset, i, args=SalGenArgs.args) for i in range(num_tasks)]
+    if algorithm == "RPSnet":
+        infer_paths = []
+        lasts = [-1] * len(models)
+        for i in range(len(models)):
+            infer_paths.append(generate_path(i, SalGenArgs.dataset, SalGenArgs.args))
+            models[i].shap_path = infer_paths[i]
+            models[i].set_shap(True)
+    elif algorithm in pycil_algs:
+        for model in models: model.set_shap(True)
 
 # Get train dataset
 train_set = get_train_set(dataset)
@@ -149,9 +158,10 @@ sample = 0
 
 for sample in tqdm(range(len(test_imgs)), desc="Progress"):
     shap_dict[f'{sample}'] = {}
+    sample_task = test_labels[sample] // cls_per_task
     for e in range(len(explainers)):
         if first_last_only:
-            boolean_statement = (e == test_labels[sample] // cls_per_task or e == num_tasks-1)
+            boolean_statement = (e == sample_task or e == num_tasks-1+sample_task)
         else:
             boolean_statement = test_labels[sample] // cls_per_task <= e
 
