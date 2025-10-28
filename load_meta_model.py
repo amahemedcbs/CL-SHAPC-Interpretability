@@ -10,7 +10,6 @@ from Saliency.iTAML import incremental_dataloader as data
 from Saliency.imports import iTAMLArgs
 from saliency_generator import load_model
 
-sess = 0
 args = iTAMLArgs
 use_cuda = True if torch.cuda.is_available() else 'cpu'
 
@@ -140,13 +139,13 @@ def meta_test(model, memory, inc_dataset, testloader):
                     meta_task_test_list[j] = [[task_argmax, task_max, output_base_max, targets[i]]]
                 else:
                     meta_task_test_list[j].append([task_argmax, task_max, output_base_max, targets[i]])
-        if sess == 4:
-            all_models.append(meta_model)
+        if args.sess == 4:
+            all_models.append(meta_model.to('cpu'))
             # Save the meta_model for each task_idx
             #torch.save(meta_model.state_dict(), f"meta_model_task_{task_idx}_session_{args.sess}.pth")
             #print(f"Saved adapted meta model for Task {task_idx} to {save_path}")
-        elif sess != 4 and task_idx == sess:
-            all_models.append(meta_model)
+        elif args.sess != 4 and task_idx == args.sess:
+            all_models.append(meta_model.to('cpu'))
             # Save the adapted model for classes 4 and 5
             #torch.save(meta_model.state_dict(), 'meta_model_task2_classes4_5.pth')
         del meta_model
@@ -164,8 +163,8 @@ def meta_test(model, memory, inc_dataset, testloader):
     print(class_acc)
     '''
 
-    print("Meta models:")
-    print(all_models)
+    #print("Meta models:")
+    #print(all_models)
 
     #return acc_task
     return all_models
@@ -182,6 +181,7 @@ def load_meta_models(dataset, sess):
 
     args.dataset = dataset
     args.sess = sess
+    args.data_path = f"../Datasets/{dataset}/"
     inc_dataset = data.IncrementalDataset(
         dataset_name=args.dataset,
         args=args,
@@ -195,21 +195,21 @@ def load_meta_models(dataset, sess):
     )
 
     #if (start_sess == ses and start_sess != 0):
-    if sess != 0:
-        inc_dataset._current_task = sess
+    if args.sess != 0:
+        inc_dataset._current_task = args.sess
         #with open(f"Saliency/iTAML/{dataset}" + "/sample_per_task_testing_" + str(args.sess - 1) + ".pickle", 'rb') as handle:
         #    sample_per_task_testing = pickle.load(handle)
         #inc_dataset.sample_per_task_testing = sample_per_task_testing
         #args.sample_per_task_testing = sample_per_task_testing
 
     memory = None
-    if sess > 0:
+    if args.sess > 0:
         with open(f"Saliency/iTAML/{dataset}" + "/memory_" + str(args.sess - 1) + ".pickle", 'rb') as handle:
             memory = pickle.load(handle)
 
     _, _, _, testloader, for_memory = inc_dataset.new_task(memory)
     memory = inc_dataset.get_memory(memory, for_memory)
-    model = load_model("iTAML", dataset, sess, args=args)
+    model = load_model("iTAML", dataset, args.sess, args=args)
     return meta_test(model, memory, inc_dataset, testloader)
 
 if __name__ == '__main__':

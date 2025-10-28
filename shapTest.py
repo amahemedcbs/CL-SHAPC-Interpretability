@@ -12,9 +12,10 @@ import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 from tqdm import tqdm
 
-from load_meta_model import load_meta_models
 # Custom Imports
 from saliency_generator import load_model
+from load_meta_model import load_meta_models
+
 from saliency_generator import SalGenArgs, iTAMLArgs, MnistArgs
 import saliency_dataloader as sdl
 from rps_net import generate_path
@@ -74,8 +75,8 @@ def get_train_set(dataset):
                                               transforms.Normalize(mean, std)]))
     return train_set
 
-algorithm = "RPSnet"
-dataset = "mnist"
+algorithm = "ds-al"
+dataset = "cifar10"
 
 '''
 algorithm = sys.argv[1]
@@ -98,7 +99,7 @@ num_tasks = 10 if dataset == "cifar100" else 5
 cls_per_task = 10 if dataset == "cifar100" else 2
 
 
-pycil_algs = ["der", "foster", "memo", "icarl"]
+pycil_algs = ["der", "foster", "memo", "icarl", "simplecil", "ds-al"]
 
 # Configures models depending on the algorithm chosen
 if algorithm == "iTAML":
@@ -169,7 +170,7 @@ for sample in tqdm(range(len(test_imgs)), desc="Progress"):
             #print("Shape:", test_imgs.shape)
             #print("Sample Shape:", test_imgs[sample].unsqueeze(0).shape)
             shap_values, indexes = explainers[e].shap_values(test_imgs[sample].unsqueeze(0), ranked_outputs=1)
-            shap_dict[f'{sample}'][f'ses{e}'] = {'shap_values': shap_values, 'idxs': indexes}
+            shap_dict[f'{sample}'][f'ses{sample_task}'] = {'shap_values': shap_values, 'idxs': indexes}
             shap_dict[f'{sample}']['true_label'] = test_labels[sample].item()
         else:
             continue

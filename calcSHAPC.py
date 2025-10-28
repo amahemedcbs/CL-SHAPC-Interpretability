@@ -136,8 +136,8 @@ def _calculate_single_channel_shapc(s_tau, m_tau, s_t, m_t):
 if __name__ == "__main__":
 
     #algorithms = ["iTAML", "RPSnet", "DGR", "foster", "memo", "der"]
-    algorithms = ["icarl"]
-    dataset = "cifar10"
+    algorithms = ["iTAML"]
+    dataset = "mnist"
 
     inclass = False
     cls = 7
@@ -168,6 +168,8 @@ if __name__ == "__main__":
 
         shapc_dict = {}
         for sample in tqdm(range(num_imgs), desc="Progress"):
+            if sample == 200:
+                pass
             # If computing inclass shapc and the sample is from the wrong class
             if inclass and shap_dict[f'{sample}']['true_label'] != cls: continue
 
@@ -189,7 +191,9 @@ if __name__ == "__main__":
                     #print("Reshaping shap1...")
                 shap_value1 = normalize_shap_value(shap_value1)
 
-                if first_last_only: range2 = [num_sessions-1]
+                if first_last_only:
+                    if algorithm == "iTAML": range2 = [num_sessions-1+ses]
+                    else: range2 = [num_sessions-1]
                 else: range2 = range(ses+1, num_sessions)
 
                 for j in range2:
@@ -218,8 +222,8 @@ if __name__ == "__main__":
                     # --- Step 3: Calculate SHAPC ---
                     shapc_value = calculate_shapc(shap_value1, p_tau, shap_value2, p_t)
                     #print(f"SHAP Value Consistency (SHAPC) for sample x between task tau and task t: {shapc_value:.4f}")
-                    if f'sc{ses}{j}' not in shapc_dict: shapc_dict[f'sc{ses}{j}'] = {}
-                    shapc_dict[f'sc{ses}{j}'][f'sample{sample}'] = shapc_value
+                    if f'sc{ses}{num_sessions-1}' not in shapc_dict: shapc_dict[f'sc{ses}{num_sessions-1}'] = {}
+                    shapc_dict[f'sc{ses}{num_sessions-1}'][f'sample{sample}'] = shapc_value
         if inclass:
             save_path = f"analysis/{algorithm}/{dataset}/{savepath}_cls{cls}.mat"
         else:

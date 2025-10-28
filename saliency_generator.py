@@ -14,8 +14,6 @@ from captum.attr import Saliency
 from captum.attr import visualization as viz
 import matplotlib.pyplot as plt
 
-
-
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
 
@@ -59,69 +57,65 @@ def load_model(algorithm, dataset, ses, **kwargs):
     model = None
     scholar = None
     model_path = ""
-    match algorithm:
-        case "iTAML":
-            model_path = f"Saliency/{algorithm}/{dataset}/session_{ses}_model_best.pth.tar"
-            model = BasicNet1(kwargs['args'], 0, device=device)
-        case "RPSnet":
-            model_path = f"Saliency/{algorithm}/{dataset}/session_{ses}_0_model_best.pth.tar"
-            if dataset == "mnist":
-                model = RPS_net_mlp(kwargs['args'])
-            else:
-                model = RPS_net_cifar(kwargs['args'])
-        case "DGR":
-            model_path = f"Saliency/{algorithm}/{dataset}/split-mnist-generative-replay-r0.3_ses_{ses}"
-            cnn = CNN(image_size=32, image_channel_size=1, classes=10,
-                      depth=5, channel_size=1024, reducing_layers=3)
-            wgan = WGAN(z_size=100, image_size=32, image_channel_size=1,
-                        c_channel_size=64, g_channel_size=64)
+    if algorithm in pycil_algs:
+        model_path = f"Saliency/{algorithm}/{dataset}/{algorithm}_ses_{ses}.pth"
+        load_start_sess = ses - 1 if algorithm == "foster" else 0
+        match algorithm:
+            case "foster":
+                if dataset == "mnist":
+                    fosterArgs['convnet_type'] = "resnet32mnist"
+                model = FOSTERNet(fosterArgs, False)
+            case "memo":
+                model_path = f"Saliency/{algorithm}/{dataset}/{algorithm}_ses_{ses}.pth"
+                if dataset == "mnist":
+                    memoArgs['convnet_type'] = "memo_resnet32mnist"
+                model = AdaptiveNet(memoArgs, False)
+            case "der":
+                model_path = f"Saliency/{algorithm}/{dataset}/{algorithm}_ses_{ses}.pth"
+                if dataset == "mnist":
+                    derArgs['convnet_type'] = "resnet32mnist"
+                model = DERNet(derArgs, False)
+            case "icarl":
+                model_path = f"Saliency/{algorithm}/{dataset}/{algorithm}_ses_{ses}.pth"
+                if dataset == "mnist":
+                    icarlArgs['convnet_type'] = "resnet32mnist"
+                model = IncrementalNet(icarlArgs, False)
+            case "ds-al":
+                model = DSALNet(
+                    dsalArgs,
+                    dsalArgs["configurations"][f"{dataset}"]["buffer_size"],
+                    dsalArgs["configurations"][f"{dataset}"]["gamma"],
+                    dsalArgs["configurations"][f"{dataset}"]["gamma_comp"],
+                    dsalArgs["configurations"][f"{dataset}"]["compensation_ratio"],
+                )
+                model.generate_buffer()
+                model.generate_fc()
 
-            scholar = Scholar('', generator=wgan, solver=cnn, dataset_config=None)
-        case "foster":
-            model_path = f"Saliency/{algorithm}/{dataset}/{algorithm}_ses_{ses}.pth"
-            #model = factory.get_model(algorithm, fosterArgs)._network
-            if dataset == "mnist":
-                fosterArgs['convnet_type'] = "resnet32mnist"
-            model = FOSTERNet(fosterArgs, False)
-            # Update the model architecture to match the task
-            if ses > 0:
-                for i in range(ses-1, ses + 1):
-                    model.update_fc(SalGenArgs.class_per_task * (i + 1))
-            else: model.update_fc(SalGenArgs.class_per_task * (ses + 1))
-        case "memo":
-            model_path = f"Saliency/{algorithm}/{dataset}/{algorithm}_ses_{ses}.pth"
-            if dataset == "mnist":
-                memoArgs['convnet_type'] = "memo_resnet32mnist"
-            model = AdaptiveNet(memoArgs, False)
-            # Update the model architecture to match the task
-            if ses > 0:
-                for i in range(ses + 1):
-                    model.update_fc(SalGenArgs.class_per_task * (i + 1))
-            else:
-                model.update_fc(SalGenArgs.class_per_task * (ses + 1))
+        # Update the model architecture to match the task
+        if ses > 0:
+            for i in range(load_start_sess, ses + 1):
+                model.update_fc(SalGenArgs.class_per_task * (i + 1))
+        else:
+            model.update_fc(SalGenArgs.class_per_task * (ses + 1))
+    else:
+        match algorithm:
+            case "iTAML":
+                model_path = f"Saliency/{algorithm}/{dataset}/session_{ses}_model_best.pth.tar"
+                model = BasicNet1(kwargs['args'], 0, device=device)
+            case "RPSnet":
+                model_path = f"Saliency/{algorithm}/{dataset}/session_{ses}_0_model_best.pth.tar"
+                if dataset == "mnist":
+                    model = RPS_net_mlp(kwargs['args'])
+                else:
+                    model = RPS_net_cifar(kwargs['args'])
+            case "DGR":
+                model_path = f"Saliency/{algorithm}/{dataset}/split-mnist-generative-replay-r0.3_ses_{ses}"
+                cnn = CNN(image_size=32, image_channel_size=1, classes=10,
+                          depth=5, channel_size=1024, reducing_layers=3)
+                wgan = WGAN(z_size=100, image_size=32, image_channel_size=1,
+                            c_channel_size=64, g_channel_size=64)
 
-        case "der":
-            model_path = f"Saliency/{algorithm}/{dataset}/{algorithm}_ses_{ses}.pth"
-            if dataset == "mnist":
-                derArgs['convnet_type'] = "resnet32mnist"
-            model = DERNet(derArgs, False)
-            # Update the model architecture to match the task
-            if ses > 0:
-                for i in range(ses + 1):
-                    model.update_fc(SalGenArgs.class_per_task * (i + 1))
-            else:
-                model.update_fc(SalGenArgs.class_per_task * (ses + 1))
-        case "icarl":
-            model_path = f"Saliency/{algorithm}/{dataset}/{algorithm}_ses_{ses}.pth"
-            if dataset == "mnist":
-                icarlArgs['convnet_type'] = "resnet32mnist"
-            model = IncrementalNet(icarlArgs, False)
-            # Update the model architecture to match the task
-            if ses > 0:
-                for i in range(ses + 1):
-                    model.update_fc(SalGenArgs.class_per_task * (i + 1))
-            else:
-                model.update_fc(SalGenArgs.class_per_task * (ses + 1))
+                scholar = Scholar('', generator=wgan, solver=cnn, dataset_config=None)
 
 
     model_data = torch.load(model_path, map_location=device, weights_only=False)

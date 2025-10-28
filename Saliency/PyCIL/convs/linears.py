@@ -131,6 +131,7 @@ class AnalyticLinear(torch.nn.Linear, metaclass=ABCMeta):
         self.gamma: float = gamma
         self.bias: bool = bias
         self.dtype = dtype
+        self.shap = False
 
         # Linear Layer
         if bias:
@@ -138,12 +139,21 @@ class AnalyticLinear(torch.nn.Linear, metaclass=ABCMeta):
         weight = torch.zeros((in_features, 0), **factory_kwargs)
         self.register_buffer("weight", weight)
 
-    @torch.no_grad()
+    def set_shap(self, mode):
+        self.shap = mode
+
     def forward(self, X: torch.Tensor) -> Dict[str, torch.Tensor]:
-        X = X.to(self.weight)
-        if self.bias:
-            X = torch.cat((X, torch.ones(X.shape[0], 1).to(X)), dim=-1)
-        return {"logits": X @ self.weight}
+        if self.shap:
+            X = X.to(self.weight)
+            if self.bias:
+                X = torch.cat((X, torch.ones(X.shape[0], 1).to(X)), dim=-1)
+            return {"logits": X @ self.weight}
+        else:
+            with torch.no_grad():
+                X = X.to(self.weight)
+                if self.bias:
+                    X = torch.cat((X, torch.ones(X.shape[0], 1).to(X)), dim=-1)
+                return {"logits": X @ self.weight}
 
     @property
     def in_features(self) -> int:
@@ -204,6 +214,7 @@ class RecursiveLinear(AnalyticLinear):
         self.R: torch.Tensor
         R = torch.eye(self.weight.shape[0], **factory_kwargs) / self.gamma
         self.register_buffer("R", R)
+
 
     def update_fc(self, nb_classes: int) -> None:
         increment_size = nb_classes - self.out_features

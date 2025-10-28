@@ -83,9 +83,6 @@ test_img_np = np.transpose(test_img.numpy(), [1, 2, 0])
 
 shap.image_plot(np.concatenate(test_shaps), np.stack([test_img_np,test_img_np]), true_labels=test_sess)
 
-# Try visualising the normalized images with the normalized shap values
-# OR use both the denormalized image and the denormalized shap values.
-# Either both normalize or both denormalized.
 
 # For a model with high SHAPC, but low accuracy:
 # Look for a sample that was predicted correctly, feature consistency should be high

@@ -131,9 +131,12 @@ class SalGenArgs:
     distill = False
 
 # PyCIL Imports
+pycil_algs = ["der", "foster", "memo", "icarl", "simplecil", "ds-al"]
 from Saliency.PyCIL.models import foster
 from Saliency.PyCIL.utils import factory
-from Saliency.PyCIL.utils.inc_net import FOSTERNet, AdaptiveNet, DERNet, IncrementalNet
+from Saliency.PyCIL.utils.inc_net import FOSTERNet, AdaptiveNet, DERNet, IncrementalNet, SimpleCosineIncrementalNet
+from Saliency.PyCIL.utils.inc_net import DSALNet, ACILNet, BaseNet
+
 fosterArgs = {'config': './exps/fostertest.json', 'prefix': 'cil', 'dataset': 'cifar100',
               'memory_size': 2000, 'memory_per_class': 20, 'fixed_memory': True,
               'shuffle': False, 'init_cls': 10, 'increment': 10, 'model_name': 'foster',
@@ -158,8 +161,53 @@ derArgs = {"prefix": "reproduce", "dataset": "cifar10", "memory_size": 2000,
            "increment": 2, "model_name": "der", "convnet_type": "resnet32",
            "device": ["0"], "seed": [1993]}
 
-icarlArgs = {"prefix": "reproduce", "dataset": "cifar100", "memory_size": 2000,
+icarlArgs = {"prefix": "reproduce", "dataset": "cifar10", "memory_size": 2000,
              "memory_per_class": 20, "fixed_memory": False, "shuffle": False, "init_cls": 2,
              "increment": 2, "model_name": "icarl", "convnet_type": "resnet32",
              "device": ["0"], "seed": [1993]}
 
+scilArgs = {"prefix": "reproduce", "dataset": "cifar10", "memory_size": 0, "memory_per_class": 0,
+            "fixed_memory": False, "shuffle": False, "init_cls": 50, "increment": 10,
+            "model_name": "simplecil", "convnet_type": "cosine_resnet32", "device": ["0"],
+            "seed": [1993], "init_epoch": 200, "init_lr": 0.01, "batch_size": 128,
+            "weight_decay": 0.05, "init_lr_decay": 0.1, "init_weight_decay": 5e-4,
+            "min_lr": 0}
+
+dsalArgs = {"model_name": "ds-al", "prefix": "DS-AL", "memory_size": 0, "dataset": "cifar10",
+            "seed": [1993], "shuffle": False, "device": ["0"], "convnet_type": "resnet32",
+            "init_cls": 2, "increment": 2, "num_workers": 16, "init_batch_size": 128,
+            "IL_batch_size": 4096, "inplace_repeat": 1,
+
+            "configurations": {
+                "cifar10": {
+                    "buffer_size": 4096,
+                    "gamma": 0.1,
+                    "gamma_comp": 0.1,
+                    "compensation_ratio": 0.6,
+                    "init_weight_decay": 5e-4,
+                    "scheduler": {
+                        "type": "MultiStep",
+                        "init_lr": 0.1,
+                        "init_epochs": 160,
+                        "warmup": 0,
+                        "milestones": [120, 140],
+                        "decay": 0.1
+                    }
+                },
+                "cifar100": {
+                    "buffer_size": 8192,
+                    "gamma": 0.1,
+                    "gamma_comp": 0.1,
+                    "compensation_ratio": 0.6,
+                    "init_weight_decay": 5e-4,
+                    "scheduler": {
+                        "type": "MultiStep",
+                        "init_lr": 0.1,
+                        "init_epochs": 160,
+                        "warmup": 0,
+                        "milestones": [120, 140],
+                        "decay": 0.1
+                    }
+                }
+            }
+        }

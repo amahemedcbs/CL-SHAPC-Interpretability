@@ -69,6 +69,7 @@ class BaseNet(nn.Module):
 
         self.convnet = get_convnet(args, pretrained)
         self.fc = None
+        self.device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
     @property
     def feature_dim(self):
@@ -434,7 +435,7 @@ class SimpleCosineIncrementalNet(BaseNet):
         super().__init__(args, pretrained)
 
     def update_fc(self, nb_classes, nextperiod_initialization=None):
-        fc = self.generate_fc(self.feature_dim, nb_classes).cuda()
+        fc = self.generate_fc(self.feature_dim, nb_classes).to(self.device)
         if self.fc is not None:
             nb_output = self.fc.out_features
             weight = copy.deepcopy(self.fc.weight.data)
@@ -443,7 +444,7 @@ class SimpleCosineIncrementalNet(BaseNet):
 
                 weight = torch.cat([weight, nextperiod_initialization])
             else:
-                weight = torch.cat([weight, torch.zeros(nb_classes - nb_output, self.feature_dim).cuda()])
+                weight = torch.cat([weight, torch.zeros(nb_classes - nb_output, self.feature_dim).to(self.device)])
             fc.weight = nn.Parameter(weight)
         del self.fc
         self.fc = fc
@@ -453,7 +454,7 @@ class SimpleCosineIncrementalNet(BaseNet):
         return fc
 
     def regenerate_fc(self, nb_classes):
-        fc = self.generate_fc(self.feature_dim, nb_classes).cuda()
+        fc = self.generate_fc(self.feature_dim, nb_classes).to(device)
         del self.fc
         self.fc = fc
         return fc
@@ -935,13 +936,27 @@ class ACILNet(BaseNet):
         self.gamma: float = gamma
         self.device = device
         self.dtype = dtype
+        self.shap = False
 
-    @torch.no_grad()
+    def set_shap(self, mode):
+        self.shap = mode
+        self.buffer.set_shap(mode)
+        self.fc.set_shap(mode)
+        for param in self.convnet.parameters():
+            param.requires_grad = mode
+
     def forward(self, X: torch.Tensor) -> Dict[str, torch.Tensor]:
-        X = self.convnet(X)["features"]
-        X = self.buffer(X)
-        X = self.fc(X)["logits"]
-        return {"logits": X}
+        if self.shap:
+            X = self.convnet(X)["features"]
+            X = self.buffer(X)
+            X = self.fc(X)["logits"]
+            return {"logits": X}
+        else:
+            with torch.no_grad():
+                X = self.convnet(X)["features"]
+                X = self.buffer(X)
+                X = self.fc(X)["logits"]
+                return {"logits": X}
 
     def update_fc(self, nb_classes: int) -> None:
         self.fc.update_fc(nb_classes)
@@ -957,7 +972,7 @@ class ACILNet(BaseNet):
 
     def generate_buffer(self) -> None:
         self.buffer = RandomBuffer(
-            self.feature_dim, self.buffer_size, device=self.device, dtype=self.dtype
+            self.feature_dim, self.buffer_size, device=self.device, dtype=self.dtype,
         )
 
     def after_task(self) -> None:
@@ -1001,12 +1016,22 @@ class DSALNet(ACILNet):
         self.activation_comp = activation_comp
         super().__init__(args, buffer_size, gamma_main, pretrained, device, dtype)
 
-    @torch.no_grad()
+    def set_shap(self, mode):
+        super().set_shap(mode)
+
     def forward(self, X: torch.Tensor) -> Dict[str, torch.Tensor]:
-        X = self.buffer(self.convnet(X)["features"])
-        X_main = self.fc(self.activation_main(X))["logits"]
-        X_comp = self.fc_comp(self.activation_comp(X))["logits"]
-        return {"logits": X_main + self.C * X_comp}
+        if self.shap:
+            X = self.buffer(self.convnet(X)["features"])
+            X_main = self.fc(self.activation_main(X))["logits"]
+            X_comp = self.fc_comp(self.activation_comp(X))["logits"]
+            out = {"logits": X_main + self.C * X_comp}
+            return out['logits']
+        else:
+            with torch.no_grad():
+                X = self.buffer(self.convnet(X)["features"])
+                X_main = self.fc(self.activation_main(X))["logits"]
+                X_comp = self.fc_comp(self.activation_comp(X))["logits"]
+                return {"logits": X_main + self.C * X_comp}
 
     @torch.no_grad()
     def fit(self, X: torch.Tensor, y: torch.Tensor) -> None:

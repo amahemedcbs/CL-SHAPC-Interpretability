@@ -69,6 +69,7 @@ class RandomBuffer(torch.nn.Linear, Buffer):
         self.activation: activation_t = (
             torch.nn.Identity() if activation is None else activation
         )
+        self.shap = False
 
         W = torch.empty((out_features, in_features), **factory_kwargs)
         b = torch.empty(out_features, **factory_kwargs) if bias else None
@@ -80,7 +81,14 @@ class RandomBuffer(torch.nn.Linear, Buffer):
         # Random Initialization
         self.reset_parameters()
 
-    @torch.no_grad()
+    def set_shap(self, mode):
+        self.shap = mode
+
     def forward(self, X: torch.Tensor) -> torch.Tensor:
-        X = X.to(self.weight)
-        return self.activation(super().forward(X))
+        if self.shap:
+            X = X.to(self.weight)
+            return self.activation(super().forward(X))
+        else:
+            with torch.no_grad():
+                X = X.to(self.weight)
+                return self.activation(super().forward(X))
