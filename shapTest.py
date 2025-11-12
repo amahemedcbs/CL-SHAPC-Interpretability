@@ -75,8 +75,8 @@ def get_train_set(dataset):
                                               transforms.Normalize(mean, std)]))
     return train_set
 
-algorithm = "ds-al"
-dataset = "cifar10"
+algorithm = "iTAML"
+dataset = "cifar100"
 
 '''
 algorithm = sys.argv[1]
@@ -162,7 +162,8 @@ for sample in tqdm(range(len(test_imgs)), desc="Progress"):
     sample_task = test_labels[sample] // cls_per_task
     for e in range(len(explainers)):
         if first_last_only:
-            boolean_statement = (e == sample_task or e == num_tasks-1+sample_task)
+            if algorithm == "iTAML": boolean_statement = (e == sample_task or e == num_tasks-1+sample_task)
+            else: boolean_statement = (e == sample_task or e == num_tasks-1)
         else:
             boolean_statement = test_labels[sample] // cls_per_task <= e
 
@@ -170,7 +171,7 @@ for sample in tqdm(range(len(test_imgs)), desc="Progress"):
             #print("Shape:", test_imgs.shape)
             #print("Sample Shape:", test_imgs[sample].unsqueeze(0).shape)
             shap_values, indexes = explainers[e].shap_values(test_imgs[sample].unsqueeze(0), ranked_outputs=1)
-            shap_dict[f'{sample}'][f'ses{sample_task}'] = {'shap_values': shap_values, 'idxs': indexes}
+            shap_dict[f'{sample}'][f'ses{e}'] = {'shap_values': shap_values, 'idxs': indexes}
             shap_dict[f'{sample}']['true_label'] = test_labels[sample].item()
         else:
             continue

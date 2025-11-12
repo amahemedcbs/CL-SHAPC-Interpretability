@@ -13,7 +13,7 @@ from Saliency.imports import generate_path
 
 
 
-algorithm = "RPSnet"
+algorithm = "icarl"
 dataset = "cifar10"
 num = 10 if dataset == "cifar100" else 5
 
@@ -42,14 +42,7 @@ shap_dict = {}
 for i in range(num_imgs):
     shap_dict[f'{i}'] = shap_values_loaded[()][f'{i}']
 
-'''
-Bad Sample: 80
-Good Sample: 132
-
-Samples to Try: 55
-'''
-
-samples = range(1000)
+samples = range(8000)
 for sample in samples:
     test_sample = shap_dict[f'{sample}']
     test_sess = list(test_sample.keys())
@@ -84,8 +77,8 @@ for sample in samples:
     # Store predictions
 
     # Load the saved preds, if possible
-    if os.path.isfile(f"analysis/noshuffle/preds.mat"):
-        loaded_preds = scipy.io.loadmat(f"analysis/noshuffle/preds.mat", simplify_cells=True)
+    if os.path.isfile(f"analysis/noshuffle/{algorithm}_{dataset}_preds.mat"):
+        loaded_preds = scipy.io.loadmat(f"analysis/noshuffle/{algorithm}_{dataset}_preds.mat", simplify_cells=True)
         keys_to_remove = ['__header__', '__version__', '__globals__']
         pred_dict = {key: value for key, value in loaded_preds.items() if key not in keys_to_remove}
     else:
@@ -97,4 +90,4 @@ for sample in samples:
     pred_dict[f'{algorithm}'][f'sample{sample}'][f'pred_{test_sess[-1]}'] = preds[1].item()
 
     # Save shap values to filepath
-    scipy.io.savemat(f"analysis/noshuffle/preds.mat", pred_dict)
+    scipy.io.savemat(f"analysis/noshuffle/{algorithm}_{dataset}_preds.mat", pred_dict)

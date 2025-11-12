@@ -26,6 +26,8 @@ def compute_accuracy(predictions, targets):
 
 
 def generate_predictions(algorithm, model, ses, images, labels=None, **kwargs):
+    pycil_algs = ["der", "foster", "memo", "icarl", "dsal"]
+
     if algorithm == "iTAML":
         model.set_saliency(True)
         outputs2 = model(images)
@@ -40,7 +42,7 @@ def generate_predictions(algorithm, model, ses, images, labels=None, **kwargs):
     elif algorithm == "DGR":
         real_scores = model.forward(images)
         _, pred = real_scores[:, 0: SalGenArgs.class_per_task * (1 + ses)].max(1)
-    elif algorithm == "foster" or algorithm == "memo" or algorithm == "der":
+    elif algorithm in pycil_algs:
         with torch.no_grad():
             outputs = model(images)["logits"]
         pred = torch.max(outputs, dim=1)[1]

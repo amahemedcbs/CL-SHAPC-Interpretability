@@ -9,7 +9,7 @@ import saliency_dataloader as sdl
 
 
 
-algorithm = "der"
+algorithm = "iTAML"
 dataset = "cifar10"
 num = 10 if dataset == "cifar100" else 5
 
@@ -45,7 +45,7 @@ Good Sample: 132
 Samples to Try: 55
 '''
 
-sample = 132
+sample = 303
 test_sample = shap_dict[f'{sample}']
 test_sess = list(test_sample.keys())
 test_sess.remove(test_sess[1])

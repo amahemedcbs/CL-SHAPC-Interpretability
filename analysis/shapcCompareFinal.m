@@ -1,6 +1,6 @@
 % SHAPC-Mean and SHAPC-Var Comparison
-algs = ["iTAML", "RPSnet", "DGR", "foster", "memo", "der"];%, "icarl"];
-dataset = 'cifar100';
+algs = ["iTAML", "RPSnet", "DGR", "foster", "memo", "der", "icarl", "dsal"];
+dataset = 'cifar10';
 if dataset == "cifar100"
     num_sessions = 10;
 else
@@ -18,6 +18,10 @@ end
 
 if dataset ~= "mnist"
     algs(algs=="DGR") = [];
+end
+if dataset ~= "cifar10"
+    algs(algs=="icarl") = [];
+    algs(algs=="dsal") = [];
 end
 %%
 % Load SHAPC values (First and Last 1000)
@@ -73,14 +77,14 @@ first_last_1000_times = column_data3;
 shapc_table_first_last_1000 = table(column_data1, column_data2, column_data3, ...
     'VariableNames', columns, 'RowNames', rows);
 sorted_shapc_first_last_1000 = sortrows(shapc_table_first_last_1000, {'SHAPC-Mean (%)'}, {'ascend'});
-disp(sorted_shapc_first_last_1000) %[output:8cdbecb6]
+disp(sorted_shapc_first_last_1000) %[output:573d3877]
 
 
 %[appendix]{"version":"1.0"}
 %---
 %[metadata:view]
-%   data: {"layout":"onright","rightPanelPercent":47.2}
+%   data: {"layout":"onright","rightPanelPercent":40.2}
 %---
-%[output:8cdbecb6]
-%   data: {"dataType":"text","outputData":{"text":"              <strong>Accuracy (%)<\/strong>    <strong>SHAPC-Mean (%)<\/strong>    <strong>Time (hrs)<\/strong>\n              <strong>____________<\/strong>    <strong>______________<\/strong>    <strong>__________<\/strong>\n\n    <strong>iTAML <\/strong>       78.66            27.186          4.4339  \n    <strong>foster<\/strong>       65.95            28.709          2.9886  \n    <strong>RPSnet<\/strong>       40.51            30.739          36.407  \n    <strong>memo  <\/strong>       68.99            31.252          5.0228  \n    <strong>der   <\/strong>       63.68            41.429          10.866  \n\n","truncated":false}}
+%[output:573d3877]
+%   data: {"dataType":"text","outputData":{"text":"              <strong>Accuracy (%)<\/strong>    <strong>SHAPC-Mean (%)<\/strong>    <strong>Time (hrs)<\/strong>\n              <strong>____________<\/strong>    <strong>______________<\/strong>    <strong>__________<\/strong>\n\n    <strong>RPSnet<\/strong>       61.35            23.217          6.9869  \n    <strong>foster<\/strong>       71.61            28.713         0.50417  \n    <strong>memo  <\/strong>       88.36            29.583         0.68417  \n    <strong>iTAML <\/strong>       93.45            30.672         0.57083  \n    <strong>icarl <\/strong>       86.45            31.202         0.15694  \n    <strong>dsal  <\/strong>       72.15             36.43          0.1775  \n    <strong>der   <\/strong>          89            41.909          1.5094  \n\n","truncated":false}}
 %---

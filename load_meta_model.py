@@ -139,12 +139,12 @@ def meta_test(model, memory, inc_dataset, testloader):
                     meta_task_test_list[j] = [[task_argmax, task_max, output_base_max, targets[i]]]
                 else:
                     meta_task_test_list[j].append([task_argmax, task_max, output_base_max, targets[i]])
-        if args.sess == 4:
+        if args.sess == args.num_task-1:
             all_models.append(meta_model.to('cpu'))
             # Save the meta_model for each task_idx
             #torch.save(meta_model.state_dict(), f"meta_model_task_{task_idx}_session_{args.sess}.pth")
             #print(f"Saved adapted meta model for Task {task_idx} to {save_path}")
-        elif args.sess != 4 and task_idx == args.sess:
+        elif args.sess != args.num_task-1 and task_idx == args.sess:
             all_models.append(meta_model.to('cpu'))
             # Save the adapted model for classes 4 and 5
             #torch.save(meta_model.state_dict(), 'meta_model_task2_classes4_5.pth')
@@ -175,13 +175,15 @@ def load_meta_models(dataset, sess):
     if dataset == "cifar100":
         args.class_per_task = 10
         args.num_class = 100
+        args.num_task = 10
     else:
         args.class_per_task = 2
         args.num_class = 10
+        args.num_task = 5
 
     args.dataset = dataset
     args.sess = sess
-    args.data_path = f"../Datasets/{dataset}/"
+    args.data_path = f"Datasets/{dataset}/"
     inc_dataset = data.IncrementalDataset(
         dataset_name=args.dataset,
         args=args,

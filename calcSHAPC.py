@@ -137,7 +137,7 @@ if __name__ == "__main__":
 
     #algorithms = ["iTAML", "RPSnet", "DGR", "foster", "memo", "der"]
     algorithms = ["iTAML"]
-    dataset = "mnist"
+    dataset = "cifar100"
 
     inclass = False
     cls = 7
@@ -159,8 +159,8 @@ if __name__ == "__main__":
             savepath = "shapc_vals_full_1000"
 
         # Load the SHAP Values
-        #shap_values_loaded = np.load(f"analysis/noshuffle/{algorithm}/{filepath}", allow_pickle=True)  # ['shap_dict']
         shap_values_loaded = np.load(f"analysis/{algorithm}/{dataset}/{filepath}", allow_pickle=True)  # ['shap_dict']
+        #shap_values_loaded = np.load(f"analysis/noshuffle/{algorithm}/{filepath}", allow_pickle=True)  # ['shap_dict']
         num_imgs = len(shap_values_loaded[()].keys())
         shap_dict = {}
         for i in range(num_imgs):
@@ -168,8 +168,6 @@ if __name__ == "__main__":
 
         shapc_dict = {}
         for sample in tqdm(range(num_imgs), desc="Progress"):
-            if sample == 200:
-                pass
             # If computing inclass shapc and the sample is from the wrong class
             if inclass and shap_dict[f'{sample}']['true_label'] != cls: continue
 
@@ -194,6 +192,7 @@ if __name__ == "__main__":
                 if first_last_only:
                     if algorithm == "iTAML": range2 = [num_sessions-1+ses]
                     else: range2 = [num_sessions-1]
+                    #range2 = [num_sessions - 1]
                 else: range2 = range(ses+1, num_sessions)
 
                 for j in range2:
@@ -228,5 +227,5 @@ if __name__ == "__main__":
             save_path = f"analysis/{algorithm}/{dataset}/{savepath}_cls{cls}.mat"
         else:
             save_path = f"analysis/{algorithm}/{dataset}/{savepath}.mat"
+            #save_path = f"analysis/noshuffle/{algorithm}/{savepath}.mat"
         scipy.io.savemat(save_path, shapc_dict)
-        pass
