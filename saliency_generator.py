@@ -28,6 +28,8 @@ def compute_accuracy(predictions, targets):
 def generate_predictions(algorithm, model, ses, images, labels=None, **kwargs):
     pycil_algs = ["der", "foster", "memo", "icarl", "dsal"]
 
+    images = images.to(device)
+
     if algorithm == "iTAML":
         model.set_saliency(True)
         outputs2 = model(images)
