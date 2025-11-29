@@ -66,6 +66,7 @@ for sample in samples:
 
     test_imgs, test_labels = test_imgs.to(device), test_labels.to(device)
 
+    sample_multiplier = 10 * 100 if dataset == "cifar100" else 2 * 100
     # Get test image
     test_img = test_imgs[sample-(ses*200)].unsqueeze(0)
     test_label = test_labels[sample-(ses*200)]

@@ -1,21 +1,20 @@
-function [threshold] = shapcthresholdtable(algs, dataset)
-%UNTITLED2 Summary of this function goes here
-%   Detailed explanation goes here
-arguments (Input)
-    algs
-    dataset
-end
-
-arguments (Output)
-    threshold
-end
-
+algs = ["iTAML", "RPSnet", "DGR", "foster", "memo", "der", "icarl", "dsal"];
+dataset = 'cifar10' %[output:80322494]
 if dataset == "cifar100"
     num_sessions = 10;
 else
     num_sessions = 5;
 end
 
+if dataset ~= "mnist"
+    algs(algs=="DGR") = [];
+end
+%{
+if dataset ~= "cifar10"
+    algs(algs=="icarl") = [];
+    algs(algs=="dsal") = [];
+end
+%}
 shapc_path = sprintf("%s_shapc_data.mat", dataset);
 
 if isfile(shapc_path)
@@ -29,7 +28,7 @@ all_shapc_vars = [];
 all_shapc_stds = [];
 means = [];
 thresholds = zeros(length(algs), 1);
-
+%%
 % Load SHAPC values
 for j=1:length(algs)
     alg = algs(j);
@@ -69,14 +68,29 @@ for j=1:length(algs)
     alg_threshold = shapc_mean - sqrt(shapc_var_perc);
     thresholds(j) = alg_threshold;
 end
-
+%%
 % Create Table
 rows = algs;
-std_table_first_last_1000 = table(all_shapc_stds, 'VariableNames', "SHAPC Stds", 'RowNames', rows)
-%std_table_first_last_1000 = table(all_shapc_vars, 'VariableNames', "SHAPC-Var", 'RowNames', rows)
+std_table = table(all_shapc_stds, 'VariableNames', "SHAPC Stds", 'RowNames', rows) %[output:40ef5dc9]
+fprintf("Std of Stds: %f", std(all_shapc_stds)); %[output:052cc99a]
+fprintf("Avg of Stds: %f", mean(all_shapc_stds)); %[output:32e2ea31]
 mean_table = table(means, 'VariableNames', "SHAPC Means", 'RowNames', rows);
 threshold_table = table(thresholds, 'VariableNames', "SHAPC Thresholds", 'RowNames', rows);
-threshold = min(thresholds);
-std(all_shapc_stds)
-mean(all_shapc_stds)
-end
+
+%[appendix]{"version":"1.0"}
+%---
+%[metadata:view]
+%   data: {"layout":"onright"}
+%---
+%[output:80322494]
+%   data: {"dataType":"textualVariable","outputData":{"name":"dataset","value":"'cifar10'"}}
+%---
+%[output:40ef5dc9]
+%   data: {"dataType":"tabular","outputData":{"columnNames":["SHAPC Stds"],"columns":1,"dataTypes":["single"],"header":"7×1 table","name":"std_table","rowNames":["iTAML","RPSnet","foster","memo","der","icarl","dsal"],"rows":7,"type":"table","value":[["4.9120"],["3.2777"],["4.5173"],["4.3782"],["4.5347"],["4.7045"],["5.4388"]]}}
+%---
+%[output:052cc99a]
+%   data: {"dataType":"text","outputData":{"text":"Std of Stds: 0.657452","truncated":false}}
+%---
+%[output:32e2ea31]
+%   data: {"dataType":"text","outputData":{"text":"Avg of Stds: 4.537583","truncated":false}}
+%---
