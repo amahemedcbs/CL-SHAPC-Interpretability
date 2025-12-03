@@ -33,6 +33,38 @@ class SimpleLinear(nn.Module):
     def forward(self, input):
         return {'logits': F.linear(input, self.weight, self.bias)}
 
+class TagFex_SimpleLinear(nn.Module):
+    '''
+    Reference:
+    https://github.com/pytorch/pytorch/blob/master/torch/nn/modules/linear.py
+    '''
+    __constants__ = ['in_features', 'out_features']
+    in_features: int
+    out_features: int
+    weight: torch.Tensor
+
+    def __init__(self, in_features: int, out_features: int, bias: bool = True, device=None, dtype=None):
+        factory_kwargs = {'device': device, 'dtype': dtype}
+        super(TagFex_SimpleLinear, self).__init__()
+        self.in_features = in_features
+        self.out_features = out_features
+        self.weight = nn.Parameter(torch.empty(out_features, in_features, **factory_kwargs))
+        if bias:
+            self.bias = nn.Parameter(torch.empty(out_features, **factory_kwargs))
+        else:
+            self.register_parameter('bias', None)
+        self.reset_parameters()
+
+    def reset_parameters(self):
+        nn.init.kaiming_uniform_(self.weight, nonlinearity='linear')
+        if self.bias is not None:
+            nn.init.zeros_(self.bias)
+
+    def forward(self, input) -> torch.Tensor:
+        return F.linear(input, self.weight, self.bias)
+
+    def extra_repr(self) -> str:
+        return f'in_features={self.in_features}, out_features={self.out_features}, bias={self.bias is not None}'
 
 class CosineLinear(nn.Module):
     def __init__(self, in_features, out_features, nb_proxy=1, to_reduce=False, sigma=True):
@@ -131,7 +163,6 @@ class AnalyticLinear(torch.nn.Linear, metaclass=ABCMeta):
         self.gamma: float = gamma
         self.bias: bool = bias
         self.dtype = dtype
-        self.shap = False
 
         # Linear Layer
         if bias:
@@ -139,21 +170,12 @@ class AnalyticLinear(torch.nn.Linear, metaclass=ABCMeta):
         weight = torch.zeros((in_features, 0), **factory_kwargs)
         self.register_buffer("weight", weight)
 
-    def set_shap(self, mode):
-        self.shap = mode
-
+    @torch.no_grad()
     def forward(self, X: torch.Tensor) -> Dict[str, torch.Tensor]:
-        if self.shap:
-            X = X.to(self.weight)
-            if self.bias:
-                X = torch.cat((X, torch.ones(X.shape[0], 1).to(X)), dim=-1)
-            return {"logits": X @ self.weight}
-        else:
-            with torch.no_grad():
-                X = X.to(self.weight)
-                if self.bias:
-                    X = torch.cat((X, torch.ones(X.shape[0], 1).to(X)), dim=-1)
-                return {"logits": X @ self.weight}
+        X = X.to(self.weight)
+        if self.bias:
+            X = torch.cat((X, torch.ones(X.shape[0], 1).to(X)), dim=-1)
+        return {"logits": X @ self.weight}
 
     @property
     def in_features(self) -> int:
@@ -214,7 +236,6 @@ class RecursiveLinear(AnalyticLinear):
         self.R: torch.Tensor
         R = torch.eye(self.weight.shape[0], **factory_kwargs) / self.gamma
         self.register_buffer("R", R)
-
 
     def update_fc(self, nb_classes: int) -> None:
         increment_size = nb_classes - self.out_features

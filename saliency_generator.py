@@ -1,6 +1,7 @@
 ## SALIENCY MAP-MAKING
 
 import os
+import argparse
 import numpy as np
 
 # Custom Imports
@@ -26,7 +27,6 @@ def compute_accuracy(predictions, targets):
 
 
 def generate_predictions(algorithm, model, ses, images, labels=None, **kwargs):
-    pycil_algs = ["der", "foster", "memo", "icarl", "dsal"]
 
     images = images.to(device)
 
@@ -48,7 +48,9 @@ def generate_predictions(algorithm, model, ses, images, labels=None, **kwargs):
         with torch.no_grad():
             outputs = model(images)["logits"]
         pred = torch.max(outputs, dim=1)[1]
-
+    elif algorithm == "xder":
+        outputs = model(images)
+        _, pred = torch.max(outputs[:, :SalGenArgs.class_per_task* (1 + ses)].data, 1)
     predicted = pred.squeeze()
     if labels is not None:
         acc = compute_accuracy(predicted, labels)
@@ -70,17 +72,14 @@ def load_model(algorithm, dataset, ses, **kwargs):
                     fosterArgs['convnet_type'] = "resnet32mnist"
                 model = FOSTERNet(fosterArgs, False)
             case "memo":
-                model_path = f"Saliency/{algorithm}/{dataset}/{algorithm}_ses_{ses}.pth"
                 if dataset == "mnist":
                     memoArgs['convnet_type'] = "memo_resnet32mnist"
                 model = AdaptiveNet(memoArgs, False)
             case "der":
-                model_path = f"Saliency/{algorithm}/{dataset}/{algorithm}_ses_{ses}.pth"
                 if dataset == "mnist":
                     derArgs['convnet_type'] = "resnet32mnist"
                 model = DERNet(derArgs, False)
             case "icarl":
-                model_path = f"Saliency/{algorithm}/{dataset}/{algorithm}_ses_{ses}.pth"
                 if dataset == "mnist":
                     icarlArgs['convnet_type'] = "resnet32mnist"
                 model = IncrementalNet(icarlArgs, False)
@@ -94,6 +93,8 @@ def load_model(algorithm, dataset, ses, **kwargs):
                 )
                 model.generate_buffer()
                 model.generate_fc()
+            case "tagfex":
+                model = TagFexNet(tagfexArgs, False)
 
         # Update the model architecture to match the task
         if ses > 0:
@@ -120,6 +121,27 @@ def load_model(algorithm, dataset, ses, **kwargs):
                             c_channel_size=64, g_channel_size=64)
 
                 scholar = Scholar('', generator=wgan, solver=cnn, dataset_config=None)
+            case "xder":
+                model_path = f"./{dataset}/xder_seq-{dataset}_ses_{ses}.pt"
+                #model_path = f"./cifar10/xder_ses_{ses}.pt"
+                #model_path = f"Saliency/xder/{dataset}/xder_ses_{ses}.pt"
+
+                xderArgs['dataset'] = f'seq-{dataset}'
+                args = argparse.Namespace(**xderArgs)
+
+                xder_dataset = get_dataset_class(args)
+                backbone_cl, backbone_args = get_backbone_class('resnet18', return_args=True)
+                parsed_args = {arg: getattr(args, arg) for arg in backbone_args.keys()}
+                model = XDer(backbone_cl(**parsed_args),
+                             xder_dataset.get_loss(),
+                             args,
+                             xder_dataset.get_transform(),
+                             dataset=xder_dataset)
+
+                model, _ = mammoth_load_checkpoint(model_path, model)
+                model.eval()
+                os.chdir(original_cwd)
+                return model
 
 
     model_data = torch.load(model_path, map_location=device, weights_only=False)

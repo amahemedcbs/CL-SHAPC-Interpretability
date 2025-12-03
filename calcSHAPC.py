@@ -135,9 +135,9 @@ def _calculate_single_channel_shapc(s_tau, m_tau, s_t, m_t):
 
 if __name__ == "__main__":
 
-    #algorithms = ["iTAML", "RPSnet", "DGR", "foster", "memo", "der"]
-    algorithms = ["iTAML"]
-    dataset = "cifar100"
+    #algorithms = ["iTAML", "RPSnet", "DGR", "foster", "memo", "der", "ds-al", "tagfex", "xder"]
+    algorithms = ["xder"]
+    dataset = "cifar10"
 
     inclass = False
     cls = 7

@@ -1,5 +1,6 @@
 % SHAPC-Mean and SHAPC-Var Comparison
-algs = ["iTAML", "RPSnet", "DGR", "foster", "memo", "der", "icarl", "dsal"];
+algs = ["iTAML", "RPSnet", "DGR", "foster", "memo", ...,
+    "der", "icarl", "dsal", "tagfex", "xder"];
 dataset = 'cifar10';
 if dataset == "cifar100"
     num_sessions = 10;
@@ -77,14 +78,14 @@ first_last_1000_times = column_data3;
 shapc_table_first_last_1000 = table(column_data1, column_data2, column_data3, ...
     'VariableNames', columns, 'RowNames', rows);
 sorted_shapc_first_last_1000 = sortrows(shapc_table_first_last_1000, {'SHAPC-Mean (%)'}, {'ascend'});
-disp(sorted_shapc_first_last_1000) %[output:1abb60bd]
+disp(sorted_shapc_first_last_1000) %[output:0e83355c]
 
 
 %[appendix]{"version":"1.0"}
 %---
 %[metadata:view]
-%   data: {"layout":"onright","rightPanelPercent":43.8}
+%   data: {"layout":"onright","rightPanelPercent":41.2}
 %---
-%[output:1abb60bd]
-%   data: {"dataType":"text","outputData":{"text":"              <strong>Accuracy (%)<\/strong>    <strong>SHAPC-Mean (%)<\/strong>    <strong>Time (hrs)<\/strong>\n              <strong>____________<\/strong>    <strong>______________<\/strong>    <strong>__________<\/strong>\n\n    <strong>RPSnet<\/strong>       61.35            23.217          6.9869  \n    <strong>foster<\/strong>       71.61            28.713         0.50417  \n    <strong>memo  <\/strong>       88.36            29.583         0.68417  \n    <strong>iTAML <\/strong>       93.45            30.672         0.57083  \n    <strong>icarl <\/strong>       86.45            31.202         0.15694  \n    <strong>dsal  <\/strong>       72.15             36.43          0.1775  \n    <strong>der   <\/strong>          89            41.909          1.5094  \n\n","truncated":false}}
+%[output:0e83355c]
+%   data: {"dataType":"text","outputData":{"text":"              <strong>Accuracy (%)<\/strong>    <strong>SHAPC-Mean (%)<\/strong>    <strong>Time (hrs)<\/strong>\n              <strong>____________<\/strong>    <strong>______________<\/strong>    <strong>__________<\/strong>\n\n    <strong>RPSnet<\/strong>        61.35           23.217          6.9869  \n    <strong>xder  <\/strong>         55.8           25.706            0.44  \n    <strong>foster<\/strong>        71.61           28.713         0.50417  \n    <strong>memo  <\/strong>        88.36           29.583         0.68417  \n    <strong>iTAML <\/strong>        93.45           30.672         0.57083  \n    <strong>icarl <\/strong>        86.45           31.202         0.15694  \n    <strong>dsal  <\/strong>        72.15            36.43          0.1775  \n    <strong>tagfex<\/strong>       90.402           40.791          1.8206  \n    <strong>der   <\/strong>           89           41.909          1.5094  \n\n","truncated":false}}
 %---

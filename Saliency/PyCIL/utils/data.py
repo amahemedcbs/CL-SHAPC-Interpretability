@@ -28,8 +28,8 @@ class iCIFAR10(iData):
     class_order = np.arange(10).tolist()
 
     def download_data(self):
-        train_dataset = datasets.cifar.CIFAR10("../Datasets", train=True, download=True)
-        test_dataset = datasets.cifar.CIFAR10("../Datasets", train=False, download=True)
+        train_dataset = datasets.cifar.CIFAR10("./Datasets/cifar10", train=True, download=False)
+        test_dataset = datasets.cifar.CIFAR10("./Datasets/cifar10", train=False, download=False)
         self.train_data, self.train_targets = train_dataset.data, np.array(
             train_dataset.targets
         )
@@ -56,8 +56,8 @@ class iCIFAR100(iData):
     class_order = np.arange(100).tolist()
 
     def download_data(self):
-        train_dataset = datasets.cifar.CIFAR100("./Datasets/cifar100", train=True, download=True)
-        test_dataset = datasets.cifar.CIFAR100("./Datasets/cifar100", train=False, download=True)
+        train_dataset = datasets.cifar.CIFAR100("./Datasets/cifar100", train=True, download=False)
+        test_dataset = datasets.cifar.CIFAR100("./Datasets/cifar100", train=False, download=False)
         self.train_data, self.train_targets = train_dataset.data, np.array(
             train_dataset.targets
         )

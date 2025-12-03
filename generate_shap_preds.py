@@ -13,8 +13,8 @@ from Saliency.imports import generate_path
 
 
 
-algorithm = "iTAML"
-dataset = "cifar100"
+algorithm = "der"
+dataset = "cifar10"
 num_sessions = 10 if dataset == "cifar100" else 5
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
@@ -68,8 +68,8 @@ for sample in samples:
 
     sample_multiplier = 10 * 100 if dataset == "cifar100" else 2 * 100
     # Get test image
-    test_img = test_imgs[sample-(ses*200)].unsqueeze(0)
-    test_label = test_labels[sample-(ses*200)]
+    test_img = test_imgs[sample-(ses*sample_multiplier)].unsqueeze(0)
+    test_label = test_labels[sample-(ses*sample_multiplier)]
     models = [load_model(algorithm, dataset, i, args=SalGenArgs.args).to(device) for i in [int(test_sess[0][-1]),int(test_sess[-1][-1])]]
 
     # Generate predictions
@@ -92,8 +92,8 @@ for sample in samples:
     # Store predictions
 
     # Load the saved preds, if possible
-    if os.path.isfile(f"analysis/noshuffle/{algorithm}_{dataset}_preds.mat"):
-        loaded_preds = scipy.io.loadmat(f"analysis/noshuffle/{algorithm}_{dataset}_preds.mat", simplify_cells=True)
+    if os.path.isfile(f"analysis/noshuffle/{dataset}_preds.mat"):
+        loaded_preds = scipy.io.loadmat(f"analysis/noshuffle/{dataset}_preds.mat", simplify_cells=True)
         keys_to_remove = ['__header__', '__version__', '__globals__']
         pred_dict = {key: value for key, value in loaded_preds.items() if key not in keys_to_remove}
     else:
@@ -105,4 +105,4 @@ for sample in samples:
     pred_dict[f'{algorithm}'][f'sample{sample}'][f'pred_{test_sess[-1]}'] = preds[1].item()
 
     # Save shap values to filepath
-    scipy.io.savemat(f"analysis/noshuffle/{algorithm}_{dataset}_preds.mat", pred_dict)
+    scipy.io.savemat(f"analysis/noshuffle/{dataset}_preds.mat", pred_dict)

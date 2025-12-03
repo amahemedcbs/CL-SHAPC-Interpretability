@@ -75,8 +75,8 @@ def get_train_set(dataset):
                                               transforms.Normalize(mean, std)]))
     return train_set
 
-algorithm = "iTAML"
-dataset = "cifar100"
+algorithm = "xder"
+dataset = "cifar10"
 
 '''
 algorithm = sys.argv[1]
@@ -99,7 +99,7 @@ num_tasks = 10 if dataset == "cifar100" else 5
 cls_per_task = 10 if dataset == "cifar100" else 2
 
 
-pycil_algs = ["der", "foster", "memo", "icarl", "simplecil", "ds-al"]
+pycil_algs = ["der", "foster", "memo", "icarl", "simplecil", "ds-al", "tagfex"]
 
 # Configures models depending on the algorithm chosen
 if algorithm == "iTAML":
@@ -119,6 +119,9 @@ else:
             models[i].set_shap(True)
     elif algorithm in pycil_algs:
         for model in models: model.set_shap(True)
+    elif algorithm == "xder":
+        #for model in models: model.set_shap(True)
+        pass
 
 # Get train dataset
 train_set = get_train_set(dataset)

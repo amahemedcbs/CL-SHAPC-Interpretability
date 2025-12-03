@@ -130,12 +130,48 @@ class SalGenArgs:
     num_class = 10
     distill = False
 
+# XDER Imports
+import os
+original_cwd = os.getcwd()
+from Saliency.xder.models.xder import XDer
+from Saliency.xder.backbone import get_backbone_class
+from Saliency.xder.datasets import get_dataset_class
+from Saliency.xder.utils.checkpoints import mammoth_load_checkpoint
+os.chdir(original_cwd)
+xderArgs = {'loadcheck': None, 'dataset': 'seq-cifar10', 'model': 'xder', 'backbone': 'resnet18',
+            'load_best_args': False, 'dataset_config': None, 'model_config': 'default',
+            'buffer_size': 2000, 'minibatch_size': 128, 'alpha': 0.6, 'beta': 0.9,
+            'simclr_temp': 5.0, 'gamma': 0.85, 'simclr_batch_size': 64, 'simclr_num_aug': 4,
+            'lambd': 0.05, 'constr_eta': 0.1, 'constr_margin': 0.3, 'dp_weight': 0.0,
+            'past_constraint': False, 'future_constraint': True, 'align_bn': True,
+            'transform_type': 'weak', 'num_classes': 10, 'num_filters': 64, 'seed': 1993,
+            'permute_classes': False, 'base_path': './data/', 'checkpoint_path': './checkpoints/',
+            'results_path': 'results/', 'device': 'cuda:0', 'notes': None, 'eval_epochs': None,
+            'non_verbose': False, 'disable_log': False, 'num_workers': None, 'enable_other_metrics': False,
+            'debug_mode': False, 'inference_only': False, 'code_optimization': 0, 'distributed': 'no',
+            'savecheck': 'task', 'save_checkpoint_mode': 'safe',
+            'ckpt_name': 'xder_seq-cifar10_None_2000_2_20251201-035705_93385ae6', 'start_from': None,
+            'stop_after': None, 'save_after_interrupt': True, 'wandb_name': None, 'wandb_entity': None,
+            'wandb_project': None, 'lr': 0.03, 'batch_size': 128, 'label_perc': 1.0,
+            'label_perc_by_class': 1.0, 'joint': 0, 'eval_future': False, 'custom_task_order': None,
+            'custom_class_order': None, 'validation': None, 'validation_mode': 'current',
+            'fitting_mode': 'epochs', 'early_stopping_patience': 5, 'early_stopping_metric': 'loss',
+            'early_stopping_freq': 1, 'early_stopping_epsilon': 1e-06, 'n_epochs': 50, 'n_iters': None,
+            'optimizer': 'sgd', 'optim_wd': 0.0, 'optim_mom': 0.0, 'optim_nesterov': False,
+            'drop_last': False, 'lr_scheduler': None, 'scheduler_mode': 'epoch', 'lr_milestones': [],
+            'sched_multistep_lr_gamma': 0.1, 'noise_type': 'symmetric', 'noise_rate': 0.0,
+            'disable_noisy_labels_cache': False, 'cache_path_noisy_labels': 'noisy_labels',
+            'conf_jobnum': '93385ae6-a3dc-4e80-9855-1a55c58e472a',
+            'conf_timestamp': '2025-12-01 03:57:05.038568', 'conf_host': 'b752ea1fefda',
+            'conf_git_hash': 'ea967c34ac56d97d52e4baeb82274169cdface6e', 'nowand': 1}
+
+
 # PyCIL Imports
-pycil_algs = ["der", "foster", "memo", "icarl", "simplecil", "ds-al"]
+pycil_algs = ["der", "foster", "memo", "icarl", "simplecil", "ds-al", "tagfex"]
 from Saliency.PyCIL.models import foster
 from Saliency.PyCIL.utils import factory
 from Saliency.PyCIL.utils.inc_net import FOSTERNet, AdaptiveNet, DERNet, IncrementalNet, SimpleCosineIncrementalNet
-from Saliency.PyCIL.utils.inc_net import DSALNet, ACILNet, BaseNet
+from Saliency.PyCIL.utils.inc_net import DSALNet, ACILNet, BaseNet, TagFexNet
 
 fosterArgs = {'config': './exps/fostertest.json', 'prefix': 'cil', 'dataset': 'cifar100',
               'memory_size': 2000, 'memory_per_class': 20, 'fixed_memory': True,
@@ -165,13 +201,6 @@ icarlArgs = {"prefix": "reproduce", "dataset": "cifar10", "memory_size": 2000,
              "memory_per_class": 20, "fixed_memory": False, "shuffle": False, "init_cls": 2,
              "increment": 2, "model_name": "icarl", "convnet_type": "resnet32",
              "device": ["0"], "seed": [1993]}
-
-scilArgs = {"prefix": "reproduce", "dataset": "cifar10", "memory_size": 0, "memory_per_class": 0,
-            "fixed_memory": False, "shuffle": False, "init_cls": 50, "increment": 10,
-            "model_name": "simplecil", "convnet_type": "cosine_resnet32", "device": ["0"],
-            "seed": [1993], "init_epoch": 200, "init_lr": 0.01, "batch_size": 128,
-            "weight_decay": 0.05, "init_lr_decay": 0.1, "init_weight_decay": 5e-4,
-            "min_lr": 0}
 
 dsalArgs = {"model_name": "ds-al", "prefix": "DS-AL", "memory_size": 0, "dataset": "cifar10",
             "seed": [1993], "shuffle": False, "device": ["0"], "convnet_type": "resnet32",
@@ -211,3 +240,13 @@ dsalArgs = {"model_name": "ds-al", "prefix": "DS-AL", "memory_size": 0, "dataset
                 }
             }
         }
+
+tagfexArgs = {"prefix": "reproduce", "dataset": "cifar100", "memory_size": 2000,
+              "memory_per_class": 20, "fixed_memory": False, "shuffle": False,
+              "init_cls": 10, "increment": 10, "model_name": "tagfex",
+              "convnet_type": "resnet18", "device": ["0"], "seed": [1993],
+              "init_interpolation_factor": 0.95, "infonce_temp":0.2, "kd_temp":2,
+              "infonce_kd_temp":0.2, "ta_convnet_type":"resnet18", "proj_hidden_dim":2048,
+              "proj_output_dim":1024, "attn_num_heads":8, "contrast_factor":1,
+              "trans_cls_factor":1, "transfer_factor":1, "aux_factor":2,
+              "contrast_kd_factor":2, "aug":2}

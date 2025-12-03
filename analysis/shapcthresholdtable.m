@@ -1,4 +1,5 @@
-algs = ["iTAML", "RPSnet", "DGR", "foster", "memo", "der", "icarl", "dsal"];
+algs = ["iTAML", "RPSnet", "DGR", "foster", "memo", ...,
+    "der", "icarl", "dsal", "tagfex", "xder"];
 dataset = 'cifar10' %[output:80322494]
 if dataset == "cifar100"
     num_sessions = 10;
@@ -86,11 +87,11 @@ threshold_table = table(thresholds, 'VariableNames', "SHAPC Thresholds", 'RowNam
 %   data: {"dataType":"textualVariable","outputData":{"name":"dataset","value":"'cifar10'"}}
 %---
 %[output:40ef5dc9]
-%   data: {"dataType":"tabular","outputData":{"columnNames":["SHAPC Stds"],"columns":1,"dataTypes":["single"],"header":"7×1 table","name":"std_table","rowNames":["iTAML","RPSnet","foster","memo","der","icarl","dsal"],"rows":7,"type":"table","value":[["4.9120"],["3.2777"],["4.5173"],["4.3782"],["4.5347"],["4.7045"],["5.4388"]]}}
+%   data: {"dataType":"tabular","outputData":{"columnNames":["SHAPC Stds"],"columns":1,"dataTypes":["single"],"header":"9×1 table","name":"std_table","rowNames":["iTAML","RPSnet","foster","memo","der","icarl","dsal","tagfex","xder"],"rows":9,"type":"table","value":[["4.9120"],["3.2777"],["4.5173"],["4.3782"],["4.5347"],["4.7045"],["5.4388"],["4.6368"],["4.8230"]]}}
 %---
 %[output:052cc99a]
-%   data: {"dataType":"text","outputData":{"text":"Std of Stds: 0.657452","truncated":false}}
+%   data: {"dataType":"text","outputData":{"text":"Std of Stds: 0.577533","truncated":false}}
 %---
 %[output:32e2ea31]
-%   data: {"dataType":"text","outputData":{"text":"Avg of Stds: 4.537583","truncated":false}}
+%   data: {"dataType":"text","outputData":{"text":"Avg of Stds: 4.580328","truncated":false}}
 %---
