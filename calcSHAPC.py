@@ -135,14 +135,14 @@ def _calculate_single_channel_shapc(s_tau, m_tau, s_t, m_t):
 
 if __name__ == "__main__":
 
-    #algorithms = ["iTAML", "RPSnet", "DGR", "foster", "memo", "der", "ds-al", "tagfex", "xder"]
-    algorithms = ["xder"]
+    #algorithms = ["iTAML", "RPSnet", "DGR", "foster", "memo", "der", "icarl","dsal", "tagfex", "xder"]
+    algorithms = ["icarl","dsal", "tagfex", "xder"]
     dataset = "cifar10"
 
     inclass = False
     cls = 7
 
-    if len(algorithms) > 1 and dataset != "mnist":
+    if len(algorithms) > 1 and dataset != "mnist" and "DGR" in algorithms:
         algorithms.remove("DGR")
 
     for alg in algorithms:
@@ -150,13 +150,18 @@ if __name__ == "__main__":
         num_sessions = 10 if dataset == "cifar100" else 5
         cls_per_task = 10 if dataset == "cifar100" else 2
 
-        first_last_only = True
+        first_last_only = False
+        all_samples = True
         if first_last_only:
-            filepath = "shap_values_first_last_1000.npy"
-            savepath = "shapc_vals_first_last_1000"
+            filepath = "shap_values_first_last.npy"
+            savepath = "shapc_vals_first_last"
         else:
-            filepath = "shap_values_full_1000.npy"
-            savepath = "shapc_vals_full_1000"
+            filepath = "shap_values_full.npy"
+            savepath = "shapc_vals_full"
+
+        if not all_samples:
+            filepath = filepath[:-4] + "_1000.npy"
+            savepath = savepath + "_1000"
 
         # Load the SHAP Values
         shap_values_loaded = np.load(f"analysis/{algorithm}/{dataset}/{filepath}", allow_pickle=True)  # ['shap_dict']
@@ -221,8 +226,8 @@ if __name__ == "__main__":
                     # --- Step 3: Calculate SHAPC ---
                     shapc_value = calculate_shapc(shap_value1, p_tau, shap_value2, p_t)
                     #print(f"SHAP Value Consistency (SHAPC) for sample x between task tau and task t: {shapc_value:.4f}")
-                    if f'sc{ses}{num_sessions-1}' not in shapc_dict: shapc_dict[f'sc{ses}{num_sessions-1}'] = {}
-                    shapc_dict[f'sc{ses}{num_sessions-1}'][f'sample{sample}'] = shapc_value
+                    if f'sc{ses}{j}' not in shapc_dict: shapc_dict[f'sc{ses}{j}'] = {}
+                    shapc_dict[f'sc{ses}{j}'][f'sample{sample}'] = shapc_value
         if inclass:
             save_path = f"analysis/{algorithm}/{dataset}/{savepath}_cls{cls}.mat"
         else:
