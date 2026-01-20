@@ -127,6 +127,7 @@ def load_model(algorithm, dataset, ses, **kwargs):
                 #model_path = f"Saliency/xder/{dataset}/xder_ses_{ses}.pt"
 
                 xderArgs['dataset'] = f'seq-{dataset}'
+                xderArgs['num_classes'] = SalGenArgs.num_class
                 args = argparse.Namespace(**xderArgs)
 
                 xder_dataset = get_dataset_class(args)

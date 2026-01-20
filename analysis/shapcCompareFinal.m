@@ -67,18 +67,18 @@ columns = ["Accuracy (%)" "SHAPC-Mean (%)" "Time (hrs)"];
 column_data1 = [];
 column_data2 = [];
 column_data3 = [];
-for i=1:length(algs) %[output:group:4a109e28]
+for i=1:length(algs)
     alg = algs(i);
-    column_data1 = [column_data1; shapc_data.(alg).acc]; %[output:2e265aff]
+    column_data1 = [column_data1; shapc_data.(alg).acc];
     column_data2 = [column_data2; shapc_data.(alg).first_last_1000_shapc];
     column_data3 = [column_data3; shapc_data.(alg).first_last_1000_time];
-end %[output:group:4a109e28]
+end
 first_last_1000_shapcs = column_data2;
 first_last_1000_times = column_data3;
 shapc_table_first_last_1000 = table(column_data1, column_data2, column_data3, ...
     'VariableNames', columns, 'RowNames', rows);
 sorted_shapc_first_last_1000 = sortrows(shapc_table_first_last_1000, {'SHAPC-Mean (%)'}, {'ascend'});
-disp(sorted_shapc_first_last_1000)
+disp(sorted_shapc_first_last_1000) %[output:4d8b0cc3]
 
 
 %[appendix]{"version":"1.0"}
@@ -86,6 +86,6 @@ disp(sorted_shapc_first_last_1000)
 %[metadata:view]
 %   data: {"layout":"onright","rightPanelPercent":41.2}
 %---
-%[output:2e265aff]
-%   data: {"dataType":"error","outputData":{"errorType":"runtime","text":"Unrecognized field name \"acc\"."}}
+%[output:4d8b0cc3]
+%   data: {"dataType":"text","outputData":{"text":"              <strong>Accuracy (%)<\/strong>    <strong>SHAPC-Mean (%)<\/strong>    <strong>Time (hrs)<\/strong>\n              <strong>____________<\/strong>    <strong>______________<\/strong>    <strong>__________<\/strong>\n\n    <strong>RPSnet<\/strong>        61.35           23.217          6.9869  \n    <strong>xder  <\/strong>         55.8           25.706            0.44  \n    <strong>foster<\/strong>        71.61           28.713         0.50417  \n    <strong>memo  <\/strong>        88.36           29.583         0.68417  \n    <strong>iTAML <\/strong>        93.45           30.672         0.57083  \n    <strong>icarl <\/strong>        86.45           31.202         0.15694  \n    <strong>dsal  <\/strong>        72.15            36.43          0.1775  \n    <strong>tagfex<\/strong>       90.402           40.791          1.8206  \n    <strong>der   <\/strong>           89           41.909          1.5094  \n\n","truncated":false}}
 %---

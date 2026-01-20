@@ -17,11 +17,9 @@ def load_shapcs(path):
 
 if __name__ == "__main__":
 
-    #algorithms = ["iTAML", "RPSnet", "DGR", "foster", "memo", "der", "ds-al", "tagfex", "xder"]
-    algorithms = ["xder"]
-    dataset = "cifar10"
-
-    #cls = 7
+    #algorithms = ["iTAML", "RPSnet", "DGR", "foster", "memo", "der", "icarl", "ds-al", "tagfex", "xder"]
+    algorithms = ["iTAML"]
+    dataset = "cifar100"
 
     if len(algorithms) > 1 and dataset != "mnist":
         algorithms.remove("DGR")
@@ -62,7 +60,8 @@ if __name__ == "__main__":
                     shap_value1 = shap_dict[f'{sample}'][f'ses{ses}']['shap_values']
                     shap_value1 = normalize_shap_value(shap_value1)
 
-                    range2 = [num_sessions-1]
+                    if algorithm == "iTAML": range2 = [num_sessions - 1 + ses]
+                    else: range2 = [num_sessions-1]
 
                     for j in range2:
 
@@ -74,8 +73,9 @@ if __name__ == "__main__":
 
                         # --- Step 3: Calculate SHAPC ---
                         shapc_value = calculate_shapc(shap_value1, p_tau, shap_value2, p_t)
-                        if f'sc{ses}{j}' not in shapc_dict: shapc_dict[f'sc{ses}{j}'] = {}
-                        shapc_dict[f'sc{ses}{j}'][f'sample{sample}'] = shapc_value
+                        last_task = j-ses if algorithm == "iTAML" else j
+                        if f'sc{ses}{last_task}' not in shapc_dict: shapc_dict[f'sc{ses}{last_task}'] = {}
+                        shapc_dict[f'sc{ses}{last_task}'][f'sample{sample}'] = shapc_value
             inclass_shapcs[f'cls{cls}'] = shapc_dict
         save_path = f"analysis/{algorithm}/{dataset}/{savepath}.mat"
         scipy.io.savemat(save_path, inclass_shapcs)
