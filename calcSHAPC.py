@@ -135,9 +135,9 @@ def _calculate_single_channel_shapc(s_tau, m_tau, s_t, m_t):
 
 if __name__ == "__main__":
 
-    #algorithms = ["iTAML", "RPSnet", "DGR", "foster", "memo", "der", "icarl","dsal", "tagfex", "xder"]
-    algorithms = ["tagfex"]
-    dataset = "cifar10"
+    #algorithms = ["iTAML", "RPSnet", "DGR", "foster", "memo", "der", "icarl", "dsal", "tagfex", "xder"]
+    algorithms = ["iTAML"]
+    dataset = "cifar100"
 
     inclass = False
     cls = 7
@@ -151,7 +151,7 @@ if __name__ == "__main__":
         cls_per_task = 10 if dataset == "cifar100" else 2
 
         first_last_only = True
-        all_samples = True
+        all_samples = False
         if first_last_only:
             filepath = "shap_values_first_last.npy"
             savepath = "shapc_vals_first_last"
@@ -160,8 +160,9 @@ if __name__ == "__main__":
             savepath = "shapc_vals_full"
 
         if not all_samples:
-            filepath = filepath[:-4] + "_1000.npy"
-            savepath = savepath + "_1000"
+            sample_str = "_2000" if dataset == "cifar100" else "_1000"
+            filepath = filepath[:-4] + sample_str + ".npy"
+            savepath += sample_str
 
         # Load the SHAP Values
         shap_values_loaded = np.load(f"analysis/{algorithm}/{dataset}/{filepath}", allow_pickle=True)  # ['shap_dict']
@@ -227,8 +228,8 @@ if __name__ == "__main__":
                     shapc_value = calculate_shapc(shap_value1, p_tau, shap_value2, p_t)
                     #print(f"SHAP Value Consistency (SHAPC) for sample x between task tau and task t: {shapc_value:.4f}")
                     last_task = j-ses if algorithm == "iTAML" else j
-                    if f'sc{ses}{j}' not in shapc_dict: shapc_dict[f'sc{ses}{j}'] = {}
-                    shapc_dict[f'sc{ses}{j}'][f'sample{sample}'] = shapc_value
+                    if f'sc{ses}{last_task}' not in shapc_dict: shapc_dict[f'sc{ses}{last_task}'] = {}
+                    shapc_dict[f'sc{ses}{last_task}'][f'sample{sample}'] = shapc_value
         if inclass:
             save_path = f"analysis/{algorithm}/{dataset}/{savepath}_cls{cls}.mat"
         else:

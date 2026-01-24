@@ -75,8 +75,8 @@ def get_train_set(dataset):
                                               transforms.Normalize(mean, std)]))
     return train_set
 
-algorithm = "xder"
-dataset = "cifar10"
+algorithm = "foster"
+dataset = "cifar100"
 
 '''
 algorithm = sys.argv[1]
@@ -85,7 +85,7 @@ dataset = sys.argv[2]
 
 first_last_only = True
 if first_last_only:
-    filepath = f"analysis/{algorithm}/{dataset}/shap_values_first_last_1000_fixed"
+    filepath = f"analysis/{algorithm}/{dataset}/shap_values_first_last_2000"
 else:
     filepath = f"analysis/{algorithm}/{dataset}/shap_values_full_1000"
 
@@ -130,7 +130,7 @@ train_set = get_train_set(dataset)
 sal_dataloader = sdl.SalDataloader(SalGenArgs)
 for i in range(num_tasks):
     if dataset == "cifar100":
-        sal_imgs, sal_labels, _, STD, MEAN = sal_dataloader.load_data(range(i * 10, (i * 10) + 10), 100, batch_size=10000)
+        sal_imgs, sal_labels, _, STD, MEAN = sal_dataloader.load_data(range(i * 10, (i * 10) + 10), 20, batch_size=10000)
     else:
         sal_imgs, sal_labels, _, STD, MEAN = sal_dataloader.load_data([i*2, (i*2)+1], 100, batch_size=10000)
     print("Len of sal_imgs:", len(sal_imgs))

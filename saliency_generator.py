@@ -84,6 +84,8 @@ def load_model(algorithm, dataset, ses, **kwargs):
                     icarlArgs['convnet_type'] = "resnet32mnist"
                 model = IncrementalNet(icarlArgs, False)
             case "ds-al":
+                if dataset == "cifar100":
+                    dsalArgs['convnet_type'] = "resnet18"
                 model = DSALNet(
                     dsalArgs,
                     dsalArgs["configurations"][f"{dataset}"]["buffer_size"],

@@ -18,7 +18,7 @@ def load_shapcs(path):
 if __name__ == "__main__":
 
     #algorithms = ["iTAML", "RPSnet", "DGR", "foster", "memo", "der", "icarl", "ds-al", "tagfex", "xder"]
-    algorithms = ["iTAML"]
+    algorithms = ["tagfex"]
     dataset = "cifar100"
 
     if len(algorithms) > 1 and dataset != "mnist":
