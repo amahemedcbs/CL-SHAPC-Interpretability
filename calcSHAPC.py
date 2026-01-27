@@ -136,7 +136,7 @@ def _calculate_single_channel_shapc(s_tau, m_tau, s_t, m_t):
 if __name__ == "__main__":
 
     #algorithms = ["iTAML", "RPSnet", "DGR", "foster", "memo", "der", "icarl", "dsal", "tagfex", "xder"]
-    algorithms = ["iTAML"]
+    algorithms = ["dsal"]
     dataset = "cifar100"
 
     inclass = False
@@ -151,10 +151,10 @@ if __name__ == "__main__":
         cls_per_task = 10 if dataset == "cifar100" else 2
 
         first_last_only = True
-        all_samples = False
+        all_samples = True
         if first_last_only:
-            filepath = "shap_values_first_last.npy"
-            savepath = "shapc_vals_first_last"
+            filepath = "shap_values_first_last_1000.npy"
+            savepath = "shapc_vals_first_last_1000"
         else:
             filepath = "shap_values_full.npy"
             savepath = "shapc_vals_full"
