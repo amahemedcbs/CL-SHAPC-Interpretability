@@ -78,10 +78,16 @@ def load_model(algorithm, dataset, ses, **kwargs):
             case "der":
                 if dataset == "mnist":
                     derArgs['convnet_type'] = "resnet32mnist"
+                elif dataset == "imagenet200":
+                    derArgs['convnet_type'] = "resnet18"
+                    derArgs['dataset'] = "imagenet200"
                 model = DERNet(derArgs, False)
             case "icarl":
                 if dataset == "mnist":
                     icarlArgs['convnet_type'] = "resnet32mnist"
+                elif dataset == "imagenet200":
+                    icarlArgs['convnet_type'] = "resnet18"
+                    icarlArgs['dataset'] = "imagenet200"
                 model = IncrementalNet(icarlArgs, False)
             case "ds-al":
                 if dataset == "cifar100":

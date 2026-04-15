@@ -27,7 +27,14 @@ else
 end
 
 % Load SHAPC values
-save_path = sprintf("%s/%s/shapc_vals_first_last_1000.mat", alg, dataset);
+if strcmp(dataset, "cifar100")
+    save_path = sprintf("%s/%s/shapc_vals_first_last_2000.mat", alg, dataset);
+elseif strcmp(dataset, "imagenet200")
+    save_path = sprintf("%s/%s/shapc_vals_first_last_4000.mat", alg, dataset);
+else
+    save_path = sprintf("%s/%s/shapc_vals_first_last_1000.mat", alg, dataset);
+end
+
 if isfile(save_path)
     shapc_struct = load(save_path);
    
@@ -53,5 +60,12 @@ end
 
 shapc_std = sqrt(shapc_var_perc);
 
-shapc_mean = shapc_data.(alg).first_last_1000_shapc;
+if strcmp(dataset, "cifar100")
+    shapc_mean = shapc_data.(alg).first_last_2000_shapc;
+elseif strcmp(dataset, "imagenet200")
+    shapc_mean = shapc_data.(alg).first_last_4000_shapc;
+else
+    shapc_mean = shapc_data.(alg).first_last_1000_shapc;
+end
+
 threshold = shapc_mean - shapc_std;

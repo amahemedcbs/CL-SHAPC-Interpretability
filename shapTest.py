@@ -7,7 +7,7 @@ import os
 
 import torch
 import torch.nn as nn
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Subset
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 from tqdm import tqdm
@@ -29,6 +29,9 @@ def setup_args(algorithm, dataset) -> None:
     if dataset == "cifar100":
         SalGenArgs.class_per_task = 10
         SalGenArgs.num_class = 100
+    elif dataset == "imagenet200":
+        SalGenArgs.class_per_task = 20
+        SalGenArgs.num_class = 200
     else:
         SalGenArgs.class_per_task = 2
         SalGenArgs.num_class = 10
@@ -39,44 +42,8 @@ def setup_args(algorithm, dataset) -> None:
     SalGenArgs.args.num_class = SalGenArgs.num_class
 
 
-def get_train_set(dataset):
-    '''
-    Gets the train dataset for the shap explainer
-    :param dataset: Desired dataset for shap explainer
-    :return: train_set
-    '''
-    match dataset:
-        case "mnist":
-            if algorithm == "foster" or algorithm == "memo" or algorithm == "der":
-                trsf = transforms.Compose([transforms.Pad(2), transforms.ToTensor()])
-            elif algorithm == "DGR":
-                trsf = transforms.Compose([transforms.ToTensor(), transforms.ToPILImage(),
-                                           transforms.Pad(2), transforms.ToTensor()])
-            else:
-                trsf = transforms.Compose([transforms.ToTensor()])
-            train_set = datasets.MNIST(root=f"Datasets/mnist/", train=False, download=False, transform=trsf)
-        case "cifar10":
-            mean = torch.tensor([0.4914, 0.4822, 0.4465])
-            std = torch.tensor([0.2023, 0.1994, 0.2010])
-
-            train_set = datasets.CIFAR10(root=f"Datasets/cifar10/", train=True,
-                                         download=False,
-                                         transform=transforms.Compose(
-                                             [transforms.ToTensor(),
-                                              transforms.Normalize(mean, std)]))
-        case "cifar100":
-            mean = torch.tensor([0.5071, 0.4867, 0.4408])
-            std = torch.tensor([0.2675, 0.2565, 0.2761])
-
-            train_set = datasets.CIFAR100(root=f"Datasets/cifar100/", train=True,
-                                         download=False,
-                                         transform=transforms.Compose(
-                                             [transforms.ToTensor(),
-                                              transforms.Normalize(mean, std)]))
-    return train_set
-
-algorithm = "foster"
-dataset = "cifar100"
+algorithm = "der"
+dataset = "imagenet200"
 
 '''
 algorithm = sys.argv[1]
@@ -95,8 +62,8 @@ if not os.path.isdir(f"analysis/{algorithm}/{dataset}"):
 
 setup_args(algorithm,dataset)
 print(f"Alg: {algorithm}\nDataset: {dataset}\nFirst/Last: {first_last_only}")
-num_tasks = 10 if dataset == "cifar100" else 5
-cls_per_task = 10 if dataset == "cifar100" else 2
+num_tasks = int(SalGenArgs.num_class / SalGenArgs.class_per_task)
+cls_per_task = SalGenArgs.class_per_task
 
 
 pycil_algs = ["der", "foster", "memo", "icarl", "simplecil", "ds-al", "tagfex"]
@@ -123,14 +90,19 @@ else:
         #for model in models: model.set_shap(True)
         pass
 
+
+sal_dataloader = sdl.SalDataloader(SalGenArgs)
+
 # Get train dataset
-train_set = get_train_set(dataset)
+train_set = sal_dataloader.get_shap_train_set(dataset)
 
 # Get test dataset
-sal_dataloader = sdl.SalDataloader(SalGenArgs)
 for i in range(num_tasks):
     if dataset == "cifar100":
         sal_imgs, sal_labels, _, STD, MEAN = sal_dataloader.load_data(range(i * 10, (i * 10) + 10), 20, batch_size=10000)
+    elif dataset == "imagenet200":
+        sal_imgs, sal_labels, _, STD, MEAN = sal_dataloader.load_data(range(i * 20, (i * 20) + 20), 20,
+                                                                      batch_size=10000)
     else:
         sal_imgs, sal_labels, _, STD, MEAN = sal_dataloader.load_data([i*2, (i*2)+1], 100, batch_size=10000)
     print("Len of sal_imgs:", len(sal_imgs))
@@ -145,11 +117,18 @@ if algorithm == "RPSnet" and dataset == "mnist":
     test_imgs = test_imgs.detach().numpy().reshape(-1, 784)
     test_imgs = torch.from_numpy(test_imgs)
 
+
+# 1. Generate 100 random indices
+indices = np.random.choice(len(train_set), 100, replace=False)
+
+# 2. Create a subset of the dataset
+small_train_set = Subset(train_set, indices)
+
 # Get background data for shap explainer
 if algorithm == "RPSnet" and dataset == "mnist":
-    background_data = torch.cat([x[0].unsqueeze(0).reshape(-1, 784) for x in train_set])  # Getting a sample
+    background_data = torch.cat([x[0].unsqueeze(0).reshape(-1, 784) for x in small_train_set])  # Getting a sample
 else:
-    background_data = torch.cat([x[0].unsqueeze(0) for x in train_set])  # Getting a sample
+    background_data = torch.cat([img.unsqueeze(0) for (*_, img, lbl) in small_train_set])  # Getting a sample
 background_data = shap.sample(background_data, 100) # Taking 100 random samples
 
 #Create the explainer for each model

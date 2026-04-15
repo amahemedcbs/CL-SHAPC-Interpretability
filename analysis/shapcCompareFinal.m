@@ -1,12 +1,12 @@
 % SHAPC-Mean and SHAPC-Var Comparison
-algs = ["iTAML", "RPSnet", "DGR", "foster", "memo", ...,
-    "der", "icarl", "dsal", "tagfex", "xder"];
-dataset = 'cifar10';
-if dataset == "cifar100"
-    num_sessions = 10;
-else
-    num_sessions = 5;
-end
+setup;
+
+dataset = 'imagenet200';
+config = dataset_configs.(dataset);
+num_sessions = config.num_sessions;
+num_classes = config.num_classes;
+cls_per_task = config.cls_per_task;
+samples_per_cls = config.samples_per_cls;
 
 shapc_path = sprintf("%s_shapc_data.mat", dataset);
 
@@ -20,15 +20,19 @@ end
 if dataset ~= "mnist"
     algs(algs=="DGR") = [];
 end
-if dataset ~= "cifar10"
-    algs(algs=="icarl") = [];
-    algs(algs=="dsal") = [];
-end
 %%
 % Load SHAPC values (First and Last 1000)
 for i=1:length(algs)
     alg = algs(i);
-    save_path = sprintf("%s/%s/shapc_vals_first_last_1000.mat", alg, dataset);
+    if dataset == "cifar10"
+        save_path = sprintf("%s/%s/shapc_vals_first_last_1000.mat", alg, dataset);
+    elseif dataset == "cifar100"
+        save_path = sprintf("%s/%s/shapc_vals_first_last_1000.mat", alg, dataset);
+    
+    elseif dataset == "imagenet200"
+        save_path = sprintf("%s/%s/shapc_vals_first_last_4000.mat", alg, dataset);
+    end
+
     if isfile(save_path)
         shapc_struct = load(save_path);
        
@@ -54,7 +58,19 @@ for i=1:length(algs)
         shapc_mean_perc = NaN;
         shapc_mean = NaN;
     end
-    shapc_data.(alg).first_last_1000_shapc = shapc_mean_perc;
+
+    if strcmp(dataset, "cifar100")
+        shapc_str = "first_last_2000_shapc";
+        time_str = "first_last_2000_time";
+    elseif strcmp(dataset, "imagenet200")
+        shapc_str = "first_last_4000_shapc";
+        time_str = "first_last_4000_time";
+    else
+        shapc_str = "first_last_1000_shapc";
+        time_str = "first_last_1000_time";
+    end
+    shapc_data.(alg).(shapc_str) = shapc_mean_perc;
+
     %shapc_data.(alg).first_last_time = shapTimes.(dataset).first_last.(alg);
 end
 save(shapc_path, "shapc_data")
@@ -69,16 +85,24 @@ column_data2 = [];
 column_data3 = [];
 for i=1:length(algs)
     alg = algs(i);
+    if ~isfield(shapc_data.(alg), 'acc')
+        shapc_data.(alg).acc = NaN;
+    end
     column_data1 = [column_data1; shapc_data.(alg).acc];
-    column_data2 = [column_data2; shapc_data.(alg).first_last_1000_shapc];
-    column_data3 = [column_data3; shapc_data.(alg).first_last_1000_time];
+    
+    column_data2 = [column_data2; shapc_data.(alg).(shapc_str)];
+
+    if ~isfield(shapc_data.(alg), time_str)
+        shapc_data.(alg).(time_str) = NaN;
+    end
+    column_data3 = [column_data3; shapc_data.(alg).(time_str)];
 end
 first_last_1000_shapcs = column_data2;
 first_last_1000_times = column_data3;
 shapc_table_first_last_1000 = table(column_data1, column_data2, column_data3, ...
     'VariableNames', columns, 'RowNames', rows);
 sorted_shapc_first_last_1000 = sortrows(shapc_table_first_last_1000, {'SHAPC-Mean (%)'}, {'ascend'});
-disp(sorted_shapc_first_last_1000) %[output:4d8b0cc3]
+disp(sorted_shapc_first_last_1000) %[output:8748a72b]
 
 
 %[appendix]{"version":"1.0"}
@@ -86,6 +110,6 @@ disp(sorted_shapc_first_last_1000) %[output:4d8b0cc3]
 %[metadata:view]
 %   data: {"layout":"onright","rightPanelPercent":41.2}
 %---
-%[output:4d8b0cc3]
-%   data: {"dataType":"text","outputData":{"text":"              <strong>Accuracy (%)<\/strong>    <strong>SHAPC-Mean (%)<\/strong>    <strong>Time (hrs)<\/strong>\n              <strong>____________<\/strong>    <strong>______________<\/strong>    <strong>__________<\/strong>\n\n    <strong>RPSnet<\/strong>        61.35           23.217          6.9869  \n    <strong>xder  <\/strong>         55.8           25.706            0.44  \n    <strong>foster<\/strong>        71.61           28.713         0.50417  \n    <strong>memo  <\/strong>        88.36           29.583         0.68417  \n    <strong>iTAML <\/strong>        93.45           30.672         0.57083  \n    <strong>icarl <\/strong>        86.45           31.202         0.15694  \n    <strong>dsal  <\/strong>        72.15            36.43          0.1775  \n    <strong>tagfex<\/strong>       90.402           40.791          1.8206  \n    <strong>der   <\/strong>           89           41.909          1.5094  \n\n","truncated":false}}
+%[output:8748a72b]
+%   data: {"dataType":"text","outputData":{"text":"              <strong>Accuracy (%)<\/strong>    <strong>SHAPC-Mean (%)<\/strong>    <strong>Time (hrs)<\/strong>\n              <strong>____________<\/strong>    <strong>______________<\/strong>    <strong>__________<\/strong>\n\n    <strong>iTAML <\/strong>        NaN              NaN               NaN  \n    <strong>RPSnet<\/strong>        NaN              NaN               NaN  \n    <strong>foster<\/strong>        NaN              NaN               NaN  \n    <strong>memo  <\/strong>        NaN              NaN               NaN  \n    <strong>der   <\/strong>        NaN              NaN             52.08  \n    <strong>icarl <\/strong>        NaN              NaN            8.6244  \n    <strong>dsal  <\/strong>        NaN              NaN               NaN  \n    <strong>tagfex<\/strong>        NaN              NaN               NaN  \n    <strong>xder  <\/strong>        NaN              NaN               NaN  \n\n","truncated":false}}
 %---

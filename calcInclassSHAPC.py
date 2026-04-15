@@ -17,8 +17,8 @@ def load_shapcs(path):
 
 if __name__ == "__main__":
 
-    #algorithms = ["iTAML", "RPSnet", "DGR", "foster", "memo", "der", "icarl", "dsal", "tagfex", "xder"]
-    algorithms = ["dsal"]
+    algorithms = ["iTAML", "RPSnet", "DGR", "foster", "memo", "der", "icarl", "dsal", "tagfex", "xder"]
+    #algorithms = ["dsal"]
     dataset = "cifar100"
 
     if len(algorithms) > 1 and dataset != "mnist":
@@ -29,8 +29,8 @@ if __name__ == "__main__":
         num_sessions = 10 if dataset == "cifar100" else 5
         cls_per_task = 10 if dataset == "cifar100" else 2
 
-        filepath = "shap_values_first_last_1000.npy"
-        savepath = "shapc_vals_inclass"
+        filepath = "shap_values_first_last_2000.npy"
+        savepath = "shapc_vals_inclass_new"
 
         inclass_shapcs = load_shapcs(savepath)
 
