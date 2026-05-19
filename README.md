@@ -1,14 +1,14 @@
 # Improved Efficiency and Class Dependency Examination with SHAPC
 ## Introduction
-This repository contains code for an efficient SHAPC calculation as well as examiniation into the nature of class dependence in the SHAPC calculation.
+This repository contains code for an efficient SHAPC calculation as well as an examination into the nature of class dependence in the SHAPC calculation.
 
 ## Results
 ## How To Use
 ### Clone
 Clone this GitHub repository:
 ```
-git clone https://github.com/AquaMouse247/CLSal-Analysis.git
-cd CLSal-Analysis
+git clone https://github.com/AquaMouse247/CL-SHAPC-Interpretability.git
+cd CL-SHAPC-Interpretability
 ```
 <!--### Dependencies
 The following Python libraries are required:
