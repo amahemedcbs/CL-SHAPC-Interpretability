@@ -1,0 +1,2347 @@
+
+CommandNotFoundError: Your shell has not been properly configured to use 'conda activate'.
+To initialize your shell, run
+
+    $ conda init <SHELL_NAME>
+
+Currently supported shells are:
+  - bash
+  - fish
+  - tcsh
+  - xonsh
+  - zsh
+  - powershell
+
+See 'conda init --help' for more information and options.
+
+IMPORTANT: You may need to close and restart your shell after running 'conda init'.
+
+
+Sample 0: [tensor(0), tensor(83)]
+Sample 1: [tensor(0), tensor(0)]
+Sample 2: [tensor(0), tensor(0)]
+Sample 3: [tensor(2), tensor(45)]
+Sample 4: [tensor(0), tensor(0)]
+Sample 5: [tensor(0), tensor(83)]
+Sample 6: [tensor(0), tensor(0)]
+Sample 7: [tensor(0), tensor(83)]
+Sample 8: [tensor(0), tensor(0)]
+Sample 9: [tensor(0), tensor(35)]
+Sample 10: [tensor(0), tensor(0)]
+Sample 11: [tensor(0), tensor(0)]
+Sample 12: [tensor(0), tensor(83)]
+Sample 13: [tensor(0), tensor(0)]
+Sample 14: [tensor(0), tensor(0)]
+Sample 15: [tensor(0), tensor(10)]
+Sample 16: [tensor(0), tensor(83)]
+Sample 17: [tensor(0), tensor(0)]
+Sample 18: [tensor(0), tensor(0)]
+Sample 19: [tensor(0), tensor(0)]
+Sample 20: [tensor(1), tensor(81)]
+Sample 21: [tensor(1), tensor(1)]
+Sample 22: [tensor(5), tensor(84)]
+Sample 23: [tensor(1), tensor(1)]
+Sample 24: [tensor(1), tensor(1)]
+Sample 25: [tensor(1), tensor(32)]
+Sample 26: [tensor(1), tensor(1)]
+Sample 27: [tensor(1), tensor(1)]
+Sample 28: [tensor(1), tensor(1)]
+Sample 29: [tensor(1), tensor(1)]
+Sample 30: [tensor(7), tensor(83)]
+Sample 31: [tensor(1), tensor(46)]
+Sample 32: [tensor(1), tensor(1)]
+Sample 33: [tensor(1), tensor(33)]
+Sample 34: [tensor(1), tensor(1)]
+Sample 35: [tensor(1), tensor(1)]
+Sample 36: [tensor(1), tensor(1)]
+Sample 37: [tensor(1), tensor(1)]
+Sample 38: [tensor(1), tensor(1)]
+Sample 39: [tensor(1), tensor(1)]
+Sample 40: [tensor(2), tensor(2)]
+Sample 41: [tensor(2), tensor(53)]
+Sample 42: [tensor(2), tensor(83)]
+Sample 43: [tensor(2), tensor(11)]
+Sample 44: [tensor(7), tensor(14)]
+Sample 45: [tensor(2), tensor(46)]
+Sample 46: [tensor(9), tensor(64)]
+Sample 47: [tensor(2), tensor(2)]
+Sample 48: [tensor(2), tensor(2)]
+Sample 49: [tensor(2), tensor(2)]
+Sample 50: [tensor(2), tensor(2)]
+Sample 51: [tensor(2), tensor(2)]
+Sample 52: [tensor(2), tensor(43)]
+Sample 53: [tensor(2), tensor(87)]
+Sample 54: [tensor(2), tensor(70)]
+Sample 55: [tensor(2), tensor(2)]
+Sample 56: [tensor(2), tensor(98)]
+Sample 57: [tensor(2), tensor(11)]
+Sample 58: [tensor(2), tensor(2)]
+Sample 59: [tensor(2), tensor(2)]
+Sample 60: [tensor(4), tensor(15)]
+Sample 61: [tensor(3), tensor(3)]
+Sample 62: [tensor(3), tensor(3)]
+Sample 63: [tensor(6), tensor(34)]
+Sample 64: [tensor(3), tensor(80)]
+Sample 65: [tensor(4), tensor(19)]
+Sample 66: [tensor(3), tensor(3)]
+Sample 67: [tensor(3), tensor(98)]
+Sample 68: [tensor(7), tensor(55)]
+Sample 69: [tensor(3), tensor(3)]
+Sample 70: [tensor(3), tensor(3)]
+Sample 71: [tensor(3), tensor(31)]
+Sample 72: [tensor(3), tensor(80)]
+Sample 73: [tensor(3), tensor(80)]
+Sample 74: [tensor(4), tensor(98)]
+Sample 75: [tensor(4), tensor(67)]
+Sample 76: [tensor(3), tensor(51)]
+Sample 77: [tensor(3), tensor(21)]
+Sample 78: [tensor(3), tensor(55)]
+Sample 79: [tensor(3), tensor(27)]
+Sample 80: [tensor(4), tensor(98)]
+Sample 81: [tensor(4), tensor(55)]
+Sample 82: [tensor(4), tensor(50)]
+Sample 83: [tensor(4), tensor(27)]
+Sample 84: [tensor(4), tensor(4)]
+Sample 85: [tensor(3), tensor(15)]
+Sample 86: [tensor(4), tensor(42)]
+Sample 87: [tensor(4), tensor(63)]
+Sample 88: [tensor(4), tensor(27)]
+Sample 89: [tensor(4), tensor(4)]
+Sample 90: [tensor(4), tensor(4)]
+Sample 91: [tensor(4), tensor(21)]
+Sample 92: [tensor(6), tensor(21)]
+Sample 93: [tensor(4), tensor(91)]
+Sample 94: [tensor(4), tensor(55)]
+Sample 95: [tensor(4), tensor(21)]
+Sample 96: [tensor(4), tensor(80)]
+Sample 97: [tensor(4), tensor(80)]
+Sample 98: [tensor(4), tensor(21)]
+Sample 99: [tensor(1), tensor(32)]
+Sample 100: [tensor(5), tensor(5)]
+Sample 101: [tensor(5), tensor(5)]
+Sample 102: [tensor(5), tensor(25)]
+Sample 103: [tensor(5), tensor(5)]
+Sample 104: [tensor(5), tensor(10)]
+Sample 105: [tensor(5), tensor(94)]
+Sample 106: [tensor(5), tensor(17)]
+Sample 107: [tensor(5), tensor(33)]
+Sample 108: [tensor(5), tensor(25)]
+Sample 109: [tensor(5), tensor(94)]
+Sample 110: [tensor(5), tensor(5)]
+Sample 111: [tensor(5), tensor(5)]
+Sample 112: [tensor(5), tensor(5)]
+Sample 113: [tensor(5), tensor(25)]
+Sample 114: [tensor(5), tensor(94)]
+Sample 115: [tensor(5), tensor(37)]
+Sample 116: [tensor(5), tensor(5)]
+Sample 117: [tensor(5), tensor(5)]
+Sample 118: [tensor(5), tensor(5)]
+Sample 119: [tensor(5), tensor(5)]
+Sample 120: [tensor(6), tensor(93)]
+Sample 121: [tensor(6), tensor(6)]
+Sample 122: [tensor(6), tensor(6)]
+Sample 123: [tensor(6), tensor(6)]
+Sample 124: [tensor(6), tensor(18)]
+Sample 125: [tensor(6), tensor(18)]
+Sample 126: [tensor(6), tensor(6)]
+Sample 127: [tensor(6), tensor(6)]
+Sample 128: [tensor(6), tensor(6)]
+Sample 129: [tensor(6), tensor(18)]
+Sample 130: [tensor(4), tensor(55)]
+Sample 131: [tensor(6), tensor(26)]
+Sample 132: [tensor(1), tensor(26)]
+Sample 133: [tensor(6), tensor(6)]
+Sample 134: [tensor(6), tensor(6)]
+Sample 135: [tensor(6), tensor(78)]
+Sample 136: [tensor(6), tensor(6)]
+Sample 137: [tensor(6), tensor(45)]
+Sample 138: [tensor(6), tensor(6)]
+Sample 139: [tensor(6), tensor(80)]
+Sample 140: [tensor(1), tensor(70)]
+Sample 141: [tensor(7), tensor(34)]
+Sample 142: [tensor(7), tensor(50)]
+Sample 143: [tensor(7), tensor(7)]
+Sample 144: [tensor(7), tensor(24)]
+Sample 145: [tensor(7), tensor(24)]
+Sample 146: [tensor(7), tensor(24)]
+Sample 147: [tensor(1), tensor(54)]
+Sample 148: [tensor(4), tensor(93)]
+Sample 149: [tensor(7), tensor(92)]
+Sample 150: [tensor(7), tensor(7)]
+Sample 151: [tensor(7), tensor(7)]
+Sample 152: [tensor(7), tensor(35)]
+Sample 153: [tensor(7), tensor(7)]
+Sample 154: [tensor(7), tensor(14)]
+Sample 155: [tensor(7), tensor(7)]
+Sample 156: [tensor(7), tensor(7)]
+Sample 157: [tensor(7), tensor(95)]
+Sample 158: [tensor(7), tensor(30)]
+Sample 159: [tensor(7), tensor(14)]
+Sample 160: [tensor(8), tensor(8)]
+Sample 161: [tensor(8), tensor(8)]
+Sample 162: [tensor(8), tensor(8)]
+Sample 163: [tensor(8), tensor(48)]
+Sample 164: [tensor(8), tensor(8)]
+Sample 165: [tensor(8), tensor(48)]
+Sample 166: [tensor(1), tensor(27)]
+Sample 167: [tensor(8), tensor(78)]
+Sample 168: [tensor(8), tensor(78)]
+Sample 169: [tensor(8), tensor(8)]
+Sample 170: [tensor(8), tensor(18)]
+Sample 171: [tensor(8), tensor(8)]
+Sample 172: [tensor(8), tensor(54)]
+Sample 173: [tensor(8), tensor(48)]
+Sample 174: [tensor(8), tensor(84)]
+Sample 175: [tensor(8), tensor(48)]
+Sample 176: [tensor(8), tensor(41)]
+Sample 177: [tensor(8), tensor(78)]
+Sample 178: [tensor(8), tensor(8)]
+Sample 179: [tensor(8), tensor(89)]
+Sample 180: [tensor(9), tensor(9)]
+Sample 181: [tensor(9), tensor(9)]
+Sample 182: [tensor(4), tensor(46)]
+Sample 183: [tensor(9), tensor(40)]
+Sample 184: [tensor(9), tensor(22)]
+Sample 185: [tensor(9), tensor(59)]
+Sample 186: [tensor(9), tensor(9)]
+Sample 187: [tensor(9), tensor(9)]
+Sample 188: [tensor(9), tensor(38)]
+Sample 189: [tensor(9), tensor(59)]
+Sample 190: [tensor(9), tensor(76)]
+Sample 191: [tensor(9), tensor(9)]
+Sample 192: [tensor(9), tensor(9)]
+Sample 193: [tensor(9), tensor(69)]
+Sample 194: [tensor(9), tensor(9)]
+Sample 195: [tensor(9), tensor(57)]
+Sample 196: [tensor(9), tensor(9)]
+Sample 197: [tensor(9), tensor(9)]
+Sample 198: [tensor(9), tensor(9)]
+Sample 199: [tensor(9), tensor(22)]
+Sample 200: [tensor(10), tensor(6)]
+Sample 201: [tensor(10), tensor(8)]
+Sample 202: [tensor(10), tensor(1)]
+Sample 203: [tensor(10), tensor(3)]
+Sample 204: [tensor(10), tensor(7)]
+Sample 205: [tensor(10), tensor(4)]
+Sample 206: [tensor(10), tensor(5)]
+Sample 207: [tensor(10), tensor(6)]
+Sample 208: [tensor(10), tensor(1)]
+Sample 209: [tensor(10), tensor(5)]
+Sample 210: [tensor(10), tensor(7)]
+Sample 211: [tensor(10), tensor(0)]
+Sample 212: [tensor(10), tensor(7)]
+Sample 213: [tensor(2), tensor(9)]
+Sample 214: [tensor(10), tensor(1)]
+Sample 215: [tensor(10), tensor(5)]
+Sample 216: [tensor(10), tensor(7)]
+Sample 217: [tensor(10), tensor(5)]
+Sample 218: [tensor(10), tensor(7)]
+Sample 219: [tensor(10), tensor(9)]
+Sample 220: [tensor(11), tensor(2)]
+[1mFound one![0m
+Sample 221: [tensor(2), tensor(2)]
+Sample 222: [tensor(16), tensor(9)]
+Sample 223: [tensor(11), tensor(4)]
+Sample 224: [tensor(11), tensor(2)]
+Sample 225: [tensor(11), tensor(3)]
+[1mFound one![0m
+Sample 226: [tensor(2), tensor(2)]
+Sample 227: [tensor(2), tensor(6)]
+Sample 228: [tensor(11), tensor(9)]
+Sample 229: [tensor(11), tensor(2)]
+Sample 230: [tensor(11), tensor(2)]
+Sample 231: [tensor(14), tensor(2)]
+Sample 232: [tensor(11), tensor(2)]
+Sample 233: [tensor(11), tensor(2)]
+[1mFound one![0m
+Sample 234: [tensor(2), tensor(2)]
+Sample 235: [tensor(11), tensor(2)]
+Sample 236: [tensor(11), tensor(2)]
+Sample 237: [tensor(11), tensor(7)]
+Sample 238: [tensor(11), tensor(2)]
+Sample 239: [tensor(4), tensor(2)]
+Sample 240: [tensor(12), tensor(5)]
+[1mFound one![0m
+Sample 241: [tensor(3), tensor(3)]
+Sample 242: [tensor(12), tensor(5)]
+Sample 243: [tensor(12), tensor(8)]
+Sample 244: [tensor(12), tensor(5)]
+Sample 245: [tensor(12), tensor(8)]
+Sample 246: [tensor(12), tensor(3)]
+Sample 247: [tensor(3), tensor(1)]
+Sample 248: [tensor(12), tensor(5)]
+Sample 249: [tensor(12), tensor(5)]
+Sample 250: [tensor(12), tensor(5)]
+Sample 251: [tensor(12), tensor(5)]
+Sample 252: [tensor(12), tensor(8)]
+Sample 253: [tensor(12), tensor(5)]
+Sample 254: [tensor(12), tensor(9)]
+Sample 255: [tensor(12), tensor(4)]
+Sample 256: [tensor(12), tensor(1)]
+Sample 257: [tensor(12), tensor(9)]
+Sample 258: [tensor(12), tensor(1)]
+Sample 259: [tensor(12), tensor(8)]
+Sample 260: [tensor(13), tensor(1)]
+Sample 261: [tensor(13), tensor(9)]
+Sample 262: [tensor(13), tensor(5)]
+Sample 263: [tensor(13), tensor(1)]
+Sample 264: [tensor(13), tensor(5)]
+Sample 265: [tensor(13), tensor(3)]
+Sample 266: [tensor(13), tensor(9)]
+Sample 267: [tensor(16), tensor(9)]
+Sample 268: [tensor(13), tensor(8)]
+Sample 269: [tensor(13), tensor(5)]
+Sample 270: [tensor(13), tensor(9)]
+Sample 271: [tensor(13), tensor(5)]
+[1mFound one![0m
+Sample 272: [tensor(8), tensor(8)]
+Sample 273: [tensor(13), tensor(8)]
+Sample 274: [tensor(13), tensor(5)]
+[1mFound one![0m
+Sample 275: [tensor(9), tensor(9)]
+Sample 276: [tensor(13), tensor(5)]
+Sample 277: [tensor(13), tensor(5)]
+Sample 278: [tensor(13), tensor(9)]
+Sample 279: [tensor(13), tensor(5)]
+[1mFound one![0m
+Sample 280: [tensor(7), tensor(7)]
+Sample 281: [tensor(14), tensor(1)]
+Sample 282: [tensor(14), tensor(7)]
+Sample 283: [tensor(14), tensor(6)]
+Sample 284: [tensor(14), tensor(1)]
+Sample 285: [tensor(14), tensor(0)]
+Sample 286: [tensor(14), tensor(3)]
+Sample 287: [tensor(14), tensor(7)]
+[1mFound one![0m
+Sample 288: [tensor(8), tensor(8)]
+Sample 289: [tensor(14), tensor(9)]
+Sample 290: [tensor(14), tensor(1)]
+Sample 291: [tensor(4), tensor(7)]
+Sample 292: [tensor(14), tensor(1)]
+[1mFound one![0m
+Sample 293: [tensor(7), tensor(7)]
+Sample 294: [tensor(14), tensor(7)]
+Sample 295: [tensor(14), tensor(1)]
+Sample 296: [tensor(14), tensor(0)]
+[1mFound one![0m
+Sample 297: [tensor(3), tensor(3)]
+Sample 298: [tensor(14), tensor(7)]
+Sample 299: [tensor(14), tensor(4)]
+Sample 300: [tensor(15), tensor(4)]
+Sample 301: [tensor(19), tensor(8)]
+Sample 302: [tensor(15), tensor(3)]
+Sample 303: [tensor(15), tensor(3)]
+Sample 304: [tensor(15), tensor(3)]
+Sample 305: [tensor(15), tensor(4)]
+Sample 306: [tensor(15), tensor(9)]
+Sample 307: [tensor(15), tensor(3)]
+Sample 308: [tensor(15), tensor(1)]
+[1mFound one![0m
+Sample 309: [tensor(4), tensor(4)]
+Sample 310: [tensor(19), tensor(9)]
+[1mFound one![0m
+Sample 311: [tensor(2), tensor(2)]
+Sample 312: [tensor(15), tensor(3)]
+[1mFound one![0m
+Sample 313: [tensor(3), tensor(3)]
+Sample 314: [tensor(15), tensor(3)]
+Sample 315: [tensor(15), tensor(3)]
+Sample 316: [tensor(15), tensor(3)]
+Sample 317: [tensor(15), tensor(3)]
+Sample 318: [tensor(15), tensor(3)]
+Sample 319: [tensor(15), tensor(3)]
+Sample 320: [tensor(16), tensor(5)]
+Sample 321: [tensor(16), tensor(9)]
+[1mFound one![0m
+Sample 322: [tensor(9), tensor(9)]
+Sample 323: [tensor(16), tensor(5)]
+Sample 324: [tensor(16), tensor(5)]
+Sample 325: [tensor(16), tensor(9)]
+Sample 326: [tensor(16), tensor(9)]
+Sample 327: [tensor(16), tensor(9)]
+Sample 328: [tensor(16), tensor(9)]
+Sample 329: [tensor(16), tensor(9)]
+Sample 330: [tensor(16), tensor(2)]
+Sample 331: [tensor(16), tensor(9)]
+Sample 332: [tensor(10), tensor(2)]
+Sample 333: [tensor(16), tensor(4)]
+Sample 334: [tensor(16), tensor(9)]
+Sample 335: [tensor(16), tensor(5)]
+Sample 336: [tensor(16), tensor(9)]
+Sample 337: [tensor(16), tensor(5)]
+[1mFound one![0m
+Sample 338: [tensor(9), tensor(9)]
+[1mFound one![0m
+Sample 339: [tensor(9), tensor(9)]
+Sample 340: [tensor(17), tensor(9)]
+Sample 341: [tensor(17), tensor(3)]
+Sample 342: [tensor(17), tensor(1)]
+Sample 343: [tensor(17), tensor(4)]
+Sample 344: [tensor(17), tensor(3)]
+Sample 345: [tensor(17), tensor(3)]
+[1mFound one![0m
+Sample 346: [tensor(9), tensor(9)]
+Sample 347: [tensor(17), tensor(5)]
+Sample 348: [tensor(17), tensor(9)]
+Sample 349: [tensor(17), tensor(2)]
+Sample 350: [tensor(17), tensor(3)]
+Sample 351: [tensor(17), tensor(5)]
+Sample 352: [tensor(17), tensor(5)]
+Sample 353: [tensor(17), tensor(5)]
+Sample 354: [tensor(17), tensor(3)]
+Sample 355: [tensor(17), tensor(4)]
+Sample 356: [tensor(17), tensor(8)]
+Sample 357: [tensor(17), tensor(5)]
+Sample 358: [tensor(17), tensor(5)]
+Sample 359: [tensor(17), tensor(5)]
+Sample 360: [tensor(18), tensor(9)]
+Sample 361: [tensor(13), tensor(5)]
+Sample 362: [tensor(18), tensor(6)]
+Sample 363: [tensor(19), tensor(3)]
+Sample 364: [tensor(18), tensor(1)]
+[1mFound one![0m
+Sample 365: [tensor(6), tensor(6)]
+Sample 366: [tensor(18), tensor(9)]
+Sample 367: [tensor(18), tensor(6)]
+Sample 368: [tensor(4), tensor(0)]
+Sample 369: [tensor(18), tensor(2)]
+Sample 370: [tensor(18), tensor(1)]
+Sample 371: [tensor(18), tensor(7)]
+Sample 372: [tensor(18), tensor(6)]
+Sample 373: [tensor(3), tensor(9)]
+[1mFound one![0m
+Sample 374: [tensor(6), tensor(6)]
+Sample 375: [tensor(18), tensor(6)]
+Sample 376: [tensor(18), tensor(4)]
+[1mFound one![0m
+Sample 377: [tensor(5), tensor(5)]
+Sample 378: [tensor(18), tensor(1)]
+Sample 379: [tensor(7), tensor(8)]
+Sample 380: [tensor(19), tensor(3)]
+Sample 381: [tensor(19), tensor(3)]
+Sample 382: [tensor(19), tensor(3)]
+Sample 383: [tensor(19), tensor(3)]
+Sample 384: [tensor(19), tensor(3)]
+Sample 385: [tensor(19), tensor(8)]
+[1mFound one![0m
+Sample 386: [tensor(3), tensor(3)]
+Sample 387: [tensor(14), tensor(6)]
+Sample 388: [tensor(19), tensor(3)]
+Sample 389: [tensor(15), tensor(2)]
+[1mFound one![0m
+Sample 390: [tensor(3), tensor(3)]
+Sample 391: [tensor(19), tensor(3)]
+Sample 392: [tensor(19), tensor(4)]
+Sample 393: [tensor(19), tensor(1)]
+[1mFound one![0m
+Sample 394: [tensor(3), tensor(3)]
+Sample 395: [tensor(19), tensor(4)]
+[1mFound one![0m
+Sample 396: [tensor(4), tensor(4)]
+Sample 397: [tensor(19), tensor(3)]
+Sample 398: [tensor(15), tensor(8)]
+Sample 399: [tensor(3), tensor(8)]
+Sample 400: [tensor(20), tensor(5)]
+Sample 401: [tensor(20), tensor(16)]
+Sample 402: [tensor(20), tensor(5)]
+Sample 403: [tensor(20), tensor(5)]
+Sample 404: [tensor(20), tensor(13)]
+Sample 405: [tensor(20), tensor(9)]
+[1mFound one![0m
+Sample 406: [tensor(5), tensor(5)]
+Sample 407: [tensor(20), tensor(12)]
+Sample 408: [tensor(20), tensor(5)]
+Sample 409: [tensor(20), tensor(8)]
+Sample 410: [tensor(20), tensor(12)]
+Sample 411: [tensor(20), tensor(5)]
+Sample 412: [tensor(20), tensor(5)]
+Sample 413: [tensor(20), tensor(5)]
+Sample 414: [tensor(20), tensor(5)]
+Sample 415: [tensor(8), tensor(14)]
+Sample 416: [tensor(25), tensor(5)]
+Sample 417: [tensor(20), tensor(16)]
+Sample 418: [tensor(25), tensor(5)]
+Sample 419: [tensor(20), tensor(5)]
+Sample 420: [tensor(21), tensor(3)]
+Sample 421: [tensor(21), tensor(2)]
+Sample 422: [tensor(21), tensor(15)]
+[1mFound one![0m
+Sample 423: [tensor(3), tensor(3)]
+Sample 424: [tensor(21), tensor(11)]
+[1mFound one![0m
+Sample 425: [tensor(15), tensor(15)]
+Sample 426: [tensor(21), tensor(3)]
+Sample 427: [tensor(21), tensor(14)]
+Sample 428: [tensor(21), tensor(3)]
+Sample 429: [tensor(21), tensor(11)]
+Sample 430: [tensor(21), tensor(11)]
+Sample 431: [tensor(21), tensor(3)]
+Sample 432: [tensor(21), tensor(16)]
+Sample 433: [tensor(21), tensor(14)]
+Sample 434: [tensor(21), tensor(3)]
+Sample 435: [tensor(21), tensor(3)]
+Sample 436: [tensor(21), tensor(4)]
+Sample 437: [tensor(21), tensor(3)]
+Sample 438: [tensor(21), tensor(4)]
+Sample 439: [tensor(21), tensor(4)]
+Sample 440: [tensor(22), tensor(10)]
+Sample 441: [tensor(25), tensor(5)]
+Sample 442: [tensor(22), tensor(10)]
+Sample 443: [tensor(22), tensor(10)]
+[1mFound one![0m
+Sample 444: [tensor(10), tensor(10)]
+Sample 445: [tensor(22), tensor(5)]
+Sample 446: [tensor(20), tensor(11)]
+Sample 447: [tensor(22), tensor(10)]
+[1mFound one![0m
+Sample 448: [tensor(10), tensor(10)]
+Sample 449: [tensor(22), tensor(5)]
+Sample 450: [tensor(22), tensor(10)]
+Sample 451: [tensor(22), tensor(16)]
+Sample 452: [tensor(12), tensor(5)]
+Sample 453: [tensor(22), tensor(2)]
+Sample 454: [tensor(5), tensor(10)]
+Sample 455: [tensor(22), tensor(10)]
+Sample 456: [tensor(22), tensor(10)]
+Sample 457: [tensor(1), tensor(2)]
+Sample 458: [tensor(22), tensor(5)]
+Sample 459: [tensor(26), tensor(6)]
+Sample 460: [tensor(23), tensor(10)]
+Sample 461: [tensor(23), tensor(10)]
+Sample 462: [tensor(23), tensor(12)]
+Sample 463: [tensor(23), tensor(3)]
+Sample 464: [tensor(23), tensor(9)]
+Sample 465: [tensor(23), tensor(10)]
+Sample 466: [tensor(23), tensor(4)]
+Sample 467: [tensor(23), tensor(18)]
+Sample 468: [tensor(23), tensor(18)]
+Sample 469: [tensor(23), tensor(10)]
+Sample 470: [tensor(23), tensor(9)]
+Sample 471: [tensor(23), tensor(4)]
+Sample 472: [tensor(23), tensor(19)]
+Sample 473: [tensor(23), tensor(10)]
+Sample 474: [tensor(23), tensor(4)]
+Sample 475: [tensor(23), tensor(19)]
+Sample 476: [tensor(23), tensor(18)]
+Sample 477: [tensor(23), tensor(18)]
+Sample 478: [tensor(23), tensor(5)]
+Sample 479: [tensor(23), tensor(15)]
+Sample 480: [tensor(18), tensor(9)]
+[1mFound one![0m
+Sample 481: [tensor(7), tensor(7)]
+Sample 482: [tensor(24), tensor(7)]
+[1mFound one![0m
+Sample 483: [tensor(7), tensor(7)]
+[1mFound one![0m
+Sample 484: [tensor(7), tensor(7)]
+Sample 485: [tensor(24), tensor(7)]
+[1mFound one![0m
+Sample 486: [tensor(7), tensor(7)]
+[1mFound one![0m
+Sample 487: [tensor(7), tensor(7)]
+[1mFound one![0m
+Sample 488: [tensor(7), tensor(7)]
+[1mFound one![0m
+Sample 489: [tensor(7), tensor(7)]
+[1mFound one![0m
+Sample 490: [tensor(7), tensor(7)]
+Sample 491: [tensor(24), tensor(7)]
+Sample 492: [tensor(24), tensor(7)]
+[1mFound one![0m
+Sample 493: [tensor(7), tensor(7)]
+Sample 494: [tensor(24), tensor(7)]
+Sample 495: [tensor(24), tensor(6)]
+Sample 496: [tensor(15), tensor(2)]
+Sample 497: [tensor(24), tensor(19)]
+Sample 498: [tensor(24), tensor(7)]
+Sample 499: [tensor(24), tensor(18)]
+Sample 500: [tensor(25), tensor(2)]
+[1mFound one![0m
+Sample 501: [tensor(5), tensor(5)]
+[1mFound one![0m
+Sample 502: [tensor(13), tensor(13)]
+Sample 503: [tensor(25), tensor(5)]
+Sample 504: [tensor(5), tensor(16)]
+Sample 505: [tensor(17), tensor(18)]
+[1mFound one![0m
+Sample 506: [tensor(5), tensor(5)]
+[1mFound one![0m
+Sample 507: [tensor(0), tensor(0)]
+Sample 508: [tensor(25), tensor(17)]
+[1mFound one![0m
+Sample 509: [tensor(12), tensor(12)]
+Sample 510: [tensor(25), tensor(18)]
+Sample 511: [tensor(20), tensor(2)]
+Sample 512: [tensor(25), tensor(16)]
+[1mFound one![0m
+Sample 513: [tensor(5), tensor(5)]
+Sample 514: [tensor(25), tensor(18)]
+Sample 515: [tensor(25), tensor(10)]
+Sample 516: [tensor(25), tensor(5)]
+Sample 517: [tensor(25), tensor(17)]
+Sample 518: [tensor(12), tensor(5)]
+[1mFound one![0m
+Sample 519: [tensor(5), tensor(5)]
+Sample 520: [tensor(26), tensor(6)]
+Sample 521: [tensor(26), tensor(4)]
+[1mFound one![0m
+Sample 522: [tensor(6), tensor(6)]
+Sample 523: [tensor(26), tensor(14)]
+[1mFound one![0m
+Sample 524: [tensor(14), tensor(14)]
+Sample 525: [tensor(26), tensor(14)]
+[1mFound one![0m
+Sample 526: [tensor(10), tensor(10)]
+Sample 527: [tensor(26), tensor(19)]
+Sample 528: [tensor(26), tensor(10)]
+Sample 529: [tensor(26), tensor(14)]
+[1mFound one![0m
+Sample 530: [tensor(1), tensor(1)]
+Sample 531: [tensor(26), tensor(4)]
+Sample 532: [tensor(26), tensor(14)]
+Sample 533: [tensor(26), tensor(1)]
+Sample 534: [tensor(26), tensor(10)]
+Sample 535: [tensor(26), tensor(10)]
+[1mFound one![0m
+Sample 536: [tensor(3), tensor(3)]
+[1mFound one![0m
+Sample 537: [tensor(19), tensor(19)]
+[1mFound one![0m
+Sample 538: [tensor(10), tensor(10)]
+[1mFound one![0m
+Sample 539: [tensor(18), tensor(18)]
+[1mFound one![0m
+Sample 540: [tensor(18), tensor(18)]
+Sample 541: [tensor(4), tensor(7)]
+Sample 542: [tensor(27), tensor(1)]
+Sample 543: [tensor(12), tensor(1)]
+Sample 544: [tensor(27), tensor(4)]
+[1mFound one![0m
+Sample 545: [tensor(4), tensor(4)]
+Sample 546: [tensor(27), tensor(4)]
+[1mFound one![0m
+Sample 547: [tensor(5), tensor(5)]
+Sample 548: [tensor(27), tensor(19)]
+Sample 549: [tensor(27), tensor(1)]
+Sample 550: [tensor(27), tensor(12)]
+Sample 551: [tensor(23), tensor(18)]
+Sample 552: [tensor(27), tensor(18)]
+[1mFound one![0m
+Sample 553: [tensor(18), tensor(18)]
+[1mFound one![0m
+Sample 554: [tensor(4), tensor(4)]
+Sample 555: [tensor(29), tensor(19)]
+Sample 556: [tensor(27), tensor(18)]
+Sample 557: [tensor(20), tensor(10)]
+[1mFound one![0m
+Sample 558: [tensor(18), tensor(18)]
+[1mFound one![0m
+Sample 559: [tensor(4), tensor(4)]
+Sample 560: [tensor(16), tensor(10)]
+Sample 561: [tensor(28), tensor(11)]
+Sample 562: [tensor(28), tensor(10)]
+Sample 563: [tensor(28), tensor(6)]
+Sample 564: [tensor(28), tensor(11)]
+[1mFound one![0m
+Sample 565: [tensor(10), tensor(10)]
+Sample 566: [tensor(28), tensor(9)]
+Sample 567: [tensor(28), tensor(10)]
+Sample 568: [tensor(28), tensor(10)]
+Sample 569: [tensor(2), tensor(3)]
+Sample 570: [tensor(28), tensor(10)]
+[1mFound one![0m
+Sample 571: [tensor(0), tensor(0)]
+Sample 572: [tensor(28), tensor(10)]
+Sample 573: [tensor(28), tensor(9)]
+[1mFound one![0m
+Sample 574: [tensor(15), tensor(15)]
+Sample 575: [tensor(28), tensor(3)]
+Sample 576: [tensor(28), tensor(10)]
+Sample 577: [tensor(28), tensor(9)]
+[1mFound one![0m
+Sample 578: [tensor(10), tensor(10)]
+Sample 579: [tensor(28), tensor(6)]
+Sample 580: [tensor(29), tensor(3)]
+[1mFound one![0m
+Sample 581: [tensor(1), tensor(1)]
+Sample 582: [tensor(29), tensor(15)]
+Sample 583: [tensor(29), tensor(15)]
+Sample 584: [tensor(29), tensor(3)]
+Sample 585: [tensor(12), tensor(17)]
+Sample 586: [tensor(27), tensor(15)]
+Sample 587: [tensor(29), tensor(11)]
+Sample 588: [tensor(29), tensor(4)]
+Sample 589: [tensor(29), tensor(13)]
+[1mFound one![0m
+Sample 590: [tensor(6), tensor(6)]
+[1mFound one![0m
+Sample 591: [tensor(6), tensor(6)]
+Sample 592: [tensor(29), tensor(3)]
+Sample 593: [tensor(29), tensor(19)]
+Sample 594: [tensor(29), tensor(3)]
+[1mFound one![0m
+Sample 595: [tensor(19), tensor(19)]
+[1mFound one![0m
+Sample 596: [tensor(6), tensor(6)]
+Sample 597: [tensor(29), tensor(12)]
+Sample 598: [tensor(29), tensor(18)]
+Sample 599: [tensor(29), tensor(18)]
+Sample 600: [tensor(30), tensor(11)]
+Sample 601: [tensor(4), tensor(23)]
+Sample 602: [tensor(30), tensor(23)]
+[1mFound one![0m
+Sample 603: [tensor(23), tensor(23)]
+[1mFound one![0m
+Sample 604: [tensor(12), tensor(12)]
+[1mFound one![0m
+Sample 605: [tensor(23), tensor(23)]
+Sample 606: [tensor(30), tensor(12)]
+Sample 607: [tensor(30), tensor(12)]
+Sample 608: [tensor(30), tensor(18)]
+Sample 609: [tensor(30), tensor(4)]
+Sample 610: [tensor(30), tensor(1)]
+[1mFound one![0m
+Sample 611: [tensor(1), tensor(1)]
+[1mFound one![0m
+Sample 612: [tensor(23), tensor(23)]
+Sample 613: [tensor(5), tensor(27)]
+Sample 614: [tensor(30), tensor(17)]
+Sample 615: [tensor(30), tensor(27)]
+[1mFound one![0m
+Sample 616: [tensor(12), tensor(12)]
+Sample 617: [tensor(30), tensor(4)]
+Sample 618: [tensor(30), tensor(12)]
+Sample 619: [tensor(30), tensor(3)]
+Sample 620: [tensor(31), tensor(21)]
+Sample 621: [tensor(31), tensor(3)]
+Sample 622: [tensor(15), tensor(4)]
+[1mFound one![0m
+Sample 623: [tensor(19), tensor(19)]
+Sample 624: [tensor(29), tensor(26)]
+Sample 625: [tensor(29), tensor(3)]
+[1mFound one![0m
+Sample 626: [tensor(15), tensor(15)]
+[1mFound one![0m
+Sample 627: [tensor(3), tensor(3)]
+[1mFound one![0m
+Sample 628: [tensor(29), tensor(29)]
+Sample 629: [tensor(31), tensor(3)]
+[1mFound one![0m
+Sample 630: [tensor(3), tensor(3)]
+Sample 631: [tensor(31), tensor(13)]
+[1mFound one![0m
+Sample 632: [tensor(15), tensor(15)]
+Sample 633: [tensor(31), tensor(29)]
+[1mFound one![0m
+Sample 634: [tensor(21), tensor(21)]
+[1mFound one![0m
+Sample 635: [tensor(3), tensor(3)]
+[1mFound one![0m
+Sample 636: [tensor(21), tensor(21)]
+Sample 637: [tensor(31), tensor(3)]
+[1mFound one![0m
+Sample 638: [tensor(21), tensor(21)]
+Sample 639: [tensor(3), tensor(29)]
+Sample 640: [tensor(32), tensor(21)]
+Sample 641: [tensor(30), tensor(15)]
+[1mFound one![0m
+Sample 642: [tensor(11), tensor(11)]
+[1mFound one![0m
+Sample 643: [tensor(7), tensor(7)]
+Sample 644: [tensor(32), tensor(21)]
+Sample 645: [tensor(4), tensor(2)]
+[1mFound one![0m
+Sample 646: [tensor(21), tensor(21)]
+Sample 647: [tensor(32), tensor(19)]
+Sample 648: [tensor(32), tensor(4)]
+[1mFound one![0m
+Sample 649: [tensor(4), tensor(4)]
+Sample 650: [tensor(32), tensor(24)]
+Sample 651: [tensor(32), tensor(10)]
+Sample 652: [tensor(30), tensor(12)]
+Sample 653: [tensor(26), tensor(3)]
+[1mFound one![0m
+Sample 654: [tensor(19), tensor(19)]
+Sample 655: [tensor(32), tensor(3)]
+Sample 656: [tensor(32), tensor(18)]
+[1mFound one![0m
+Sample 657: [tensor(11), tensor(11)]
+Sample 658: [tensor(23), tensor(1)]
+Sample 659: [tensor(32), tensor(4)]
+Sample 660: [tensor(33), tensor(9)]
+Sample 661: [tensor(33), tensor(17)]
+Sample 662: [tensor(33), tensor(25)]
+[1mFound one![0m
+Sample 663: [tensor(3), tensor(3)]
+Sample 664: [tensor(33), tensor(17)]
+Sample 665: [tensor(33), tensor(18)]
+[1mFound one![0m
+Sample 666: [tensor(17), tensor(17)]
+Sample 667: [tensor(33), tensor(18)]
+Sample 668: [tensor(9), tensor(18)]
+Sample 669: [tensor(7), tensor(21)]
+Sample 670: [tensor(33), tensor(14)]
+Sample 671: [tensor(33), tensor(1)]
+Sample 672: [tensor(33), tensor(18)]
+[1mFound one![0m
+Sample 673: [tensor(18), tensor(18)]
+[1mFound one![0m
+Sample 674: [tensor(27), tensor(27)]
+Sample 675: [tensor(23), tensor(18)]
+[1mFound one![0m
+Sample 676: [tensor(18), tensor(18)]
+Sample 677: [tensor(33), tensor(29)]
+Sample 678: [tensor(33), tensor(27)]
+Sample 679: [tensor(33), tensor(17)]
+[1mFound one![0m
+Sample 680: [tensor(15), tensor(15)]
+Sample 681: [tensor(34), tensor(26)]
+Sample 682: [tensor(38), tensor(29)]
+Sample 683: [tensor(34), tensor(3)]
+Sample 684: [tensor(3), tensor(19)]
+Sample 685: [tensor(34), tensor(2)]
+Sample 686: [tensor(34), tensor(1)]
+Sample 687: [tensor(34), tensor(11)]
+Sample 688: [tensor(34), tensor(29)]
+Sample 689: [tensor(34), tensor(29)]
+Sample 690: [tensor(34), tensor(27)]
+[1mFound one![0m
+Sample 691: [tensor(6), tensor(6)]
+Sample 692: [tensor(34), tensor(29)]
+Sample 693: [tensor(34), tensor(11)]
+[1mFound one![0m
+Sample 694: [tensor(27), tensor(27)]
+[1mFound one![0m
+Sample 695: [tensor(19), tensor(19)]
+Sample 696: [tensor(34), tensor(3)]
+[1mFound one![0m
+Sample 697: [tensor(1), tensor(1)]
+Sample 698: [tensor(29), tensor(19)]
+Sample 699: [tensor(34), tensor(26)]
+[1mFound one![0m
+Sample 700: [tensor(2), tensor(2)]
+Sample 701: [tensor(11), tensor(6)]
+Sample 702: [tensor(10), tensor(23)]
+[1mFound one![0m
+Sample 703: [tensor(2), tensor(2)]
+[1mFound one![0m
+Sample 704: [tensor(11), tensor(11)]
+Sample 705: [tensor(35), tensor(2)]
+[1mFound one![0m
+Sample 706: [tensor(2), tensor(2)]
+[1mFound one![0m
+Sample 707: [tensor(11), tensor(11)]
+[1mFound one![0m
+Sample 708: [tensor(11), tensor(11)]
+[1mFound one![0m
+Sample 709: [tensor(2), tensor(2)]
+[1mFound one![0m
+Sample 710: [tensor(11), tensor(11)]
+[1mFound one![0m
+Sample 711: [tensor(11), tensor(11)]
+[1mFound one![0m
+Sample 712: [tensor(11), tensor(11)]
+[1mFound one![0m
+Sample 713: [tensor(21), tensor(21)]
+[1mFound one![0m
+Sample 714: [tensor(2), tensor(2)]
+[1mFound one![0m
+Sample 715: [tensor(11), tensor(11)]
+Sample 716: [tensor(11), tensor(2)]
+[1mFound one![0m
+Sample 717: [tensor(2), tensor(2)]
+Sample 718: [tensor(2), tensor(21)]
+Sample 719: [tensor(21), tensor(3)]
+Sample 720: [tensor(36), tensor(2)]
+Sample 721: [tensor(36), tensor(4)]
+Sample 722: [tensor(36), tensor(2)]
+Sample 723: [tensor(36), tensor(15)]
+Sample 724: [tensor(36), tensor(22)]
+Sample 725: [tensor(26), tensor(15)]
+Sample 726: [tensor(36), tensor(2)]
+[1mFound one![0m
+Sample 727: [tensor(3), tensor(3)]
+Sample 728: [tensor(36), tensor(11)]
+Sample 729: [tensor(36), tensor(2)]
+Sample 730: [tensor(36), tensor(2)]
+Sample 731: [tensor(2), tensor(13)]
+Sample 732: [tensor(34), tensor(26)]
+Sample 733: [tensor(10), tensor(2)]
+Sample 734: [tensor(36), tensor(20)]
+Sample 735: [tensor(36), tensor(4)]
+[1mFound one![0m
+Sample 736: [tensor(4), tensor(4)]
+Sample 737: [tensor(36), tensor(3)]
+Sample 738: [tensor(26), tensor(2)]
+Sample 739: [tensor(36), tensor(2)]
+Sample 740: [tensor(37), tensor(5)]
+Sample 741: [tensor(37), tensor(17)]
+Sample 742: [tensor(17), tensor(4)]
+Sample 743: [tensor(9), tensor(13)]
+Sample 744: [tensor(17), tensor(25)]
+[1mFound one![0m
+Sample 745: [tensor(1), tensor(1)]
+Sample 746: [tensor(37), tensor(17)]
+Sample 747: [tensor(37), tensor(17)]
+Sample 748: [tensor(23), tensor(1)]
+Sample 749: [tensor(37), tensor(13)]
+Sample 750: [tensor(37), tensor(13)]
+Sample 751: [tensor(37), tensor(12)]
+Sample 752: [tensor(37), tensor(29)]
+Sample 753: [tensor(37), tensor(12)]
+Sample 754: [tensor(37), tensor(15)]
+[1mFound one![0m
+Sample 755: [tensor(25), tensor(25)]
+Sample 756: [tensor(37), tensor(22)]
+Sample 757: [tensor(12), tensor(23)]
+Sample 758: [tensor(37), tensor(29)]
+[1mFound one![0m
+Sample 759: [tensor(5), tensor(5)]
+Sample 760: [tensor(14), tensor(21)]
+Sample 761: [tensor(38), tensor(4)]
+Sample 762: [tensor(38), tensor(19)]
+[1mFound one![0m
+Sample 763: [tensor(4), tensor(4)]
+Sample 764: [tensor(38), tensor(19)]
+Sample 765: [tensor(14), tensor(18)]
+[1mFound one![0m
+Sample 766: [tensor(19), tensor(19)]
+[1mFound one![0m
+Sample 767: [tensor(27), tensor(27)]
+Sample 768: [tensor(38), tensor(27)]
+Sample 769: [tensor(8), tensor(21)]
+Sample 770: [tensor(4), tensor(27)]
+Sample 771: [tensor(38), tensor(27)]
+Sample 772: [tensor(24), tensor(6)]
+Sample 773: [tensor(29), tensor(3)]
+Sample 774: [tensor(15), tensor(4)]
+[1mFound one![0m
+Sample 775: [tensor(14), tensor(14)]
+[1mFound one![0m
+Sample 776: [tensor(6), tensor(6)]
+[1mFound one![0m
+Sample 777: [tensor(19), tensor(19)]
+Sample 778: [tensor(3), tensor(29)]
+[1mFound one![0m
+Sample 779: [tensor(29), tensor(29)]
+Sample 780: [tensor(39), tensor(12)]
+Sample 781: [tensor(39), tensor(27)]
+[1mFound one![0m
+Sample 782: [tensor(22), tensor(22)]
+[1mFound one![0m
+Sample 783: [tensor(10), tensor(10)]
+Sample 784: [tensor(39), tensor(12)]
+Sample 785: [tensor(39), tensor(26)]
+Sample 786: [tensor(14), tensor(29)]
+Sample 787: [tensor(39), tensor(22)]
+Sample 788: [tensor(5), tensor(17)]
+Sample 789: [tensor(39), tensor(16)]
+[1mFound one![0m
+Sample 790: [tensor(18), tensor(18)]
+Sample 791: [tensor(39), tensor(14)]
+Sample 792: [tensor(39), tensor(5)]
+Sample 793: [tensor(39), tensor(18)]
+Sample 794: [tensor(39), tensor(27)]
+Sample 795: [tensor(39), tensor(5)]
+Sample 796: [tensor(39), tensor(12)]
+Sample 797: [tensor(39), tensor(18)]
+Sample 798: [tensor(39), tensor(25)]
+[1mFound one![0m
+Sample 799: [tensor(23), tensor(23)]
+[1mFound one![0m
+Sample 800: [tensor(28), tensor(28)]
+Sample 801: [tensor(40), tensor(1)]
+[1mFound one![0m
+Sample 802: [tensor(0), tensor(0)]
+Sample 803: [tensor(40), tensor(28)]
+Sample 804: [tensor(40), tensor(16)]
+Sample 805: [tensor(40), tensor(10)]
+Sample 806: [tensor(40), tensor(29)]
+Sample 807: [tensor(40), tensor(25)]
+Sample 808: [tensor(40), tensor(11)]
+[1mFound one![0m
+Sample 809: [tensor(28), tensor(28)]
+[1mFound one![0m
+Sample 810: [tensor(5), tensor(5)]
+[1mFound one![0m
+Sample 811: [tensor(33), tensor(33)]
+Sample 812: [tensor(28), tensor(11)]
+[1mFound one![0m
+Sample 813: [tensor(28), tensor(28)]
+[1mFound one![0m
+Sample 814: [tensor(10), tensor(10)]
+Sample 815: [tensor(7), tensor(8)]
+Sample 816: [tensor(40), tensor(5)]
+[1mFound one![0m
+Sample 817: [tensor(28), tensor(28)]
+Sample 818: [tensor(40), tensor(1)]
+Sample 819: [tensor(40), tensor(0)]
+Sample 820: [tensor(41), tensor(6)]
+Sample 821: [tensor(39), tensor(32)]
+Sample 822: [tensor(41), tensor(24)]
+Sample 823: [tensor(41), tensor(16)]
+Sample 824: [tensor(41), tensor(7)]
+Sample 825: [tensor(41), tensor(7)]
+Sample 826: [tensor(41), tensor(20)]
+[1mFound one![0m
+Sample 827: [tensor(9), tensor(9)]
+Sample 828: [tensor(41), tensor(20)]
+[1mFound one![0m
+Sample 829: [tensor(14), tensor(14)]
+[1mFound one![0m
+Sample 830: [tensor(24), tensor(24)]
+[1mFound one![0m
+Sample 831: [tensor(16), tensor(16)]
+[1mFound one![0m
+Sample 832: [tensor(7), tensor(7)]
+Sample 833: [tensor(41), tensor(32)]
+Sample 834: [tensor(41), tensor(27)]
+[1mFound one![0m
+Sample 835: [tensor(14), tensor(14)]
+Sample 836: [tensor(41), tensor(24)]
+Sample 837: [tensor(41), tensor(7)]
+Sample 838: [tensor(41), tensor(9)]
+Sample 839: [tensor(41), tensor(24)]
+Sample 840: [tensor(42), tensor(38)]
+Sample 841: [tensor(42), tensor(6)]
+Sample 842: [tensor(42), tensor(14)]
+Sample 843: [tensor(42), tensor(18)]
+Sample 844: [tensor(42), tensor(4)]
+Sample 845: [tensor(42), tensor(33)]
+[1mFound one![0m
+Sample 846: [tensor(21), tensor(21)]
+Sample 847: [tensor(42), tensor(4)]
+Sample 848: [tensor(4), tensor(38)]
+Sample 849: [tensor(42), tensor(14)]
+Sample 850: [tensor(42), tensor(33)]
+[1mFound one![0m
+Sample 851: [tensor(33), tensor(33)]
+Sample 852: [tensor(42), tensor(39)]
+Sample 853: [tensor(3), tensor(21)]
+[1mFound one![0m
+Sample 854: [tensor(33), tensor(33)]
+Sample 855: [tensor(42), tensor(27)]
+Sample 856: [tensor(42), tensor(8)]
+Sample 857: [tensor(42), tensor(18)]
+Sample 858: [tensor(27), tensor(4)]
+Sample 859: [tensor(42), tensor(4)]
+Sample 860: [tensor(43), tensor(4)]
+Sample 861: [tensor(43), tensor(15)]
+Sample 862: [tensor(3), tensor(34)]
+Sample 863: [tensor(3), tensor(2)]
+Sample 864: [tensor(43), tensor(6)]
+Sample 865: [tensor(43), tensor(3)]
+[1mFound one![0m
+Sample 866: [tensor(4), tensor(4)]
+[1mFound one![0m
+Sample 867: [tensor(15), tensor(15)]
+Sample 868: [tensor(43), tensor(26)]
+Sample 869: [tensor(3), tensor(4)]
+[1mFound one![0m
+Sample 870: [tensor(15), tensor(15)]
+Sample 871: [tensor(3), tensor(27)]
+Sample 872: [tensor(43), tensor(15)]
+[1mFound one![0m
+Sample 873: [tensor(3), tensor(3)]
+Sample 874: [tensor(23), tensor(34)]
+[1mFound one![0m
+Sample 875: [tensor(15), tensor(15)]
+[1mFound one![0m
+Sample 876: [tensor(21), tensor(21)]
+Sample 877: [tensor(35), tensor(15)]
+Sample 878: [tensor(15), tensor(26)]
+Sample 879: [tensor(43), tensor(3)]
+Sample 880: [tensor(18), tensor(34)]
+Sample 881: [tensor(4), tensor(38)]
+[1mFound one![0m
+Sample 882: [tensor(27), tensor(27)]
+[1mFound one![0m
+Sample 883: [tensor(27), tensor(27)]
+[1mFound one![0m
+Sample 884: [tensor(29), tensor(29)]
+Sample 885: [tensor(18), tensor(32)]
+[1mFound one![0m
+Sample 886: [tensor(27), tensor(27)]
+Sample 887: [tensor(18), tensor(10)]
+Sample 888: [tensor(40), tensor(9)]
+Sample 889: [tensor(44), tensor(27)]
+Sample 890: [tensor(12), tensor(14)]
+[1mFound one![0m
+Sample 891: [tensor(4), tensor(4)]
+[1mFound one![0m
+Sample 892: [tensor(18), tensor(18)]
+[1mFound one![0m
+Sample 893: [tensor(27), tensor(27)]
+[1mFound one![0m
+Sample 894: [tensor(18), tensor(18)]
+[1mFound one![0m
+Sample 895: [tensor(34), tensor(34)]
+[1mFound one![0m
+Sample 896: [tensor(26), tensor(26)]
+Sample 897: [tensor(44), tensor(15)]
+[1mFound one![0m
+Sample 898: [tensor(18), tensor(18)]
+Sample 899: [tensor(4), tensor(27)]
+Sample 900: [tensor(45), tensor(20)]
+[1mFound one![0m
+Sample 901: [tensor(16), tensor(16)]
+[1mFound one![0m
+Sample 902: [tensor(18), tensor(18)]
+Sample 903: [tensor(44), tensor(7)]
+Sample 904: [tensor(45), tensor(16)]
+[1mFound one![0m
+Sample 905: [tensor(20), tensor(20)]
+Sample 906: [tensor(39), tensor(6)]
+Sample 907: [tensor(40), tensor(15)]
+[1mFound one![0m
+Sample 908: [tensor(7), tensor(7)]
+Sample 909: [tensor(5), tensor(23)]
+Sample 910: [tensor(45), tensor(7)]
+[1mFound one![0m
+Sample 911: [tensor(30), tensor(30)]
+Sample 912: [tensor(26), tensor(10)]
+Sample 913: [tensor(26), tensor(8)]
+Sample 914: [tensor(18), tensor(6)]
+[1mFound one![0m
+Sample 915: [tensor(10), tensor(10)]
+[1mFound one![0m
+Sample 916: [tensor(32), tensor(32)]
+Sample 917: [tensor(22), tensor(13)]
+Sample 918: [tensor(11), tensor(29)]
+[1mFound one![0m
+Sample 919: [tensor(39), tensor(39)]
+[1mFound one![0m
+Sample 920: [tensor(2), tensor(2)]
+[1mFound one![0m
+Sample 921: [tensor(21), tensor(21)]
+Sample 922: [tensor(11), tensor(14)]
+Sample 923: [tensor(11), tensor(2)]
+Sample 924: [tensor(2), tensor(11)]
+[1mFound one![0m
+Sample 925: [tensor(2), tensor(2)]
+[1mFound one![0m
+Sample 926: [tensor(35), tensor(35)]
+Sample 927: [tensor(43), tensor(34)]
+Sample 928: [tensor(46), tensor(11)]
+[1mFound one![0m
+Sample 929: [tensor(2), tensor(2)]
+[1mFound one![0m
+Sample 930: [tensor(2), tensor(2)]
+[1mFound one![0m
+Sample 931: [tensor(2), tensor(2)]
+[1mFound one![0m
+Sample 932: [tensor(2), tensor(2)]
+[1mFound one![0m
+Sample 933: [tensor(2), tensor(2)]
+Sample 934: [tensor(2), tensor(11)]
+Sample 935: [tensor(35), tensor(5)]
+[1mFound one![0m
+Sample 936: [tensor(2), tensor(2)]
+Sample 937: [tensor(2), tensor(11)]
+[1mFound one![0m
+Sample 938: [tensor(11), tensor(11)]
+[1mFound one![0m
+Sample 939: [tensor(2), tensor(2)]
+Sample 940: [tensor(47), tensor(4)]
+Sample 941: [tensor(47), tensor(33)]
+Sample 942: [tensor(9), tensor(17)]
+Sample 943: [tensor(47), tensor(23)]
+Sample 944: [tensor(47), tensor(33)]
+Sample 945: [tensor(47), tensor(18)]
+Sample 946: [tensor(47), tensor(21)]
+Sample 947: [tensor(47), tensor(26)]
+Sample 948: [tensor(47), tensor(4)]
+Sample 949: [tensor(47), tensor(33)]
+Sample 950: [tensor(47), tensor(33)]
+Sample 951: [tensor(47), tensor(33)]
+Sample 952: [tensor(47), tensor(33)]
+Sample 953: [tensor(33), tensor(23)]
+Sample 954: [tensor(47), tensor(33)]
+[1mFound one![0m
+Sample 955: [tensor(33), tensor(33)]
+[1mFound one![0m
+Sample 956: [tensor(33), tensor(33)]
+Sample 957: [tensor(47), tensor(4)]
+Sample 958: [tensor(33), tensor(26)]
+[1mFound one![0m
+Sample 959: [tensor(33), tensor(33)]
+Sample 960: [tensor(48), tensor(13)]
+Sample 961: [tensor(48), tensor(26)]
+Sample 962: [tensor(48), tensor(39)]
+[1mFound one![0m
+Sample 963: [tensor(39), tensor(39)]
+[1mFound one![0m
+Sample 964: [tensor(8), tensor(8)]
+[1mFound one![0m
+Sample 965: [tensor(13), tensor(13)]
+[1mFound one![0m
+Sample 966: [tensor(8), tensor(8)]
+[1mFound one![0m
+Sample 967: [tensor(8), tensor(8)]
+Sample 968: [tensor(48), tensor(13)]
+Sample 969: [tensor(48), tensor(8)]
+Sample 970: [tensor(48), tensor(8)]
+Sample 971: [tensor(13), tensor(10)]
+Sample 972: [tensor(37), tensor(5)]
+Sample 973: [tensor(48), tensor(6)]
+Sample 974: [tensor(39), tensor(14)]
+Sample 975: [tensor(8), tensor(13)]
+Sample 976: [tensor(48), tensor(34)]
+Sample 977: [tensor(48), tensor(13)]
+Sample 978: [tensor(8), tensor(14)]
+Sample 979: [tensor(48), tensor(8)]
+Sample 980: [tensor(12), tensor(11)]
+Sample 981: [tensor(39), tensor(22)]
+Sample 982: [tensor(25), tensor(5)]
+Sample 983: [tensor(49), tensor(17)]
+Sample 984: [tensor(49), tensor(37)]
+Sample 985: [tensor(49), tensor(23)]
+[1mFound one![0m
+Sample 986: [tensor(17), tensor(17)]
+[1mFound one![0m
+Sample 987: [tensor(12), tensor(12)]
+Sample 988: [tensor(12), tensor(33)]
+Sample 989: [tensor(49), tensor(27)]
+Sample 990: [tensor(49), tensor(17)]
+Sample 991: [tensor(49), tensor(12)]
+[1mFound one![0m
+Sample 992: [tensor(30), tensor(30)]
+Sample 993: [tensor(49), tensor(23)]
+[1mFound one![0m
+Sample 994: [tensor(23), tensor(23)]
+Sample 995: [tensor(49), tensor(29)]
+Sample 996: [tensor(49), tensor(23)]
+[1mFound one![0m
+Sample 997: [tensor(17), tensor(17)]
+Sample 998: [tensor(49), tensor(12)]
+Sample 999: [tensor(17), tensor(4)]
+Sample 1000: [tensor(50), tensor(26)]
+Sample 1001: [tensor(42), tensor(18)]
+Sample 1002: [tensor(50), tensor(2)]
+[1mFound one![0m
+Sample 1003: [tensor(10), tensor(10)]
+Sample 1004: [tensor(4), tensor(27)]
+Sample 1005: [tensor(50), tensor(26)]
+[1mFound one![0m
+Sample 1006: [tensor(4), tensor(4)]
+[1mFound one![0m
+Sample 1007: [tensor(36), tensor(36)]
+[1mFound one![0m
+Sample 1008: [tensor(23), tensor(23)]
+Sample 1009: [tensor(38), tensor(15)]
+[1mFound one![0m
+Sample 1010: [tensor(32), tensor(32)]
+[1mFound one![0m
+Sample 1011: [tensor(4), tensor(4)]
+[1mFound one![0m
+Sample 1012: [tensor(5), tensor(5)]
+Sample 1013: [tensor(10), tensor(32)]
+Sample 1014: [tensor(31), tensor(13)]
+[1mFound one![0m
+Sample 1015: [tensor(14), tensor(14)]
+[1mFound one![0m
+Sample 1016: [tensor(4), tensor(4)]
+Sample 1017: [tensor(22), tensor(46)]
+Sample 1018: [tensor(50), tensor(4)]
+Sample 1019: [tensor(50), tensor(4)]
+Sample 1020: [tensor(51), tensor(13)]
+Sample 1021: [tensor(42), tensor(27)]
+Sample 1022: [tensor(38), tensor(4)]
+[1mFound one![0m
+Sample 1023: [tensor(27), tensor(27)]
+Sample 1024: [tensor(51), tensor(19)]
+[1mFound one![0m
+Sample 1025: [tensor(42), tensor(42)]
+Sample 1026: [tensor(51), tensor(6)]
+Sample 1027: [tensor(26), tensor(14)]
+[1mFound one![0m
+Sample 1028: [tensor(14), tensor(14)]
+[1mFound one![0m
+Sample 1029: [tensor(1), tensor(1)]
+Sample 1030: [tensor(51), tensor(15)]
+Sample 1031: [tensor(14), tensor(29)]
+[1mFound one![0m
+Sample 1032: [tensor(15), tensor(15)]
+[1mFound one![0m
+Sample 1033: [tensor(1), tensor(1)]
+[1mFound one![0m
+Sample 1034: [tensor(1), tensor(1)]
+Sample 1035: [tensor(7), tensor(18)]
+[1mFound one![0m
+Sample 1036: [tensor(33), tensor(33)]
+Sample 1037: [tensor(31), tensor(21)]
+[1mFound one![0m
+Sample 1038: [tensor(2), tensor(2)]
+[1mFound one![0m
+Sample 1039: [tensor(18), tensor(18)]
+[1mFound one![0m
+Sample 1040: [tensor(47), tensor(47)]
+[1mFound one![0m
+Sample 1041: [tensor(47), tensor(47)]
+Sample 1042: [tensor(47), tensor(17)]
+[1mFound one![0m
+Sample 1043: [tensor(47), tensor(47)]
+Sample 1044: [tensor(17), tensor(47)]
+Sample 1045: [tensor(47), tensor(29)]
+[1mFound one![0m
+Sample 1046: [tensor(47), tensor(47)]
+[1mFound one![0m
+Sample 1047: [tensor(4), tensor(4)]
+[1mFound one![0m
+Sample 1048: [tensor(47), tensor(47)]
+[1mFound one![0m
+Sample 1049: [tensor(47), tensor(47)]
+[1mFound one![0m
+Sample 1050: [tensor(47), tensor(47)]
+[1mFound one![0m
+Sample 1051: [tensor(47), tensor(47)]
+Sample 1052: [tensor(59), tensor(47)]
+[1mFound one![0m
+Sample 1053: [tensor(17), tensor(17)]
+[1mFound one![0m
+Sample 1054: [tensor(17), tensor(17)]
+Sample 1055: [tensor(47), tensor(33)]
+[1mFound one![0m
+Sample 1056: [tensor(47), tensor(47)]
+[1mFound one![0m
+Sample 1057: [tensor(47), tensor(47)]
+[1mFound one![0m
+Sample 1058: [tensor(47), tensor(47)]
+[1mFound one![0m
+Sample 1059: [tensor(47), tensor(47)]
+[1mFound one![0m
+Sample 1060: [tensor(10), tensor(10)]
+Sample 1061: [tensor(0), tensor(10)]
+Sample 1062: [tensor(53), tensor(6)]
+Sample 1063: [tensor(53), tensor(40)]
+Sample 1064: [tensor(47), tensor(34)]
+Sample 1065: [tensor(10), tensor(0)]
+Sample 1066: [tensor(53), tensor(45)]
+[1mFound one![0m
+Sample 1067: [tensor(39), tensor(39)]
+Sample 1068: [tensor(10), tensor(0)]
+Sample 1069: [tensor(53), tensor(39)]
+Sample 1070: [tensor(53), tensor(10)]
+Sample 1071: [tensor(53), tensor(10)]
+[1mFound one![0m
+Sample 1072: [tensor(10), tensor(10)]
+Sample 1073: [tensor(53), tensor(45)]
+Sample 1074: [tensor(53), tensor(14)]
+Sample 1075: [tensor(53), tensor(45)]
+[1mFound one![0m
+Sample 1076: [tensor(10), tensor(10)]
+Sample 1077: [tensor(53), tensor(0)]
+Sample 1078: [tensor(53), tensor(0)]
+Sample 1079: [tensor(53), tensor(39)]
+Sample 1080: [tensor(54), tensor(39)]
+Sample 1081: [tensor(54), tensor(1)]
+[1mFound one![0m
+Sample 1082: [tensor(14), tensor(14)]
+Sample 1083: [tensor(54), tensor(6)]
+Sample 1084: [tensor(54), tensor(0)]
+Sample 1085: [tensor(54), tensor(1)]
+Sample 1086: [tensor(54), tensor(46)]
+[1mFound one![0m
+Sample 1087: [tensor(32), tensor(32)]
+Sample 1088: [tensor(54), tensor(39)]
+Sample 1089: [tensor(54), tensor(2)]
+Sample 1090: [tensor(54), tensor(32)]
+Sample 1091: [tensor(54), tensor(46)]
+Sample 1092: [tensor(54), tensor(1)]
+Sample 1093: [tensor(54), tensor(28)]
+Sample 1094: [tensor(54), tensor(40)]
+Sample 1095: [tensor(54), tensor(6)]
+Sample 1096: [tensor(54), tensor(6)]
+Sample 1097: [tensor(54), tensor(39)]
+Sample 1098: [tensor(26), tensor(6)]
+[1mFound one![0m
+Sample 1099: [tensor(26), tensor(26)]
+Sample 1100: [tensor(27), tensor(30)]
+[1mFound one![0m
+Sample 1101: [tensor(21), tensor(21)]
+[1mFound one![0m
+Sample 1102: [tensor(29), tensor(29)]
+Sample 1103: [tensor(27), tensor(19)]
+[1mFound one![0m
+Sample 1104: [tensor(3), tensor(3)]
+Sample 1105: [tensor(30), tensor(12)]
+[1mFound one![0m
+Sample 1106: [tensor(27), tensor(27)]
+[1mFound one![0m
+Sample 1107: [tensor(30), tensor(30)]
+[1mFound one![0m
+Sample 1108: [tensor(3), tensor(3)]
+Sample 1109: [tensor(55), tensor(4)]
+Sample 1110: [tensor(35), tensor(40)]
+Sample 1111: [tensor(55), tensor(19)]
+[1mFound one![0m
+Sample 1112: [tensor(30), tensor(30)]
+Sample 1113: [tensor(4), tensor(27)]
+Sample 1114: [tensor(18), tensor(1)]
+[1mFound one![0m
+Sample 1115: [tensor(15), tensor(15)]
+[1mFound one![0m
+Sample 1116: [tensor(5), tensor(5)]
+Sample 1117: [tensor(26), tensor(19)]
+[1mFound one![0m
+Sample 1118: [tensor(14), tensor(14)]
+Sample 1119: [tensor(4), tensor(5)]
+Sample 1120: [tensor(56), tensor(18)]
+Sample 1121: [tensor(45), tensor(18)]
+Sample 1122: [tensor(45), tensor(18)]
+[1mFound one![0m
+Sample 1123: [tensor(29), tensor(29)]
+[1mFound one![0m
+Sample 1124: [tensor(18), tensor(18)]
+Sample 1125: [tensor(27), tensor(33)]
+Sample 1126: [tensor(27), tensor(33)]
+Sample 1127: [tensor(56), tensor(29)]
+Sample 1128: [tensor(33), tensor(18)]
+Sample 1129: [tensor(56), tensor(30)]
+Sample 1130: [tensor(47), tensor(33)]
+[1mFound one![0m
+Sample 1131: [tensor(27), tensor(27)]
+Sample 1132: [tensor(56), tensor(15)]
+Sample 1133: [tensor(18), tensor(4)]
+Sample 1134: [tensor(56), tensor(6)]
+Sample 1135: [tensor(56), tensor(29)]
+Sample 1136: [tensor(56), tensor(16)]
+[1mFound one![0m
+Sample 1137: [tensor(27), tensor(27)]
+Sample 1138: [tensor(45), tensor(18)]
+[1mFound one![0m
+Sample 1139: [tensor(47), tensor(47)]
+Sample 1140: [tensor(0), tensor(32)]
+[1mFound one![0m
+Sample 1141: [tensor(10), tensor(10)]
+[1mFound one![0m
+Sample 1142: [tensor(10), tensor(10)]
+Sample 1143: [tensor(0), tensor(10)]
+[1mFound one![0m
+Sample 1144: [tensor(10), tensor(10)]
+[1mFound one![0m
+Sample 1145: [tensor(0), tensor(0)]
+[1mFound one![0m
+Sample 1146: [tensor(18), tensor(18)]
+Sample 1147: [tensor(57), tensor(0)]
+Sample 1148: [tensor(15), tensor(10)]
+Sample 1149: [tensor(57), tensor(0)]
+Sample 1150: [tensor(2), tensor(13)]
+[1mFound one![0m
+Sample 1151: [tensor(39), tensor(39)]
+[1mFound one![0m
+Sample 1152: [tensor(0), tensor(0)]
+[1mFound one![0m
+Sample 1153: [tensor(0), tensor(0)]
+[1mFound one![0m
+Sample 1154: [tensor(32), tensor(32)]
+[1mFound one![0m
+Sample 1155: [tensor(0), tensor(0)]
+[1mFound one![0m
+Sample 1156: [tensor(0), tensor(0)]
+Sample 1157: [tensor(0), tensor(10)]
+Sample 1158: [tensor(57), tensor(9)]
+Sample 1159: [tensor(57), tensor(32)]
+[1mFound one![0m
+Sample 1160: [tensor(45), tensor(45)]
+Sample 1161: [tensor(58), tensor(37)]
+Sample 1162: [tensor(58), tensor(13)]
+Sample 1163: [tensor(13), tensor(37)]
+[1mFound one![0m
+Sample 1164: [tensor(13), tensor(13)]
+Sample 1165: [tensor(58), tensor(13)]
+Sample 1166: [tensor(8), tensor(12)]
+[1mFound one![0m
+Sample 1167: [tensor(13), tensor(13)]
+Sample 1168: [tensor(58), tensor(13)]
+[1mFound one![0m
+Sample 1169: [tensor(13), tensor(13)]
+Sample 1170: [tensor(13), tensor(25)]
+[1mFound one![0m
+Sample 1171: [tensor(13), tensor(13)]
+Sample 1172: [tensor(58), tensor(41)]
+Sample 1173: [tensor(58), tensor(13)]
+[1mFound one![0m
+Sample 1174: [tensor(13), tensor(13)]
+[1mFound one![0m
+Sample 1175: [tensor(13), tensor(13)]
+Sample 1176: [tensor(58), tensor(13)]
+[1mFound one![0m
+Sample 1177: [tensor(13), tensor(13)]
+[1mFound one![0m
+Sample 1178: [tensor(13), tensor(13)]
+[1mFound one![0m
+Sample 1179: [tensor(13), tensor(13)]
+[1mFound one![0m
+Sample 1180: [tensor(9), tensor(9)]
+[1mFound one![0m
+Sample 1181: [tensor(49), tensor(49)]
+Sample 1182: [tensor(27), tensor(33)]
+[1mFound one![0m
+Sample 1183: [tensor(47), tensor(47)]
+Sample 1184: [tensor(33), tensor(17)]
+Sample 1185: [tensor(59), tensor(12)]
+[1mFound one![0m
+Sample 1186: [tensor(17), tensor(17)]
+[1mFound one![0m
+Sample 1187: [tensor(21), tensor(21)]
+Sample 1188: [tensor(17), tensor(47)]
+Sample 1189: [tensor(33), tensor(47)]
+[1mFound one![0m
+Sample 1190: [tensor(47), tensor(47)]
+Sample 1191: [tensor(59), tensor(27)]
+Sample 1192: [tensor(33), tensor(47)]
+Sample 1193: [tensor(27), tensor(6)]
+[1mFound one![0m
+Sample 1194: [tensor(33), tensor(33)]
+[1mFound one![0m
+Sample 1195: [tensor(47), tensor(47)]
+Sample 1196: [tensor(59), tensor(47)]
+[1mFound one![0m
+Sample 1197: [tensor(47), tensor(47)]
+[1mFound one![0m
+Sample 1198: [tensor(47), tensor(47)]
+Sample 1199: [tensor(56), tensor(29)]
+Sample 1200: [tensor(25), tensor(37)]
+Sample 1201: [tensor(60), tensor(49)]
+Sample 1202: [tensor(60), tensor(5)]
+Sample 1203: [tensor(60), tensor(31)]
+Sample 1204: [tensor(60), tensor(25)]
+Sample 1205: [tensor(49), tensor(23)]
+Sample 1206: [tensor(49), tensor(23)]
+Sample 1207: [tensor(49), tensor(12)]
+Sample 1208: [tensor(60), tensor(49)]
+Sample 1209: [tensor(49), tensor(18)]
+Sample 1210: [tensor(49), tensor(12)]
+Sample 1211: [tensor(60), tensor(23)]
+Sample 1212: [tensor(60), tensor(25)]
+Sample 1213: [tensor(60), tensor(37)]
+[1mFound one![0m
+Sample 1214: [tensor(23), tensor(23)]
+[1mFound one![0m
+Sample 1215: [tensor(49), tensor(49)]
+Sample 1216: [tensor(60), tensor(37)]
+Sample 1217: [tensor(60), tensor(49)]
+[1mFound one![0m
+Sample 1218: [tensor(25), tensor(25)]
+Sample 1219: [tensor(60), tensor(17)]
+[1mFound one![0m
+Sample 1220: [tensor(22), tensor(22)]
+Sample 1221: [tensor(61), tensor(10)]
+[1mFound one![0m
+Sample 1222: [tensor(10), tensor(10)]
+[1mFound one![0m
+Sample 1223: [tensor(22), tensor(22)]
+[1mFound one![0m
+Sample 1224: [tensor(10), tensor(10)]
+Sample 1225: [tensor(61), tensor(22)]
+Sample 1226: [tensor(61), tensor(26)]
+Sample 1227: [tensor(40), tensor(25)]
+[1mFound one![0m
+Sample 1228: [tensor(22), tensor(22)]
+Sample 1229: [tensor(22), tensor(10)]
+[1mFound one![0m
+Sample 1230: [tensor(22), tensor(22)]
+[1mFound one![0m
+Sample 1231: [tensor(10), tensor(10)]
+[1mFound one![0m
+Sample 1232: [tensor(22), tensor(22)]
+[1mFound one![0m
+Sample 1233: [tensor(10), tensor(10)]
+[1mFound one![0m
+Sample 1234: [tensor(22), tensor(22)]
+Sample 1235: [tensor(61), tensor(10)]
+Sample 1236: [tensor(22), tensor(36)]
+Sample 1237: [tensor(22), tensor(10)]
+[1mFound one![0m
+Sample 1238: [tensor(10), tensor(10)]
+Sample 1239: [tensor(61), tensor(10)]
+Sample 1240: [tensor(62), tensor(49)]
+Sample 1241: [tensor(6), tensor(14)]
+Sample 1242: [tensor(7), tensor(14)]
+Sample 1243: [tensor(62), tensor(53)]
+Sample 1244: [tensor(22), tensor(14)]
+Sample 1245: [tensor(62), tensor(33)]
+[1mFound one![0m
+Sample 1246: [tensor(14), tensor(14)]
+Sample 1247: [tensor(62), tensor(9)]
+[1mFound one![0m
+Sample 1248: [tensor(22), tensor(22)]
+Sample 1249: [tensor(62), tensor(1)]
+[1mFound one![0m
+Sample 1250: [tensor(48), tensor(48)]
+Sample 1251: [tensor(62), tensor(0)]
+[1mFound one![0m
+Sample 1252: [tensor(6), tensor(6)]
+[1mFound one![0m
+Sample 1253: [tensor(9), tensor(9)]
+Sample 1254: [tensor(23), tensor(10)]
+Sample 1255: [tensor(62), tensor(14)]
+Sample 1256: [tensor(62), tensor(1)]
+Sample 1257: [tensor(51), tensor(1)]
+Sample 1258: [tensor(62), tensor(14)]
+[1mFound one![0m
+Sample 1259: [tensor(33), tensor(33)]
+[1mFound one![0m
+Sample 1260: [tensor(18), tensor(18)]
+Sample 1261: [tensor(27), tensor(42)]
+Sample 1262: [tensor(42), tensor(26)]
+Sample 1263: [tensor(63), tensor(41)]
+Sample 1264: [tensor(63), tensor(27)]
+Sample 1265: [tensor(55), tensor(21)]
+[1mFound one![0m
+Sample 1266: [tensor(39), tensor(39)]
+Sample 1267: [tensor(29), tensor(3)]
+[1mFound one![0m
+Sample 1268: [tensor(43), tensor(43)]
+[1mFound one![0m
+Sample 1269: [tensor(4), tensor(4)]
+Sample 1270: [tensor(38), tensor(26)]
+Sample 1271: [tensor(42), tensor(27)]
+Sample 1272: [tensor(63), tensor(10)]
+[1mFound one![0m
+Sample 1273: [tensor(4), tensor(4)]
+Sample 1274: [tensor(3), tensor(21)]
+Sample 1275: [tensor(4), tensor(26)]
+[1mFound one![0m
+Sample 1276: [tensor(39), tensor(39)]
+Sample 1277: [tensor(50), tensor(10)]
+Sample 1278: [tensor(33), tensor(41)]
+[1mFound one![0m
+Sample 1279: [tensor(3), tensor(3)]
+[1mFound one![0m
+Sample 1280: [tensor(3), tensor(3)]
+Sample 1281: [tensor(26), tensor(39)]
+[1mFound one![0m
+Sample 1282: [tensor(50), tensor(50)]
+Sample 1283: [tensor(38), tensor(27)]
+Sample 1284: [tensor(38), tensor(50)]
+Sample 1285: [tensor(64), tensor(3)]
+[1mFound one![0m
+Sample 1286: [tensor(3), tensor(3)]
+Sample 1287: [tensor(64), tensor(35)]
+[1mFound one![0m
+Sample 1288: [tensor(3), tensor(3)]
+[1mFound one![0m
+Sample 1289: [tensor(3), tensor(3)]
+[1mFound one![0m
+Sample 1290: [tensor(50), tensor(50)]
+[1mFound one![0m
+Sample 1291: [tensor(50), tensor(50)]
+Sample 1292: [tensor(50), tensor(36)]
+Sample 1293: [tensor(50), tensor(43)]
+[1mFound one![0m
+Sample 1294: [tensor(3), tensor(3)]
+Sample 1295: [tensor(64), tensor(50)]
+Sample 1296: [tensor(64), tensor(32)]
+Sample 1297: [tensor(43), tensor(3)]
+[1mFound one![0m
+Sample 1298: [tensor(21), tensor(21)]
+Sample 1299: [tensor(27), tensor(3)]
+[1mFound one![0m
+Sample 1300: [tensor(38), tensor(38)]
+[1mFound one![0m
+Sample 1301: [tensor(36), tensor(36)]
+Sample 1302: [tensor(4), tensor(27)]
+Sample 1303: [tensor(44), tensor(18)]
+Sample 1304: [tensor(42), tensor(27)]
+Sample 1305: [tensor(26), tensor(51)]
+[1mFound one![0m
+Sample 1306: [tensor(24), tensor(24)]
+[1mFound one![0m
+Sample 1307: [tensor(0), tensor(0)]
+Sample 1308: [tensor(19), tensor(1)]
+Sample 1309: [tensor(15), tensor(43)]
+Sample 1310: [tensor(50), tensor(42)]
+[1mFound one![0m
+Sample 1311: [tensor(22), tensor(22)]
+Sample 1312: [tensor(27), tensor(42)]
+Sample 1313: [tensor(30), tensor(16)]
+Sample 1314: [tensor(3), tensor(43)]
+Sample 1315: [tensor(38), tensor(28)]
+[1mFound one![0m
+Sample 1316: [tensor(38), tensor(38)]
+Sample 1317: [tensor(21), tensor(3)]
+[1mFound one![0m
+Sample 1318: [tensor(50), tensor(50)]
+Sample 1319: [tensor(69), tensor(34)]
+Sample 1320: [tensor(8), tensor(38)]
+[1mFound one![0m
+Sample 1321: [tensor(4), tensor(4)]
+Sample 1322: [tensor(10), tensor(18)]
+Sample 1323: [tensor(55), tensor(21)]
+[1mFound one![0m
+Sample 1324: [tensor(3), tensor(3)]
+Sample 1325: [tensor(4), tensor(42)]
+Sample 1326: [tensor(66), tensor(55)]
+Sample 1327: [tensor(66), tensor(45)]
+Sample 1328: [tensor(66), tensor(16)]
+[1mFound one![0m
+Sample 1329: [tensor(29), tensor(29)]
+Sample 1330: [tensor(51), tensor(26)]
+Sample 1331: [tensor(4), tensor(10)]
+[1mFound one![0m
+Sample 1332: [tensor(38), tensor(38)]
+[1mFound one![0m
+Sample 1333: [tensor(19), tensor(19)]
+Sample 1334: [tensor(19), tensor(55)]
+Sample 1335: [tensor(66), tensor(27)]
+[1mFound one![0m
+Sample 1336: [tensor(19), tensor(19)]
+Sample 1337: [tensor(66), tensor(55)]
+[1mFound one![0m
+Sample 1338: [tensor(51), tensor(51)]
+Sample 1339: [tensor(66), tensor(10)]
+[1mFound one![0m
+Sample 1340: [tensor(10), tensor(10)]
+[1mFound one![0m
+Sample 1341: [tensor(23), tensor(23)]
+[1mFound one![0m
+Sample 1342: [tensor(30), tensor(30)]
+Sample 1343: [tensor(67), tensor(30)]
+Sample 1344: [tensor(67), tensor(50)]
+Sample 1345: [tensor(67), tensor(23)]
+[1mFound one![0m
+Sample 1346: [tensor(23), tensor(23)]
+Sample 1347: [tensor(1), tensor(10)]
+Sample 1348: [tensor(23), tensor(49)]
+[1mFound one![0m
+Sample 1349: [tensor(30), tensor(30)]
+[1mFound one![0m
+Sample 1350: [tensor(1), tensor(1)]
+Sample 1351: [tensor(44), tensor(4)]
+[1mFound one![0m
+Sample 1352: [tensor(23), tensor(23)]
+Sample 1353: [tensor(67), tensor(30)]
+[1mFound one![0m
+Sample 1354: [tensor(10), tensor(10)]
+Sample 1355: [tensor(67), tensor(30)]
+[1mFound one![0m
+Sample 1356: [tensor(4), tensor(4)]
+Sample 1357: [tensor(32), tensor(23)]
+[1mFound one![0m
+Sample 1358: [tensor(44), tensor(44)]
+Sample 1359: [tensor(49), tensor(5)]
+Sample 1360: [tensor(68), tensor(23)]
+Sample 1361: [tensor(68), tensor(18)]
+[1mFound one![0m
+Sample 1362: [tensor(12), tensor(12)]
+[1mFound one![0m
+Sample 1363: [tensor(37), tensor(37)]
+[1mFound one![0m
+Sample 1364: [tensor(12), tensor(12)]
+Sample 1365: [tensor(68), tensor(18)]
+Sample 1366: [tensor(68), tensor(23)]
+[1mFound one![0m
+Sample 1367: [tensor(12), tensor(12)]
+[1mFound one![0m
+Sample 1368: [tensor(5), tensor(5)]
+Sample 1369: [tensor(68), tensor(33)]
+[1mFound one![0m
+Sample 1370: [tensor(12), tensor(12)]
+[1mFound one![0m
+Sample 1371: [tensor(49), tensor(49)]
+Sample 1372: [tensor(68), tensor(3)]
+Sample 1373: [tensor(68), tensor(33)]
+Sample 1374: [tensor(68), tensor(49)]
+Sample 1375: [tensor(68), tensor(18)]
+Sample 1376: [tensor(68), tensor(56)]
+Sample 1377: [tensor(68), tensor(33)]
+Sample 1378: [tensor(68), tensor(33)]
+Sample 1379: [tensor(68), tensor(46)]
+Sample 1380: [tensor(69), tensor(23)]
+[1mFound one![0m
+Sample 1381: [tensor(30), tensor(30)]
+Sample 1382: [tensor(69), tensor(9)]
+Sample 1383: [tensor(69), tensor(40)]
+Sample 1384: [tensor(69), tensor(44)]
+Sample 1385: [tensor(69), tensor(9)]
+Sample 1386: [tensor(23), tensor(30)]
+Sample 1387: [tensor(69), tensor(40)]
+Sample 1388: [tensor(17), tensor(12)]
+[1mFound one![0m
+Sample 1389: [tensor(12), tensor(12)]
+Sample 1390: [tensor(69), tensor(18)]
+Sample 1391: [tensor(16), tensor(9)]
+Sample 1392: [tensor(69), tensor(9)]
+[1mFound one![0m
+Sample 1393: [tensor(30), tensor(30)]
+Sample 1394: [tensor(69), tensor(40)]
+Sample 1395: [tensor(69), tensor(1)]
+Sample 1396: [tensor(69), tensor(12)]
+Sample 1397: [tensor(69), tensor(9)]
+[1mFound one![0m
+Sample 1398: [tensor(40), tensor(40)]
+Sample 1399: [tensor(69), tensor(40)]
+[1mFound one![0m
+Sample 1400: [tensor(62), tensor(62)]
+[1mFound one![0m
+Sample 1401: [tensor(53), tensor(53)]
+Sample 1402: [tensor(28), tensor(44)]
+[1mFound one![0m
+Sample 1403: [tensor(1), tensor(1)]
+[1mFound one![0m
+Sample 1404: [tensor(1), tensor(1)]
+Sample 1405: [tensor(62), tensor(0)]
+[1mFound one![0m
+Sample 1406: [tensor(0), tensor(0)]
+Sample 1407: [tensor(70), tensor(62)]
+Sample 1408: [tensor(62), tensor(10)]
+[1mFound one![0m
+Sample 1409: [tensor(62), tensor(62)]
+[1mFound one![0m
+Sample 1410: [tensor(48), tensor(48)]
+Sample 1411: [tensor(62), tensor(6)]
+Sample 1412: [tensor(62), tensor(7)]
+[1mFound one![0m
+Sample 1413: [tensor(0), tensor(0)]
+Sample 1414: [tensor(70), tensor(62)]
+[1mFound one![0m
+Sample 1415: [tensor(62), tensor(62)]
+[1mFound one![0m
+Sample 1416: [tensor(1), tensor(1)]
+Sample 1417: [tensor(70), tensor(62)]
+[1mFound one![0m
+Sample 1418: [tensor(45), tensor(45)]
+Sample 1419: [tensor(70), tensor(62)]
+Sample 1420: [tensor(33), tensor(60)]
+Sample 1421: [tensor(69), tensor(9)]
+Sample 1422: [tensor(71), tensor(30)]
+[1mFound one![0m
+Sample 1423: [tensor(49), tensor(49)]
+Sample 1424: [tensor(71), tensor(49)]
+Sample 1425: [tensor(71), tensor(12)]
+Sample 1426: [tensor(25), tensor(60)]
+Sample 1427: [tensor(60), tensor(49)]
+[1mFound one![0m
+Sample 1428: [tensor(40), tensor(40)]
+Sample 1429: [tensor(60), tensor(49)]
+Sample 1430: [tensor(33), tensor(23)]
+Sample 1431: [tensor(33), tensor(49)]
+Sample 1432: [tensor(33), tensor(49)]
+Sample 1433: [tensor(60), tensor(49)]
+[1mFound one![0m
+Sample 1434: [tensor(5), tensor(5)]
+[1mFound one![0m
+Sample 1435: [tensor(40), tensor(40)]
+Sample 1436: [tensor(5), tensor(49)]
+Sample 1437: [tensor(60), tensor(49)]
+Sample 1438: [tensor(71), tensor(60)]
+[1mFound one![0m
+Sample 1439: [tensor(49), tensor(49)]
+Sample 1440: [tensor(27), tensor(55)]
+[1mFound one![0m
+Sample 1441: [tensor(15), tensor(15)]
+[1mFound one![0m
+Sample 1442: [tensor(55), tensor(55)]
+[1mFound one![0m
+Sample 1443: [tensor(21), tensor(21)]
+[1mFound one![0m
+Sample 1444: [tensor(3), tensor(3)]
+[1mFound one![0m
+Sample 1445: [tensor(55), tensor(55)]
+Sample 1446: [tensor(39), tensor(4)]
+Sample 1447: [tensor(27), tensor(4)]
+Sample 1448: [tensor(27), tensor(55)]
+[1mFound one![0m
+Sample 1449: [tensor(3), tensor(3)]
+[1mFound one![0m
+Sample 1450: [tensor(27), tensor(27)]
+[1mFound one![0m
+Sample 1451: [tensor(4), tensor(4)]
+Sample 1452: [tensor(27), tensor(4)]
+Sample 1453: [tensor(3), tensor(15)]
+Sample 1454: [tensor(31), tensor(55)]
+[1mFound one![0m
+Sample 1455: [tensor(44), tensor(44)]
+[1mFound one![0m
+Sample 1456: [tensor(3), tensor(3)]
+Sample 1457: [tensor(44), tensor(15)]
+Sample 1458: [tensor(21), tensor(3)]
+Sample 1459: [tensor(55), tensor(30)]
+[1mFound one![0m
+Sample 1460: [tensor(38), tensor(38)]
+[1mFound one![0m
+Sample 1461: [tensor(30), tensor(30)]
+Sample 1462: [tensor(49), tensor(23)]
+[1mFound one![0m
+Sample 1463: [tensor(30), tensor(30)]
+Sample 1464: [tensor(10), tensor(39)]
+[1mFound one![0m
+Sample 1465: [tensor(18), tensor(18)]
+Sample 1466: [tensor(39), tensor(23)]
+[1mFound one![0m
+Sample 1467: [tensor(1), tensor(1)]
+Sample 1468: [tensor(4), tensor(67)]
+Sample 1469: [tensor(67), tensor(44)]
+Sample 1470: [tensor(49), tensor(23)]
+[1mFound one![0m
+Sample 1471: [tensor(67), tensor(67)]
+Sample 1472: [tensor(30), tensor(49)]
+[1mFound one![0m
+Sample 1473: [tensor(10), tensor(10)]
+Sample 1474: [tensor(18), tensor(30)]
+[1mFound one![0m
+Sample 1475: [tensor(57), tensor(57)]
+Sample 1476: [tensor(1), tensor(13)]
+Sample 1477: [tensor(67), tensor(30)]
+[1mFound one![0m
+Sample 1478: [tensor(67), tensor(67)]
+Sample 1479: [tensor(67), tensor(23)]
+[1mFound one![0m
+Sample 1480: [tensor(21), tensor(21)]
+[1mFound one![0m
+Sample 1481: [tensor(17), tensor(17)]
+[1mFound one![0m
+Sample 1482: [tensor(39), tensor(39)]
+[1mFound one![0m
+Sample 1483: [tensor(4), tensor(4)]
+[1mFound one![0m
+Sample 1484: [tensor(15), tensor(15)]
+Sample 1485: [tensor(55), tensor(31)]
+Sample 1486: [tensor(21), tensor(4)]
+[1mFound one![0m
+Sample 1487: [tensor(4), tensor(4)]
+[1mFound one![0m
+Sample 1488: [tensor(63), tensor(63)]
+Sample 1489: [tensor(74), tensor(4)]
+Sample 1490: [tensor(74), tensor(50)]
+Sample 1491: [tensor(44), tensor(55)]
+Sample 1492: [tensor(18), tensor(27)]
+[1mFound one![0m
+Sample 1493: [tensor(39), tensor(39)]
+[1mFound one![0m
+Sample 1494: [tensor(4), tensor(4)]
+Sample 1495: [tensor(44), tensor(27)]
+[1mFound one![0m
+Sample 1496: [tensor(7), tensor(7)]
+[1mFound one![0m
+Sample 1497: [tensor(19), tensor(19)]
+[1mFound one![0m
+Sample 1498: [tensor(4), tensor(4)]
+Sample 1499: [tensor(50), tensor(3)]
+Sample 1500: [tensor(1), tensor(32)]
+Sample 1501: [tensor(31), tensor(3)]
+Sample 1502: [tensor(75), tensor(38)]
+[1mFound one![0m
+Sample 1503: [tensor(39), tensor(39)]
+Sample 1504: [tensor(75), tensor(27)]
+Sample 1505: [tensor(41), tensor(55)]
+Sample 1506: [tensor(75), tensor(55)]
+[1mFound one![0m
+Sample 1507: [tensor(5), tensor(5)]
+[1mFound one![0m
+Sample 1508: [tensor(37), tensor(37)]
+[1mFound one![0m
+Sample 1509: [tensor(24), tensor(24)]
+Sample 1510: [tensor(58), tensor(55)]
+[1mFound one![0m
+Sample 1511: [tensor(41), tensor(41)]
+Sample 1512: [tensor(75), tensor(63)]
+Sample 1513: [tensor(75), tensor(31)]
+[1mFound one![0m
+Sample 1514: [tensor(21), tensor(21)]
+[1mFound one![0m
+Sample 1515: [tensor(31), tensor(31)]
+Sample 1516: [tensor(75), tensor(4)]
+[1mFound one![0m
+Sample 1517: [tensor(39), tensor(39)]
+Sample 1518: [tensor(75), tensor(44)]
+[1mFound one![0m
+Sample 1519: [tensor(39), tensor(39)]
+[1mFound one![0m
+Sample 1520: [tensor(9), tensor(9)]
+Sample 1521: [tensor(23), tensor(30)]
+Sample 1522: [tensor(76), tensor(60)]
+Sample 1523: [tensor(76), tensor(9)]
+[1mFound one![0m
+Sample 1524: [tensor(9), tensor(9)]
+[1mFound one![0m
+Sample 1525: [tensor(49), tensor(49)]
+Sample 1526: [tensor(57), tensor(49)]
+[1mFound one![0m
+Sample 1527: [tensor(9), tensor(9)]
+Sample 1528: [tensor(76), tensor(17)]
+[1mFound one![0m
+Sample 1529: [tensor(69), tensor(69)]
+[1mFound one![0m
+Sample 1530: [tensor(23), tensor(23)]
+[1mFound one![0m
+Sample 1531: [tensor(49), tensor(49)]
+Sample 1532: [tensor(76), tensor(49)]
+Sample 1533: [tensor(17), tensor(37)]
+Sample 1534: [tensor(76), tensor(49)]
+Sample 1535: [tensor(76), tensor(49)]
+Sample 1536: [tensor(76), tensor(37)]
+[1mFound one![0m
+Sample 1537: [tensor(49), tensor(49)]
+[1mFound one![0m
+Sample 1538: [tensor(49), tensor(49)]
+Sample 1539: [tensor(76), tensor(23)]
+Sample 1540: [tensor(77), tensor(4)]
+[1mFound one![0m
+Sample 1541: [tensor(35), tensor(35)]
+Sample 1542: [tensor(22), tensor(61)]
+Sample 1543: [tensor(77), tensor(25)]
+Sample 1544: [tensor(18), tensor(27)]
+Sample 1545: [tensor(44), tensor(26)]
+Sample 1546: [tensor(21), tensor(55)]
+Sample 1547: [tensor(27), tensor(45)]
+Sample 1548: [tensor(55), tensor(26)]
+[1mFound one![0m
+Sample 1549: [tensor(19), tensor(19)]
+Sample 1550: [tensor(42), tensor(63)]
+Sample 1551: [tensor(67), tensor(32)]
+[1mFound one![0m
+Sample 1552: [tensor(26), tensor(26)]
+Sample 1553: [tensor(77), tensor(15)]
+Sample 1554: [tensor(77), tensor(4)]
+Sample 1555: [tensor(77), tensor(0)]
+[1mFound one![0m
+Sample 1556: [tensor(44), tensor(44)]
+Sample 1557: [tensor(77), tensor(26)]
+Sample 1558: [tensor(77), tensor(26)]
+[1mFound one![0m
+Sample 1559: [tensor(55), tensor(55)]
+[1mFound one![0m
+Sample 1560: [tensor(10), tensor(10)]
+Sample 1561: [tensor(78), tensor(25)]
+Sample 1562: [tensor(50), tensor(4)]
+Sample 1563: [tensor(78), tensor(26)]
+Sample 1564: [tensor(55), tensor(15)]
+[1mFound one![0m
+Sample 1565: [tensor(39), tensor(39)]
+[1mFound one![0m
+Sample 1566: [tensor(39), tensor(39)]
+Sample 1567: [tensor(78), tensor(22)]
+[1mFound one![0m
+Sample 1568: [tensor(39), tensor(39)]
+Sample 1569: [tensor(74), tensor(42)]
+[1mFound one![0m
+Sample 1570: [tensor(39), tensor(39)]
+Sample 1571: [tensor(78), tensor(39)]
+Sample 1572: [tensor(55), tensor(27)]
+Sample 1573: [tensor(78), tensor(62)]
+Sample 1574: [tensor(12), tensor(30)]
+Sample 1575: [tensor(55), tensor(4)]
+[1mFound one![0m
+Sample 1576: [tensor(4), tensor(4)]
+Sample 1577: [tensor(27), tensor(38)]
+Sample 1578: [tensor(22), tensor(39)]
+Sample 1579: [tensor(78), tensor(51)]
+[1mFound one![0m
+Sample 1580: [tensor(55), tensor(55)]
+Sample 1581: [tensor(55), tensor(4)]
+Sample 1582: [tensor(79), tensor(26)]
+Sample 1583: [tensor(54), tensor(6)]
+Sample 1584: [tensor(18), tensor(45)]
+[1mFound one![0m
+Sample 1585: [tensor(11), tensor(11)]
+Sample 1586: [tensor(34), tensor(26)]
+[1mFound one![0m
+Sample 1587: [tensor(24), tensor(24)]
+[1mFound one![0m
+Sample 1588: [tensor(14), tensor(14)]
+Sample 1589: [tensor(54), tensor(44)]
+[1mFound one![0m
+Sample 1590: [tensor(3), tensor(3)]
+[1mFound one![0m
+Sample 1591: [tensor(18), tensor(18)]
+[1mFound one![0m
+Sample 1592: [tensor(6), tensor(6)]
+Sample 1593: [tensor(18), tensor(27)]
+Sample 1594: [tensor(79), tensor(18)]
+[1mFound one![0m
+Sample 1595: [tensor(10), tensor(10)]
+[1mFound one![0m
+Sample 1596: [tensor(26), tensor(26)]
+[1mFound one![0m
+Sample 1597: [tensor(33), tensor(33)]
+Sample 1598: [tensor(79), tensor(6)]
+Sample 1599: [tensor(79), tensor(69)]
+Sample 1600: [tensor(34), tensor(43)]
+Sample 1601: [tensor(55), tensor(27)]
+Sample 1602: [tensor(80), tensor(3)]
+[1mFound one![0m
+Sample 1603: [tensor(27), tensor(27)]
+[1mFound one![0m
+Sample 1604: [tensor(9), tensor(9)]
+Sample 1605: [tensor(3), tensor(65)]
+Sample 1606: [tensor(12), tensor(76)]
+Sample 1607: [tensor(1), tensor(51)]
+Sample 1608: [tensor(27), tensor(38)]
+[1mFound one![0m
+Sample 1609: [tensor(17), tensor(17)]
+Sample 1610: [tensor(16), tensor(39)]
+Sample 1611: [tensor(80), tensor(3)]
+Sample 1612: [tensor(23), tensor(1)]
+[1mFound one![0m
+Sample 1613: [tensor(3), tensor(3)]
+[1mFound one![0m
+Sample 1614: [tensor(65), tensor(65)]
+[1mFound one![0m
+Sample 1615: [tensor(38), tensor(38)]
+Sample 1616: [tensor(26), tensor(19)]
+Sample 1617: [tensor(51), tensor(42)]
+Sample 1618: [tensor(79), tensor(78)]
+Sample 1619: [tensor(3), tensor(72)]
+Sample 1620: [tensor(81), tensor(71)]
+Sample 1621: [tensor(81), tensor(37)]
+Sample 1622: [tensor(58), tensor(25)]
+Sample 1623: [tensor(89), tensor(17)]
+[1mFound one![0m
+Sample 1624: [tensor(37), tensor(37)]
+[1mFound one![0m
+Sample 1625: [tensor(37), tensor(37)]
+Sample 1626: [tensor(37), tensor(58)]
+Sample 1627: [tensor(37), tensor(58)]
+[1mFound one![0m
+Sample 1628: [tensor(37), tensor(37)]
+[1mFound one![0m
+Sample 1629: [tensor(58), tensor(58)]
+Sample 1630: [tensor(17), tensor(76)]
+Sample 1631: [tensor(13), tensor(58)]
+[1mFound one![0m
+Sample 1632: [tensor(58), tensor(58)]
+Sample 1633: [tensor(58), tensor(68)]
+[1mFound one![0m
+Sample 1634: [tensor(58), tensor(58)]
+[1mFound one![0m
+Sample 1635: [tensor(37), tensor(37)]
+[1mFound one![0m
+Sample 1636: [tensor(58), tensor(58)]
+[1mFound one![0m
+Sample 1637: [tensor(25), tensor(25)]
+[1mFound one![0m
+Sample 1638: [tensor(37), tensor(37)]
+Sample 1639: [tensor(58), tensor(12)]
+[1mFound one![0m
+Sample 1640: [tensor(62), tensor(62)]
+Sample 1641: [tensor(82), tensor(13)]
+Sample 1642: [tensor(82), tensor(62)]
+Sample 1643: [tensor(62), tensor(6)]
+[1mFound one![0m
+Sample 1644: [tensor(14), tensor(14)]
+[1mFound one![0m
+Sample 1645: [tensor(62), tensor(62)]
+Sample 1646: [tensor(82), tensor(26)]
+Sample 1647: [tensor(82), tensor(6)]
+Sample 1648: [tensor(82), tensor(10)]
+Sample 1649: [tensor(82), tensor(24)]
+Sample 1650: [tensor(62), tensor(10)]
+Sample 1651: [tensor(82), tensor(79)]
+[1mFound one![0m
+Sample 1652: [tensor(62), tensor(62)]
+Sample 1653: [tensor(1), tensor(62)]
+Sample 1654: [tensor(82), tensor(21)]
+Sample 1655: [tensor(32), tensor(78)]
+[1mFound one![0m
+Sample 1656: [tensor(62), tensor(62)]
+[1mFound one![0m
+Sample 1657: [tensor(62), tensor(62)]
+Sample 1658: [tensor(62), tensor(26)]
+Sample 1659: [tensor(28), tensor(16)]
+Sample 1660: [tensor(0), tensor(62)]
+Sample 1661: [tensor(45), tensor(22)]
+Sample 1662: [tensor(87), tensor(21)]
+[1mFound one![0m
+Sample 1663: [tensor(26), tensor(26)]
+Sample 1664: [tensor(70), tensor(62)]
+[1mFound one![0m
+Sample 1665: [tensor(0), tensor(0)]
+[1mFound one![0m
+Sample 1666: [tensor(62), tensor(62)]
+[1mFound one![0m
+Sample 1667: [tensor(62), tensor(62)]
+[1mFound one![0m
+Sample 1668: [tensor(0), tensor(0)]
+Sample 1669: [tensor(0), tensor(18)]
+[1mFound one![0m
+Sample 1670: [tensor(0), tensor(0)]
+[1mFound one![0m
+Sample 1671: [tensor(0), tensor(0)]
+[1mFound one![0m
+Sample 1672: [tensor(0), tensor(0)]
+[1mFound one![0m
+Sample 1673: [tensor(57), tensor(57)]
+[1mFound one![0m
+Sample 1674: [tensor(62), tensor(62)]
+[1mFound one![0m
+Sample 1675: [tensor(62), tensor(62)]
+Sample 1676: [tensor(18), tensor(33)]
+Sample 1677: [tensor(53), tensor(10)]
+[1mFound one![0m
+Sample 1678: [tensor(62), tensor(62)]
+Sample 1679: [tensor(83), tensor(62)]
+Sample 1680: [tensor(84), tensor(5)]
+Sample 1681: [tensor(53), tensor(39)]
+[1mFound one![0m
+Sample 1682: [tensor(5), tensor(5)]
+Sample 1683: [tensor(16), tensor(61)]
+Sample 1684: [tensor(84), tensor(20)]
+[1mFound one![0m
+Sample 1685: [tensor(5), tensor(5)]
+[1mFound one![0m
+Sample 1686: [tensor(62), tensor(62)]
+Sample 1687: [tensor(51), tensor(28)]
+[1mFound one![0m
+Sample 1688: [tensor(26), tensor(26)]
+Sample 1689: [tensor(40), tensor(9)]
+Sample 1690: [tensor(76), tensor(9)]
+Sample 1691: [tensor(45), tensor(5)]
+Sample 1692: [tensor(78), tensor(58)]
+[1mFound one![0m
+Sample 1693: [tensor(45), tensor(45)]
+Sample 1694: [tensor(43), tensor(66)]
+Sample 1695: [tensor(12), tensor(76)]
+Sample 1696: [tensor(51), tensor(64)]
+Sample 1697: [tensor(20), tensor(44)]
+Sample 1698: [tensor(51), tensor(40)]
+Sample 1699: [tensor(41), tensor(58)]
+[1mFound one![0m
+Sample 1700: [tensor(37), tensor(37)]
+Sample 1701: [tensor(37), tensor(25)]
+Sample 1702: [tensor(58), tensor(25)]
+Sample 1703: [tensor(37), tensor(58)]
+[1mFound one![0m
+Sample 1704: [tensor(41), tensor(41)]
+Sample 1705: [tensor(85), tensor(4)]
+Sample 1706: [tensor(25), tensor(12)]
+[1mFound one![0m
+Sample 1707: [tensor(37), tensor(37)]
+Sample 1708: [tensor(52), tensor(31)]
+Sample 1709: [tensor(85), tensor(47)]
+[1mFound one![0m
+Sample 1710: [tensor(1), tensor(1)]
+Sample 1711: [tensor(4), tensor(67)]
+[1mFound one![0m
+Sample 1712: [tensor(37), tensor(37)]
+Sample 1713: [tensor(59), tensor(72)]
+Sample 1714: [tensor(37), tensor(58)]
+Sample 1715: [tensor(85), tensor(58)]
+Sample 1716: [tensor(17), tensor(23)]
+Sample 1717: [tensor(12), tensor(69)]
+Sample 1718: [tensor(85), tensor(66)]
+Sample 1719: [tensor(85), tensor(48)]
+Sample 1720: [tensor(16), tensor(76)]
+Sample 1721: [tensor(39), tensor(12)]
+[1mFound one![0m
+Sample 1722: [tensor(49), tensor(49)]
+Sample 1723: [tensor(87), tensor(61)]
+[1mFound one![0m
+Sample 1724: [tensor(9), tensor(9)]
+Sample 1725: [tensor(36), tensor(64)]
+Sample 1726: [tensor(5), tensor(25)]
+Sample 1727: [tensor(1), tensor(44)]
+Sample 1728: [tensor(86), tensor(39)]
+[1mFound one![0m
+Sample 1729: [tensor(76), tensor(76)]
+Sample 1730: [tensor(86), tensor(78)]
+[1mFound one![0m
+Sample 1731: [tensor(67), tensor(67)]
+[1mFound one![0m
+Sample 1732: [tensor(22), tensor(22)]
+Sample 1733: [tensor(86), tensor(48)]
+[1mFound one![0m
+Sample 1734: [tensor(9), tensor(9)]
+[1mFound one![0m
+Sample 1735: [tensor(39), tensor(39)]
+Sample 1736: [tensor(86), tensor(9)]
+[1mFound one![0m
+Sample 1737: [tensor(25), tensor(25)]
+Sample 1738: [tensor(86), tensor(39)]
+[1mFound one![0m
+Sample 1739: [tensor(9), tensor(9)]
+Sample 1740: [tensor(28), tensor(40)]
+Sample 1741: [tensor(5), tensor(25)]
+Sample 1742: [tensor(37), tensor(25)]
+Sample 1743: [tensor(5), tensor(25)]
+[1mFound one![0m
+Sample 1744: [tensor(16), tensor(16)]
+[1mFound one![0m
+Sample 1745: [tensor(9), tensor(9)]
+[1mFound one![0m
+Sample 1746: [tensor(41), tensor(41)]
+Sample 1747: [tensor(40), tensor(66)]
+[1mFound one![0m
+Sample 1748: [tensor(9), tensor(9)]
+[1mFound one![0m
+Sample 1749: [tensor(5), tensor(5)]
+[1mFound one![0m
+Sample 1750: [tensor(40), tensor(40)]
+Sample 1751: [tensor(87), tensor(64)]
+[1mFound one![0m
+Sample 1752: [tensor(16), tensor(16)]
+Sample 1753: [tensor(87), tensor(66)]
+[1mFound one![0m
+Sample 1754: [tensor(5), tensor(5)]
+[1mFound one![0m
+Sample 1755: [tensor(50), tensor(50)]
+Sample 1756: [tensor(87), tensor(61)]
+Sample 1757: [tensor(9), tensor(16)]
+[1mFound one![0m
+Sample 1758: [tensor(25), tensor(25)]
+[1mFound one![0m
+Sample 1759: [tensor(40), tensor(40)]
+[1mFound one![0m
+Sample 1760: [tensor(27), tensor(27)]
+Sample 1761: [tensor(88), tensor(50)]
+[1mFound one![0m
+Sample 1762: [tensor(10), tensor(10)]
+Sample 1763: [tensor(34), tensor(18)]
+[1mFound one![0m
+Sample 1764: [tensor(42), tensor(42)]
+Sample 1765: [tensor(28), tensor(52)]
+[1mFound one![0m
+Sample 1766: [tensor(63), tensor(63)]
+Sample 1767: [tensor(88), tensor(34)]
+[1mFound one![0m
+Sample 1768: [tensor(10), tensor(10)]
+[1mFound one![0m
+Sample 1769: [tensor(4), tensor(4)]
+Sample 1770: [tensor(6), tensor(38)]
+[1mFound one![0m
+Sample 1771: [tensor(34), tensor(34)]
+[1mFound one![0m
+Sample 1772: [tensor(43), tensor(43)]
+Sample 1773: [tensor(88), tensor(26)]
+Sample 1774: [tensor(88), tensor(65)]
+Sample 1775: [tensor(63), tensor(43)]
+Sample 1776: [tensor(88), tensor(44)]
+Sample 1777: [tensor(3), tensor(43)]
+Sample 1778: [tensor(50), tensor(66)]
+Sample 1779: [tensor(88), tensor(78)]
+[1mFound one![0m
+Sample 1780: [tensor(58), tensor(58)]
+[1mFound one![0m
+Sample 1781: [tensor(32), tensor(32)]
+Sample 1782: [tensor(64), tensor(25)]
+[1mFound one![0m
+Sample 1783: [tensor(48), tensor(48)]
+Sample 1784: [tensor(89), tensor(48)]
+[1mFound one![0m
+Sample 1785: [tensor(17), tensor(17)]
+[1mFound one![0m
+Sample 1786: [tensor(26), tensor(26)]
+[1mFound one![0m
+Sample 1787: [tensor(8), tensor(8)]
+[1mFound one![0m
+Sample 1788: [tensor(64), tensor(64)]
+[1mFound one![0m
+Sample 1789: [tensor(25), tensor(25)]
+[1mFound one![0m
+Sample 1790: [tensor(25), tensor(25)]
+[1mFound one![0m
+Sample 1791: [tensor(58), tensor(58)]
+[1mFound one![0m
+Sample 1792: [tensor(48), tensor(48)]
+Sample 1793: [tensor(89), tensor(25)]
+Sample 1794: [tensor(13), tensor(58)]
+Sample 1795: [tensor(25), tensor(5)]
+Sample 1796: [tensor(13), tensor(48)]
+[1mFound one![0m
+Sample 1797: [tensor(64), tensor(64)]
+Sample 1798: [tensor(89), tensor(27)]
+[1mFound one![0m
+Sample 1799: [tensor(64), tensor(64)]
+Elapsed time (HH:MM:SS): 01:51:12
