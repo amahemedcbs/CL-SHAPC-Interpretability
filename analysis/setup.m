@@ -1,5 +1,5 @@
 % Setup file
-algs = ["iTAML", "RPSnet", "DGR", "foster", "memo", "der", "icarl", "dsal", "tagfex", "xder"];
+algs = ["iTAML", "RPSnet", "foster", "memo", "der", "icarl", "dsal", "tagfex", "xder"];
 
 % Dataset configs
 dataset_configs = {};

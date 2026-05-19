@@ -11,11 +11,10 @@ arguments (Output)
     threshold
 end
 
-if dataset == "cifar100"
-    num_sessions = 10;
-else
-    num_sessions = 5;
-end
+% Select correct config and extract parameters
+setup;
+config = dataset_configs.(dataset);
+num_sessions = config.num_sessions;
 
 shapc_path = sprintf("%s_shapc_data.mat", dataset);
 

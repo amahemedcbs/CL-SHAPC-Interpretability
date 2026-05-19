@@ -1,5 +1,10 @@
 % SHAPC-Mean and SHAPC-Var Comparison
-setup;
+setup; % Loads alg list and dataset_configs
+       % If not all algs are needed either
+       % change the algs listed in setup.m
+       % OR uncomment the below line of code
+
+%algs = ["iTAML"];       
 
 dataset = 'imagenet200';
 config = dataset_configs.(dataset);
@@ -15,10 +20,6 @@ if isfile(shapc_path)
     shapc_data = load(shapc_path).(string(sh_nm));
 else
     shapc_data = struct();
-end
-
-if dataset ~= "mnist"
-    algs(algs=="DGR") = [];
 end
 %%
 % Load SHAPC values (First and Last 1000)
@@ -108,8 +109,8 @@ disp(sorted_shapc_first_last_1000) %[output:8748a72b]
 %[appendix]{"version":"1.0"}
 %---
 %[metadata:view]
-%   data: {"layout":"onright","rightPanelPercent":41.2}
+%   data: {"layout":"onright","rightPanelPercent":37.3}
 %---
 %[output:8748a72b]
-%   data: {"dataType":"text","outputData":{"text":"              <strong>Accuracy (%)<\/strong>    <strong>SHAPC-Mean (%)<\/strong>    <strong>Time (hrs)<\/strong>\n              <strong>____________<\/strong>    <strong>______________<\/strong>    <strong>__________<\/strong>\n\n    <strong>iTAML <\/strong>        NaN              NaN               NaN  \n    <strong>RPSnet<\/strong>        NaN              NaN               NaN  \n    <strong>foster<\/strong>        NaN              NaN               NaN  \n    <strong>memo  <\/strong>        NaN              NaN               NaN  \n    <strong>der   <\/strong>        NaN              NaN             52.08  \n    <strong>icarl <\/strong>        NaN              NaN            8.6244  \n    <strong>dsal  <\/strong>        NaN              NaN               NaN  \n    <strong>tagfex<\/strong>        NaN              NaN               NaN  \n    <strong>xder  <\/strong>        NaN              NaN               NaN  \n\n","truncated":false}}
+%   data: {"dataType":"text","outputData":{"text":"              <strong>Accuracy (%)<\/strong>    <strong>SHAPC-Mean (%)<\/strong>    <strong>Time (hrs)<\/strong>\n              <strong>____________<\/strong>    <strong>______________<\/strong>    <strong>__________<\/strong>\n\n    <strong>icarl <\/strong>       38.75            24.426          8.6244  \n    <strong>memo  <\/strong>       55.25            28.207          20.867  \n    <strong>foster<\/strong>       54.62            28.409          18.886  \n    <strong>der   <\/strong>       57.38             37.31           52.08  \n    <strong>iTAML <\/strong>         NaN               NaN             NaN  \n    <strong>RPSnet<\/strong>         NaN               NaN             NaN  \n    <strong>dsal  <\/strong>         NaN               NaN             NaN  \n    <strong>tagfex<\/strong>         NaN               NaN             NaN  \n    <strong>xder  <\/strong>         NaN               NaN             NaN  \n\n","truncated":false}}
 %---
