@@ -35,21 +35,21 @@ In order to run experiments 4 and 5, a minimum of MATLAB R2024b is required.
 
 ### Datasets
 The code can generate results for the following datasets:
-- CIFAR10
-- CIFAR100
-- TinyImageNet
+- CIFAR10 (referred to as 'cifar10' in setup files)
+- CIFAR100 (referred to as 'cifar100' in setup files)
+- TinyImageNet (referred to as 'imagenet200' in setup files)
 
 ### Algorithms
 A total of nine algorithms were tested:
-- `iTAML`
-- `RPSnet`
-- `FOSTER`
-- `MEMO`
-- `DER`
-- `iCARL`
-- `DS-AL`
-- `TagFex`
-- `XDER`
+- `iTAML` (referred to as 'iTAML' in setup files)
+- `RPSnet` (referred to as 'RPSnet' in setup files)
+- `FOSTER` (referred to as 'foster' in setup files)
+- `MEMO` (referred to as 'memo' in setup files)
+- `DER` (referred to as 'der' in setup files)
+- `iCARL` (referred to as 'icarl' in setup files)
+- `DS-AL` (referred to as 'dsal' in setup files)
+- `TagFex` (referred to as 'tagfex' in setup files)
+- `XDER` (referred to as 'xder' in setup files)
 
 ### Saved Models
 This code relies on saved models. In order to load these models, the `load_model.py` script must be used. Inside this script, set the `filepath` parameter to the root folder for your saved models. To use a specific model, put the saved model.pth file into the `[root_model_filepath]/[algorithm]/[saved_model].pth`.
@@ -61,6 +61,9 @@ iTAML & RPSnet - use the https://github.com/brjathu/iTAML & https://github.com/b
 
 FOSTER, MEMO, DER, iCARL, DS-AL, and TagFex - use the https://github.com/LAMDA-CL/PyCIL repository.
 
+Be sure to set `shuffle=False` in the experiment file for the desired algorithm.
+
+**Note: Add the code indicated below before training in order to save the models.**
 ```
 def _train(args):
 
@@ -100,17 +103,34 @@ XDER - uses the https://github.com/aimagelab/mammoth repository.
 The code must be run with the `--savecheck task` flag in order for the models to be saved.
 
 ### Adding Saved Models to Folder
-For iTAML: `memory_[task].pickle`, `sample_per_task_testing_[task].pickle`, and `session_[task]_model_best.pth` for each session/task are needed.
+For **iTAML**, the following files are needed from the :
+- `memory_[task].pickle`
+- `sample_per_task_testing_[task].pickle`
+- `session_[task]_model_best.pth`
 
-For RPSnet: `path_[task]_0`, `fixed_path_[task]_0`, and `session_[task]_model_best.pth` for each session/task are needed.
+**Note: One of each file is required for each session/task.**
+***
 
-For PyCIL and XDER: Only the `[saved_model].pth` files for each session/task are needed.
+For **RPSnet**, the following files are needed from the:
+- `path_[task]_0`
+- `fixed_path_[task]_0`
+- `session_[task]_model_best.pth`
+
+**Note: One of each file is required for each session/task.**
+***
+
+For **PyCIL** and **XDER**, the following files are needed from the :
+- Only the `[saved_model].pth` files for each session/task are needed.
+
+**Note: One of each file is required for each session/task.**
 
 Place the needed files in the `saved_models/[alg_name]/` folder.
+***
 
 ## Running Specific Experiments
+<!--
 ### Adjusting Models for SHAP Value Calculation
-First, some adjustments must be made to allow for SHAP calculation. These adjustments can be made after saving the models:
+Some adjustments must be made to allow for SHAP calculation. These adjustments can be made after saving the models:
 For iTAML & RPSnet: Make the following adjustments in the `basic_net.py` script.
 ```
 class BasicNet1(nn.Module):
@@ -158,26 +178,34 @@ For PyCIL Algs: Add the following function in `inc_net.py` for each model class 
 For XDER: No changes are needed.
 
 The load_models.py script should now work as expected.
-
 ---
+-->
 
 ### Experiment 1
-Use the `generate_shap_values.py` script to receive a 'shap_values_first_last_[samples_number].npy' file in `analysis/[algorithm]/[dataset]`.
+Use the `generate_shap_values.py` script.
 
----
+You should receive a `shap_values_first_last_[samples_number].npy` file in `analysis/[algorithm]/[dataset]`.
+***
+
 ### Experiment 2
 **Requires Experiment 1 to be completed for the desired algorithm and dataset.**
 
-Use the `calc_shapc_values.py` script to receive a 'shapc_values_first_last_[samples_number].mat' file in `analysis/[algorithm]/[dataset]`.
+Use the `calc_shapc_values.py` script.
 
----
+You should receive a `shapc_values_first_last_[samples_number].mat` file in `analysis/[algorithm]/[dataset]`.
+***
+
 ### Experiment 3
 **Requires Experiment 2 to be completed for the desired algorithm and dataset.**
 
 Use the `shapc_mean_values.mlx` script.
 
----
-### Experiment 4
-**Requires Experiment 3 to be completed for the desired algorithms and datasets.**
+You should see the SHAPC-Mean value output in the console.
+***
 
-Use the `identify_scenarios.mlx` script.
+### Experiment 4
+**Requires Experiment 2 to be completed for the desired algorithms and datasets.**
+
+1. Run the `generate_shap_preds.py` script to get the predictions for the associated SHAP images for each algorithm and dataset to receive a `[algorithm]_[dataset]_preds.mat` file in `analysis/preds/[algorithm]/[dataset]`.
+2. Run the `merge_preds.mlx` script to generate/update the `cifar10_preds.mat` file for each desired algorithm and dataset.
+3. Use the `identify_scenarios.mlx` script to receive the FoM tables.
