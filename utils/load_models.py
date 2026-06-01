@@ -19,6 +19,44 @@ from utils.model_parameters import XDer, mammoth_load_checkpoint, get_backbone_c
 
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
+
+
+def compute_accuracy(predictions, targets):
+    correct, total = 0, 0
+    correct += (predictions.cpu() == targets).sum()
+    total += len(targets)
+    correct = correct.cpu().data.numpy()
+    return np.around(correct * 100 / total, decimals=2)
+
+
+def generate_predictions(algorithm, model, ses, images, labels=None, **kwargs):
+
+    images = images.to(device)
+
+    if algorithm == "iTAML":
+        model.set_shap(True)
+        outputs2 = model(images)
+        pred = torch.argmax(outputs2[:, 0:kwargs['cls_per_task'] * (1 + ses)], 1, keepdim=False)
+    elif algorithm == "RPSnet":
+        outputs = model(images, kwargs['infer_path'], -1)
+        _, pred = torch.max(outputs, 1)
+    elif algorithm == "DGR":
+        real_scores = model.forward(images)
+        _, pred = real_scores[:, 0: kwargs['cls_per_task'] * (1 + ses)].max(1)
+    elif algorithm in pycil_algs:
+        with torch.no_grad():
+            outputs = model(images)["logits"]
+        pred = torch.max(outputs, dim=1)[1]
+    elif algorithm == "xder":
+        outputs = model(images)
+        _, pred = torch.max(outputs[:, :kwargs['cls_per_task']* (1 + ses)].data, 1)
+    predicted = pred.squeeze()
+    if labels is not None:
+        acc = compute_accuracy(predicted, labels)
+        print("Acc:", acc)
+
+    return predicted
+
 def load_model(algorithm, dataset, ses, shapArgs):
     model = None
     scholar = None
