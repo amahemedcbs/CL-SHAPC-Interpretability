@@ -120,11 +120,11 @@ For **RPSnet**, the following files are needed from the:
 ***
 
 For **PyCIL** and **XDER**, the following files are needed from the :
-- Only the `[saved_model].pth` files for each session/task are needed.
+- Only the `[saved_model].pth` files for each session/task are needed. These files should be located in the `savedmodels/[alg_name]/[dataset]` of your cloned PyCIL repository.
 
 **Note: One of each file is required for each session/task.**
 
-Place the needed files in the `saved_models/[alg_name]/` folder.
+Place the needed files in the `saved_models/[alg_name]/[dataset]` folder of this repository.
 ***
 
 ## Running Specific Experiments
