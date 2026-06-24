@@ -165,7 +165,7 @@ class SequentialTinyImagenet(ContinualDataset):
 
     def get_transform(self):
         transform = transforms.Compose(
-            [transforms.ToPILImage(), self.TRANSFORM])
+            [transforms.ToPILImage(), SequentialTinyImagenet.TRANSFORM])
         return transform
 
     @staticmethod

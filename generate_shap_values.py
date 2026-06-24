@@ -120,5 +120,8 @@ for sample in tqdm(range(len(test_imgs)), desc="Progress"):
         else:
             continue
 
-# Save shap values to filepath
+    # Intermittent saving in case of crash
+    np.save(filepath, shap_dict)
+
+# Final save shap values to filepath
 np.save(filepath, shap_dict)

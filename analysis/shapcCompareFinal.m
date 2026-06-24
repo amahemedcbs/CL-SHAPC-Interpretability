@@ -103,7 +103,7 @@ first_last_1000_times = column_data3;
 shapc_table_first_last_1000 = table(column_data1, column_data2, column_data3, ...
     'VariableNames', columns, 'RowNames', rows);
 sorted_shapc_first_last_1000 = sortrows(shapc_table_first_last_1000, {'SHAPC-Mean (%)'}, {'ascend'});
-disp(sorted_shapc_first_last_1000) %[output:8748a72b]
+disp(sorted_shapc_first_last_1000) %[output:520f5d08]
 
 
 %[appendix]{"version":"1.0"}
@@ -111,6 +111,6 @@ disp(sorted_shapc_first_last_1000) %[output:8748a72b]
 %[metadata:view]
 %   data: {"layout":"onright","rightPanelPercent":37.3}
 %---
-%[output:8748a72b]
-%   data: {"dataType":"text","outputData":{"text":"              <strong>Accuracy (%)<\/strong>    <strong>SHAPC-Mean (%)<\/strong>    <strong>Time (hrs)<\/strong>\n              <strong>____________<\/strong>    <strong>______________<\/strong>    <strong>__________<\/strong>\n\n    <strong>iTAML <\/strong>         NaN            22.723          17.474  \n    <strong>icarl <\/strong>       38.75            24.426          8.6244  \n    <strong>memo  <\/strong>       55.25            28.207          20.867  \n    <strong>foster<\/strong>       54.62            28.409          18.886  \n    <strong>der   <\/strong>       57.38             37.31           52.08  \n    <strong>RPSnet<\/strong>         NaN               NaN             NaN  \n    <strong>dsal  <\/strong>         NaN               NaN             NaN  \n    <strong>tagfex<\/strong>         NaN               NaN             NaN  \n    <strong>xder  <\/strong>         NaN               NaN             NaN  \n\n","truncated":false}}
+%[output:520f5d08]
+%   data: {"dataType":"text","outputData":{"text":"              <strong>Accuracy (%)<\/strong>    <strong>SHAPC-Mean (%)<\/strong>    <strong>Time (hrs)<\/strong>\n              <strong>____________<\/strong>    <strong>______________<\/strong>    <strong>__________<\/strong>\n\n    <strong>iTAML <\/strong>         40.1           22.723          17.474  \n    <strong>xder  <\/strong>        40.05           23.432             NaN  \n    <strong>icarl <\/strong>        38.75           24.426          8.6244  \n    <strong>memo  <\/strong>        55.25           28.207          20.867  \n    <strong>foster<\/strong>        54.62           28.409          18.886  \n    <strong>der   <\/strong>        57.38            37.31           52.08  \n    <strong>dsal  <\/strong>       38.248           37.589             NaN  \n    <strong>tagfex<\/strong>       57.939           37.618             NaN  \n    <strong>RPSnet<\/strong>          NaN              NaN             NaN  \n\n","truncated":false}}
 %---
