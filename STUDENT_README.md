@@ -190,7 +190,7 @@ You should receive a `shap_values_first_last_[samples_number].npy` file in `anal
 ### Experiment 2
 **Requires Experiment 1 to be completed for the desired algorithm and dataset.**
 
-Use the `calc_shapc_values.py` script.
+Use the `generate_shapc_values.py` script.
 
 You should receive a `shapc_values_first_last_[samples_number].mat` file in `analysis/[algorithm]/[dataset]`.
 ***
