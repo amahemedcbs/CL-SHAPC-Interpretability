@@ -276,7 +276,7 @@ dsalArgs = {"model_name": "ds-al", "prefix": "DS-AL", "memory_size": 0, "dataset
 tagfexArgs = {"prefix": "reproduce", "dataset": "cifar100", "memory_size": 2000,
               "memory_per_class": 20, "fixed_memory": False, "shuffle": False,
               "init_cls": 10, "increment": 10, "model_name": "tagfex",
-              "convnet_type": "resnet18", "device": ["0"], "seed": [1993],
+              "convnet_type": "resnet32", "device": ["0"], "seed": [1993],
               "init_interpolation_factor": 0.95, "infonce_temp":0.2, "kd_temp":2,
               "infonce_kd_temp":0.2, "ta_convnet_type":"resnet18", "proj_hidden_dim":2048,
               "proj_output_dim":1024, "attn_num_heads":8, "contrast_factor":1,
