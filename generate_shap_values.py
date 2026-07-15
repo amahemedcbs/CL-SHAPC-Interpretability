@@ -12,7 +12,12 @@ from utils.model_parameters import pycil_algs
 import utils.shap_dataloader as sdl
 from models.RPSnet.rps_net import generate_path
 
+import sys
+sys.path.append("/content/CL-SHAPC-Interpretability/PyCIL")
 
+from utils.data_manager import DataManager
+
+test_dataset=data_manager.get_dataset(indeces, source="test",mode="test")
 
 algorithm = "der"
 dataset = "cifar10"
