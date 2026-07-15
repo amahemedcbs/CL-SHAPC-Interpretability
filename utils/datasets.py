@@ -27,7 +27,7 @@ def get_dataset_params(dataset):
 class SHAPDataset:
     class_per_task = 2
     num_class = 10
-    shap_samples = 100
+    shap_samples = 50
 
 
 class SHAPCifar10(SHAPDataset):
@@ -68,7 +68,7 @@ class SHAPPathmnist(SHAPDataset):
 class SHAPDermamnist(SHAPDataset):
     class_per_task = 2  # Adjust this depending on your PyCIL split setup
     num_class = 7
-    num_task = 7
+    num_task = 3
     shap_samples = 50
 
 
