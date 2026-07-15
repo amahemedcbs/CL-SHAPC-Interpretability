@@ -64,7 +64,7 @@ def load_model(algorithm, dataset, ses, shapArgs):
     alg_args = get_algorithm_args(algorithm, dataset)
 
     if algorithm in pycil_algs:
-        model_path = f"saved_models/{algorithm}/{dataset}/{algorithm}_ses_{ses}.pth"
+        model_path = f"savedmodels/{algorithm}/{dataset}/{algorithm}_ses_{ses}.pth"
         load_start_sess = ses - 1 if algorithm == "foster" else 0
         match algorithm:
             case "foster":
