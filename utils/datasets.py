@@ -10,6 +10,11 @@ def get_dataset_params(dataset):
     if dataset == "tinyimagenet":
         return SHAPTinyImageNet
 
+class SHAPMedmnist:
+    class_per_task = 10
+    num_class = 100
+    num_task = 10
+    shap_samples = 20
 
 class SHAPDataset:
     class_per_task = 2
