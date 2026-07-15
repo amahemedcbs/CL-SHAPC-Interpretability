@@ -4,7 +4,7 @@ from utils.model_parameters import get_algorithm_args
 import os
 
 
-shap_value_filepath_root = 'analysis/'
+shap_value_filepath_root = '/content/drive/MyDrive/CL-SHAPC-Interpretability/analysis/'
 
 class SHAPArgs:
     def __init__(self, algorithm, dataset):
