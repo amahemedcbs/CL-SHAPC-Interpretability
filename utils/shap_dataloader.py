@@ -6,6 +6,10 @@ import numpy as np
 import os
 from PIL import Image
 
+# Import MedMNIST API
+import medmnist
+from medmnist import INFO
+
 from utils.model_parameters import pycil_algs
 from utils.setup_args import SHAPArgs
 
@@ -27,12 +31,13 @@ class ShapDataloader:
         return indices
 
     def load_data(self, desired_classes, imgs_per_class, shuffle=None, batch_size=256):
-        transform = transforms.Compose(
-            [transforms.ToTensor()])
-
+        transform = transforms.Compose([transforms.ToTensor()])
         shap_set = torch.utils.data.Dataset()
         mean = None
         std = None
+
+        # MedMNIST Dataset Identification Group
+        medmnist_datasets = ["pathmnist", "dermamnist", "octmnist"]
 
         if self.dataset == "mnist":
             if self.algorithm in pycil_algs:
@@ -40,14 +45,44 @@ class ShapDataloader:
             else:
                 trsf = transforms.Compose([transforms.ToTensor()])
             shap_set = datasets.MNIST(root=f"Datasets/{self.dataset}/", train=False, download=True, transform=trsf)
+            
+        elif self.dataset in medmnist_datasets:
+            # Dynamically resolve MedMNIST class
+            info = INFO[self.dataset]
+            DataClass = getattr(medmnist, info['python_class'])
+            
+            # Setup transformation pipeline
+            trsf_list = []
+            if info['n_channels'] == 1:
+                # Force OCTMNIST/grayscale images to 3 channels (RGB) for ResNet
+                trsf_list.append(transforms.Lambda(lambda img: img.convert('RGB')))
+                
+            if self.algorithm in pycil_algs:
+                # Pad 28x28 images up to 32x32 for PyCIL ResNet32 compatibility
+                trsf_list.append(transforms.Pad(2))
+                
+            trsf_list.append(transforms.ToTensor())
+            
+            # Normalize to standardized MedMNIST boundaries
+            mean = torch.tensor([0.5, 0.5, 0.5])
+            std = torch.tensor([0.5, 0.5, 0.5])
+            trsf_list.append(transforms.Normalize(mean, std))
+            
+            trsf = transforms.Compose(trsf_list)
+            
+            # Load the testing split
+            shap_set = DataClass(split='test', download=True, transform=trsf)
+            shap_set.targets = shap_set.labels.squeeze()
+            shap_set.classes = list(info['label'].keys())
+
         elif self.dataset == "svhn":
             mean = torch.tensor([0.485, 0.456, 0.406])
             std = torch.tensor([0.229, 0.224, 0.225])
 
             shap_set = datasets.SVHN(root=f"Datasets/{self.dataset}/", split='test',
-                                         download=True,
-                                         transform=transforms.Compose([transforms.ToTensor(),
-                                                                       transforms.Normalize(mean, std)]))
+                                     download=True,
+                                     transform=transforms.Compose([transforms.ToTensor(),
+                                                                   transforms.Normalize(mean, std)]))
             shap_set.classes = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
             shap_set.targets = shap_set.labels
 
@@ -56,20 +91,20 @@ class ShapDataloader:
             std = torch.tensor([0.2023, 0.1994, 0.2010])
 
             shap_set = datasets.CIFAR10(root=f"Datasets/{self.dataset}/", train=False,
-                                            download=True,
-                                            transform=transforms.Compose(
-                                                [transforms.ToTensor(),
-                                                 transforms.Normalize(mean, std)]))
+                                        download=True,
+                                        transform=transforms.Compose(
+                                            [transforms.ToTensor(),
+                                             transforms.Normalize(mean, std)]))
 
         elif self.dataset == "cifar100":
             mean = torch.tensor([0.5071, 0.4867, 0.4408])
             std = torch.tensor([0.2675, 0.2565, 0.2761])
 
             shap_set = datasets.CIFAR100(root=f"Datasets/{self.dataset}/", train=False,
-                                             download=True,
-                                             transform=transforms.Compose(
-                                                 [transforms.ToTensor(),
-                                                  transforms.Normalize(mean, std)]))
+                                         download=True,
+                                         transform=transforms.Compose(
+                                             [transforms.ToTensor(),
+                                              transforms.Normalize(mean, std)]))
 
         elif self.dataset == "imagenet200":
             mean = torch.tensor([0.485, 0.456, 0.406])
@@ -92,7 +127,6 @@ class ShapDataloader:
             shap_set.targets = shap_set.labels
 
         idx = self.get_indices(shap_set, desired_classes)
-
         subset = Subset(shap_set, idx)
 
         # Create a DataLoader for the subset
@@ -135,6 +169,30 @@ class ShapDataloader:
                 else:
                     trsf = transforms.Compose([transforms.ToTensor()])
                 train_set = datasets.MNIST(root=f"datasets/mnist/", train=False, download=False, transform=trsf)
+                
+            case "pathmnist" | "dermamnist" | "octmnist":
+                info = INFO[dataset]
+                DataClass = getattr(medmnist, info['python_class'])
+                
+                trsf_list = []
+                if info['n_channels'] == 1:
+                    trsf_list.append(transforms.Lambda(lambda img: img.convert('RGB')))
+                    
+                if self.algorithm in ["foster", "memo", "der"] or self.algorithm in pycil_algs:
+                    trsf_list.append(transforms.Pad(2))
+                    
+                trsf_list.append(transforms.ToTensor())
+                
+                # Setup normalized training distribution targets
+                mean = torch.tensor([0.5, 0.5, 0.5])
+                std = torch.tensor([0.5, 0.5, 0.5])
+                trsf_list.append(transforms.Normalize(mean, std))
+                
+                trsf = transforms.Compose(trsf_list)
+                train_set = DataClass(split='train', download=True, transform=trsf)
+                train_set.targets = train_set.labels.squeeze()
+                train_set.classes = list(info['label'].keys())
+                
             case "cifar10":
                 mean = torch.tensor([0.4914, 0.4822, 0.4465])
                 std = torch.tensor([0.2023, 0.1994, 0.2010])
@@ -208,11 +266,6 @@ class DummyDataset(Dataset):
 
 # From PyCIL Toolbox, used to load TinyImagenet (Imagenet200)
 def pil_loader(path):
-    """
-    Ref:
-    https://pytorch.org/docs/stable/_modules/torchvision/datasets/folder.html#ImageFolder
-    """
-    # open path as file to avoid ResourceWarning (https://github.com/python-pillow/Pillow/issues/835)
     with open(path, "rb") as f:
         img = Image.open(f)
         return img.convert("RGB")
@@ -255,9 +308,7 @@ class iImageNet200(iData):
 
     class_order = np.arange(200).tolist()
 
-    ## Check this later...
     def organize_val_dataset(self):
-        import os
         import shutil
 
         val_dir = 'datasets/imagenet200/val'
@@ -271,22 +322,18 @@ class iImageNet200(iData):
             img_filename = parts[0]
             class_name = parts[1]
 
-            # Create the class directory if it doesn't exist
             class_dir = os.path.join(val_dir, class_name)
             if not os.path.exists(class_dir):
                 os.makedirs(class_dir)
 
-            # Move the image
             src_path = os.path.join(val_dir, 'images', img_filename)
             dst_path = os.path.join(class_dir, img_filename)
             shutil.move(src_path, dst_path)
 
-        # Remove the empty images directory and the annotations file
         shutil.rmtree(os.path.join(val_dir, 'images'))
         os.remove(val_annotations_file)
 
     def download_data(self):
-        # assert 0, "You should specify the folder of your dataset"
         train_dir = "datasets/imagenet200/train"
         test_dir = "datasets/imagenet200/val"
 
@@ -301,7 +348,6 @@ class iImageNet200(iData):
 
 
 def split_images_labels(imgs):
-    # split trainset.imgs in ImageFolder
     images = []
     labels = []
     for item in imgs:
@@ -309,4 +355,3 @@ def split_images_labels(imgs):
         labels.append(item[1])
 
     return np.array(images), np.array(labels)
-# -----------------------------------------------------------------------------#
