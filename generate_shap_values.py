@@ -6,7 +6,7 @@ from tqdm import tqdm
 
 # Custom Imports
 from utils.setup_args import SHAPArgs, create_shap_value_filepath
-from utils.load_models import load_model, load_meta_models
+from utils.load_models_fixed import load_model, load_meta_models
 from utils.model_parameters import pycil_algs
 
 import utils.shap_dataloader as sdl
