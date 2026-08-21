@@ -57,23 +57,25 @@ class SHAPMnist(SHAPDataset):
     num_task = 5
     shap_samples = 50  # Set to a safe value for speedy local computation
 
-
 class SHAPPathmnist(SHAPDataset):
-    class_per_task = 3  # E.g., 9 classes split evenly across 3 task updates
+    class_per_task = 2  # E.g., 9 classes split evenly across 3 task updates
     num_class = 9
-    num_task = 3
-    shap_samples = 50   # Number of samples per class evaluated by the explainer
+    num_task = 4
+    shap_samples = 600   # Number of samples per class evaluated by the explainer
+    init_cls= 3
 
 
 class SHAPDermamnist(SHAPDataset):
     class_per_task = 2  # Adjust this depending on your PyCIL split setup
     num_class = 7
     num_task = 3
-    shap_samples = 50
+    shap_samples = 250
+    init_cls = 3
 
 
 class SHAPOctmnist(SHAPDataset):
     class_per_task = 2  # E.g., 4 classes split across 2 task updates
     num_class = 4
     num_task = 2
-    shap_samples = 50
+    shap_samples = 100
+    init_cls= 2
