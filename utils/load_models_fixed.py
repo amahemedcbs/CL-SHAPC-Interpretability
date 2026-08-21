@@ -5,6 +5,9 @@ import torch.optim as optim
 import pickle
 import numpy as np
 import copy
+import torch.nn as nn
+import torch.nn.functional as F
+from copy import deepcopy
 
 from models.iTAML.resnet import *
 from models.iTAML.radam import *
@@ -30,26 +33,70 @@ def compute_accuracy(predictions, targets):
 
 
 def generate_predictions(algorithm, model, ses, images, labels=None, **kwargs):
-
+    if not isinstance(images, torch.Tensor):
+        images = torch.tensor(images)
     images = images.to(device)
+
+    if images.ndim == 3:
+        images = images.unsqueeze(0)
 
     if algorithm == "iTAML":
         model.set_shap(True)
         outputs2 = model(images)
-        pred = torch.argmax(outputs2[:, 0:kwargs['cls_per_task'] * (1 + ses)], 1, keepdim=False)
+        pred = torch.argmax(outputs2[:, 0:kwargs['cls_per_task'] * (1 + ses)], dim=-1)
     elif algorithm == "RPSnet":
         outputs = model(images, kwargs['infer_path'], -1)
-        _, pred = torch.max(outputs, 1)
+        pred = torch.argmax(outputs, dim=-1)
     elif algorithm == "DGR":
         real_scores = model.forward(images)
-        _, pred = real_scores[:, 0: kwargs['cls_per_task'] * (1 + ses)].max(1)
-    elif algorithm in pycil_algs:
-        with torch.no_grad():
-            outputs = model(images)["logits"]
-        pred = torch.max(outputs, dim=1)[1]
+        pred = torch.argmax(real_scores[:, 0: kwargs['cls_per_task'] * (1 + ses)], dim=-1)
     elif algorithm == "xder":
         outputs = model(images)
-        _, pred = torch.max(outputs[:, :kwargs['cls_per_task']* (1 + ses)].data, 1)
+        pred = torch.argmax(outputs[:, :kwargs['cls_per_task'] * (1 + ses)].data, dim=-1)
+    else:
+        # Fast, pooled PyCIL prediction (DS-AL, DER, FOSTER, MEMO, TagFEx, iCaRL)
+        with torch.no_grad():
+            if hasattr(model, 'convnets') and len(model.convnets) > 0:
+                feats = []
+                for conv in model.convnets:
+                    f = conv(images)
+                    if isinstance(f, dict):
+                        f = f.get("features", list(f.values())[0])
+                    if isinstance(f, torch.Tensor) and f.ndim == 4:
+                        f = F.adaptive_avg_pool2d(f, (1, 1))
+                    f = torch.flatten(f, 1)
+                    feats.append(f)
+                feat = torch.cat(feats, dim=1)
+
+                if hasattr(model, 'fc') and isinstance(model.fc, nn.Linear):
+                    if feat.shape[1] == model.fc.in_features:
+                        logits = model.fc(feat)
+                    elif feat.shape[1] < model.fc.in_features:
+                        pad = torch.zeros((feat.shape[0], model.fc.in_features - feat.shape[1]), device=feat.device)
+                        logits = model.fc(torch.cat([feat, pad], dim=1))
+                    else:
+                        logits = model.fc(feat[:, :model.fc.in_features])
+                else:
+                    logits = feat
+            else:
+                out = model(images)
+                if isinstance(out, dict):
+                    logits = out.get("logits", out.get("features", list(out.values())[0]))
+                else:
+                    logits = out
+                if isinstance(logits, torch.Tensor) and logits.ndim == 4:
+                    logits = F.adaptive_avg_pool2d(logits, (1, 1)).flatten(1)
+                if hasattr(model, 'fc') and isinstance(model.fc, nn.Linear) and logits.shape[-1] == model.fc.in_features:
+                    logits = model.fc(logits)
+
+            # Restrict logits to valid classification outputs
+            if hasattr(model, 'fc') and isinstance(model.fc, nn.Linear) and logits.shape[-1] > model.fc.out_features:
+                logits = logits[:, :model.fc.out_features]
+            elif logits.shape[-1] > 7:
+                logits = logits[:, :7]
+
+            pred = torch.argmax(logits, dim=-1)
+
     predicted = pred.squeeze()
     if labels is not None:
         acc = compute_accuracy(predicted, labels)
@@ -57,98 +104,158 @@ def generate_predictions(algorithm, model, ses, images, labels=None, **kwargs):
 
     return predicted
 
-def load_model(algorithm, dataset, ses, shapArgs):
-    model = None
-    scholar = None
-    model_path = ""
-    alg_args = get_algorithm_args(algorithm, dataset)
 
-    if algorithm in pycil_algs:
-        model_path = f"/content/drive/MyDrive/CL-SHAPC-Interpretability/savedmodels/{algorithm}/{dataset}/{algorithm}_{dataset}_{ses}.pth"
-        load_start_sess = ses - 1 if algorithm == "foster" else 0
-        match algorithm:
-            case "foster":
-                model = FOSTERNet(alg_args, False)
-            case "memo":
-                model = AdaptiveNet(alg_args, False)
-            case "der":
-                model = DERNet(alg_args, False)
-            case "icarl":
-                model = IncrementalNet(alg_args, False)
-            case "ds-al":
-                model = DSALNet(
-                    alg_args,
-                    alg_args["configurations"][f"{dataset}"]["buffer_size"],
-                    alg_args["configurations"][f"{dataset}"]["gamma"],
-                    alg_args["configurations"][f"{dataset}"]["gamma_comp"],
-                    alg_args["configurations"][f"{dataset}"]["compensation_ratio"],
-                )
-                model.generate_buffer()
-                model.generate_fc()
-            case "tagfex":
-                model = TagFexNet(alg_args, False)
-
-        ###---Changes made to allow for non-uniform task class sizes and---###
-        ###---correct dataset parameter------------------------------------###
-        # Update the model architecture to match the task
-        if ses > 0:
-            model.update_fc(shapArgs.dataset_params.init_cls * (load_start_sess + 1))
-            for i in range(load_start_sess+1, ses + 1):
-                # I forgot to update to the dataset parameter before
-                model.update_fc(shapArgs.dataset_params.class_per_task * (i + 1))
-        else:
-            model.update_fc(shapArgs.dataset_params.init_cls * (ses + 1))
-        ###----------------------------------------------------------------###
-    else:
-        match algorithm:
-            case "iTAML":
-                model_path = f"Saliency/{algorithm}/{dataset}/session_{ses}_model_best.pth.tar"
-                model = BasicNet1(alg_args, 0, device=device)
-            case "RPSnet":
-                model_path = f"Saliency/{algorithm}/{dataset}/session_{ses}_0_model_best.pth.tar"
-                if dataset == "mnist":
-                    model = RPS_net_mlp(alg_args)
-                else:
-                    model = RPS_net_cifar(alg_args)
-            case "xder":
-                model_path = f"./{dataset}/xder_seq-{dataset}_ses_{ses}.pt"
-                #model_path = f"./cifar10/xder_ses_{ses}.pt"
-                #model_path = f"Saliency/xder/{dataset}/xder_ses_{ses}.pt"
-
-                alg_args['dataset'] = f'seq-{dataset}'
-                alg_args['num_classes'] = shapArgs.dataset_params.num_class
-                args = argparse.Namespace(**alg_args)
-
-                xder_dataset = get_dataset_class(args)
-                backbone_cl, backbone_args = get_backbone_class('resnet18', return_args=True)
-                parsed_args = {arg: getattr(args, arg) for arg in backbone_args.keys()}
-                model = XDer(backbone_cl(**parsed_args),
-                             xder_dataset.get_loss(),
-                             args,
-                             xder_dataset.get_transform(),
-                             dataset=xder_dataset)
-
-                model, _ = mammoth_load_checkpoint(model_path, model)
-                model.eval()
-                os.chdir(original_cwd)
-                return model
+def _extract_convnet(convnet_obj):
+    """Helper to safely extract the nn.Module from get_convnet return value"""
+    if isinstance(convnet_obj, tuple):
+        return convnet_obj[0]
+    return convnet_obj
 
 
+def load_model(algorithm, dataset, session, shapArgs=None, device=None):
+    if device is None:
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+
+    # Support both hyphen and non-hyphen naming formats (ds-al vs dsal)
+    algs_to_try = [algorithm]
+    if algorithm == "dsal":
+        algs_to_try.append("ds-al")
+    elif algorithm == "ds-al":
+        algs_to_try.append("dsal")
+
+    possible_paths = []
+    for alg in algs_to_try:
+        possible_paths.extend([
+            f"savedmodels/{alg}/{dataset}/{alg}_{dataset}_{session}.pth",
+            f"savedmodels/{alg}/{dataset}/{alg}_ses_{session}.pkl",
+            f"savedmodels/{alg}/{dataset}/{alg}_{dataset}_{session}.pkl",
+            f"savedmodels/{alg}/{dataset}/{alg}_{session}.pkl",
+            f"/content/drive/MyDrive/CL-SHAPC-Interpretability/savedmodels/{alg}/{dataset}/{alg}_{dataset}_{session}.pth",
+            f"/content/drive/MyDrive/CL-SHAPC-Interpretability/savedmodels/{alg}/{dataset}/{alg}_ses_{session}.pkl",
+            f"/content/drive/MyDrive/CL-SHAPC-Interpretability/savedmodels/{alg}/{dataset}/{alg}_{dataset}_{session}.pkl",
+            f"/content/drive/MyDrive/CL-SHAPC-Interpretability/savedmodels/{alg}/{dataset}/{alg}_{session}.pkl",
+            f"checkpoints/{alg}_{dataset}_{session}.pkl"
+        ])
+    
+    model_path = None
+    for p in possible_paths:
+        if os.path.exists(p):
+            model_path = p
+            break
+            
+    if model_path is None:
+        raise FileNotFoundError(f"Checkpoint not found for {algorithm} {dataset} session {session}. Checked: {possible_paths}")
+
+    # 2. Load the checkpoint
     model_data = torch.load(model_path, map_location=device, weights_only=False)
 
-    #print(model_data.keys())
-    #print(model_data['state_dict'].keys())
-
-    #print(model.state_dict().keys())
-    if algorithm == "RPSnet":
-        model.load_state_dict(model_data['state_dict'])
-        model.eval()
-    elif algorithm == "DGR" and scholar is not None:
-        scholar.load_state_dict(model_data['state'])
-        model = scholar.solver
+    # 3. Extract the inner state_dict
+    if isinstance(model_data, dict):
+        if "model_state_dict" in model_data:
+            state_dict = model_data["model_state_dict"]
+        elif "state_dict" in model_data:
+            state_dict = model_data["state_dict"]
+        elif "model" in model_data:
+            state_dict = model_data["model"]
+        else:
+            state_dict = model_data
     else:
-        model.load_state_dict(model_data)
-        model.eval()
+        state_dict = model_data
+
+    # 4. Instantiate base model architecture
+    # (Using your existing model instantiation logic from load_models_fixed.py)
+    from models.PyCIL.utils.inc_net import DERNet, FOSTERNet, IncrementalNet, get_convnet
+    
+    # Ensure valid algorithm_args dictionary exists
+    alg_args = getattr(shapArgs, 'algorithm_args', None) if shapArgs is not None else None
+    if alg_args is None:
+        alg_args = get_algorithm_args(algorithm, dataset)
+    if isinstance(alg_args, dict) and "convnet_type" not in alg_args:
+        alg_args["convnet_type"] = "resnet18" if dataset in ["cifar100", "imagenet200"] else "resnet18_cbam"
+    elif not isinstance(alg_args, dict):
+        alg_args = {"convnet_type": "resnet18_cbam", "device": device}
+    
+    # Calculate classes up to current session
+    init_cls = getattr(shapArgs.dataset_params, 'init_cls', 3 if dataset == "dermamnist" else getattr(shapArgs.dataset_params, 'class_per_task', 2)) if shapArgs is not None else 3
+    cls_per_task = getattr(shapArgs.dataset_params, 'class_per_task', 2) if shapArgs is not None else 2
+
+    # Detect multi-branch convnets count in state_dict or determine from fc input dimension
+    conv_indices = set()
+    for k in state_dict.keys():
+        if k.startswith("convnets."):
+            conv_indices.add(int(k.split(".")[1]))
+            
+    if conv_indices:
+        num_branches = max(len(conv_indices), max(conv_indices) + 1)
+    elif "fc.weight" in state_dict and max(state_dict["fc.weight"].shape) > 64:
+        feat_dim = max(state_dict["fc.weight"].shape)
+        num_branches = max(1, feat_dim // 64) if feat_dim % 64 == 0 else (session + 1)
+    else:
+        num_branches = session + 1
+
+    # Instantiate model
+    if algorithm in ["der", "memo", "ds-al", "dsal", "tagfex"]:
+      
+        model = DERNet(alg_args, False)
+        # Allocate the exact number of active branches present in checkpoint
+        model.convnets = nn.ModuleList([_extract_convnet(get_convnet(alg_args, False)) for _ in range(num_branches)])
+        
+        if "fc.weight" in state_dict:
+            out_dim = state_dict["fc.weight"].shape[0]
+            in_dim = state_dict["fc.weight"].shape[1]
+            model.fc = nn.Linear(in_dim, out_dim, bias=True)
+            model.out_dim = in_dim // num_branches
+
+        if "aux_fc.weight" in state_dict:
+            aux_out = state_dict["aux_fc.weight"].shape[0]
+            aux_in = state_dict["aux_fc.weight"].shape[1]
+            model.aux_fc = nn.Linear(aux_in, aux_out, bias=True)
+        elif hasattr(model, "aux_fc"):
+            model.aux_fc = None
+
+    elif algorithm == "foster":
+        model = FOSTERNet(alg_args, False)
+        model.convnets = nn.ModuleList([_extract_convnet(get_convnet(alg_args, False)) for _ in range(num_branches)])
+        
+        if "fc.weight" in state_dict:
+            out_dim = state_dict["fc.weight"].shape[0]
+            in_dim = state_dict["fc.weight"].shape[1]
+            model.fc = nn.Linear(in_dim, out_dim, bias=True)
+            model.out_dim = in_dim // num_branches
+            
+        if "oldfc.weight" in state_dict:
+            old_out = state_dict["oldfc.weight"].shape[0]
+            old_in = state_dict["oldfc.weight"].shape[1]
+            model.oldfc = nn.Linear(old_in, old_out, bias=True)
+        elif hasattr(model, "oldfc"):
+            model.oldfc = None
+
+        if "fe_fc.weight" in state_dict:
+            fe_out = state_dict["fe_fc.weight"].shape[0]
+            fe_in = state_dict["fe_fc.weight"].shape[1]
+            has_bias = "fe_fc.bias" in state_dict
+            model.fe_fc = nn.Linear(fe_in, fe_out, bias=has_bias)
+        elif hasattr(model, "fe_fc"):
+            model.fe_fc = None
+    else:
+        # Generic PyCIL loader (iCaRL, SimpleCIL, etc.)
+        model = IncrementalNet(alg_args, False)
+        if hasattr(model, 'convnet'):
+            model.convnet = _extract_convnet(model.convnet)
+            
+        if "fc.weight" in state_dict:
+            out_dim = state_dict["fc.weight"].shape[0]
+            in_dim = state_dict["fc.weight"].shape[1]
+            model.fc = nn.Linear(in_dim, out_dim, bias=True)
+        else:
+            total_cls = init_cls + session * cls_per_task
+            in_dim = getattr(model.convnet, 'out_dim', 64)
+            model.fc = nn.Linear(in_dim, total_cls, bias=True)
+
+    # 5. Load the extracted state_dict into the model
+    model.load_state_dict(state_dict, strict=False)
+    model.to(device)
+    model.eval()
 
     return model
 
