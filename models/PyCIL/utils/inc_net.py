@@ -350,13 +350,21 @@ class DERNet(nn.Module):
         features = [convnet(x)["features"] for convnet in self.convnets]
         features = torch.cat(features, 1)
 
-        out = self.fc(features)  # {logics: self.fc(features)}
+        out = self.fc(features)  # {'logits': self.fc(features)}
 
-        aux_logits = self.aux_fc(features[:, -self.out_dim :])["logits"]
+        # Direct return if running in SHAP mode (bypasses auxiliary head completely)
+        if self.shap:
+            return out['logits'] if isinstance(out, dict) else out
 
-        out.update({"aux_logits": aux_logits, "features": features})
-        if self.shap: return out['logits']
-        else: return out
+        # Only compute aux_logits during training phase when aux_fc is present
+        if self.aux_fc is not None and self.training:
+            single_dim = self.convnets[0].out_dim if len(self.convnets) > 0 else self.out_dim
+            aux_logits = self.aux_fc(features[:, -single_dim:])["logits"]
+            out.update({"aux_logits": aux_logits, "features": features})
+        else:
+            out.update({"features": features})
+
+        return out
         """
         {
             'features': features
@@ -540,17 +548,25 @@ class FOSTERNet(nn.Module):
         features = [convnet(x)["features"] for convnet in self.convnets]
         features = torch.cat(features, 1)
         out = self.fc(features)
-        fe_logits = self.fe_fc(features[:, -self.out_dim :])["logits"]
 
-        out.update({"fe_logits": fe_logits, "features": features})
+        # Return logits directly during SHAP evaluation
+        if self.shap:
+            return out["logits"] if isinstance(out, dict) else out
 
-        if self.oldfc is not None:
+        # Only compute auxiliary feature extraction logits during training
+        if self.fe_fc is not None and self.training:
+            single_dim = self.convnets[0].out_dim if len(self.convnets) > 0 else self.out_dim
+            fe_logits = self.fe_fc(features[:, -single_dim :])["logits"]
+            out.update({"fe_logits": fe_logits, "features": features})
+        else:
+            out.update({"features": features})
+
+        if self.oldfc is not None and self.training:
             old_logits = self.oldfc(features[:, : -self.out_dim])["logits"]
             out.update({"old_logits": old_logits})
 
-        out.update({"eval_logits": out["logits"]})
-        if self.shap: return out["logits"]
-        else: return out
+        out.update({"eval_logits": out["logits"] if isinstance(out, dict) else out})
+        return out
 
     def update_fc(self, nb_classes):
 
@@ -803,14 +819,22 @@ class AdaptiveNet(nn.Module):
         base_feature_map = self.TaskAgnosticExtractor(x)
         features = [extractor(base_feature_map) for extractor in self.AdaptiveExtractors]
         features = torch.cat(features, 1)
-        out=self.fc(features) #{logits: self.fc(features)}
+        out = self.fc(features)
 
-        aux_logits=self.aux_fc(features[:,-self.out_dim:])["logits"]
+        # Bypass aux_fc immediately if in SHAP evaluation mode
+        if self.shap:
+            return out["logits"] if isinstance(out, dict) else out
 
-        out.update({"aux_logits":aux_logits,"features":features})
-        out.update({"base_features":base_feature_map})
-        if self.shap: return out["logits"]
-        else: return out
+        # Only compute aux_logits during training
+        if self.aux_fc is not None and self.training:
+            single_dim = self.AdaptiveExtractors[0].feature_dim if len(self.AdaptiveExtractors) > 0 else self.out_dim
+            aux_logits = self.aux_fc(features[:, -single_dim:])["logits"]
+            out.update({"aux_logits": aux_logits, "features": features})
+        else:
+            out.update({"features": features})
+
+        out.update({"base_features": base_feature_map})
+        return out
 
         '''
         {
@@ -940,23 +964,41 @@ class ACILNet(BaseNet):
 
     def set_shap(self, mode):
         self.shap = mode
-        self.buffer.set_shap(mode)
-        self.fc.set_shap(mode)
-        for param in self.convnet.parameters():
-            param.requires_grad = mode
+        if hasattr(self, 'buffer') and hasattr(self.buffer, 'set_shap'):
+            self.buffer.set_shap(mode)
+        if hasattr(self, 'fc') and hasattr(self.fc, 'set_shap'):
+            self.fc.set_shap(mode)
+        if hasattr(self, 'fc_comp') and hasattr(self.fc_comp, 'set_shap'):
+            self.fc_comp.set_shap(mode)
+        if hasattr(self, 'convnet'):
+            for param in self.convnet.parameters():
+                param.requires_grad = mode
 
-    def forward(self, X: torch.Tensor) -> Dict[str, torch.Tensor]:
-        if self.shap:
-            X = self.convnet(X)["features"]
-            X = self.buffer(X)
-            X = self.fc(X)["logits"]
-            return {"logits": X}
-        else:
-            with torch.no_grad():
-                X = self.convnet(X)["features"]
-                X = self.buffer(X)
-                X = self.fc(X)["logits"]
-                return {"logits": X}
+    # In ACILNet & DSALNet
+    def forward(self, X: torch.Tensor):
+        feats = self.convnet(X)["features"]
+        buf_out = self.buffer(feats)
+        
+        # Ensure buf_out is (B, 8192)
+        if buf_out.shape[-1] != self.buffer_size:
+            W = getattr(self.buffer, 'W', getattr(self.buffer, 'weight', None))
+            if W is not None:
+                if W.shape[0] == feats.shape[-1]:
+                    buf_out = feats @ W.to(device=feats.device, dtype=feats.dtype)
+                elif W.shape[1] == feats.shape[-1]:
+                    buf_out = feats @ W.t().to(device=feats.device, dtype=feats.dtype)
+
+        act_main = self.activation_main(buf_out) if hasattr(self, 'activation_main') else torch.relu(buf_out)
+        act_comp = self.activation_comp(buf_out) if hasattr(self, 'activation_comp') else torch.tanh(buf_out)
+
+        X_main = self.fc(act_main)["logits"]
+        X_comp = self.fc_comp(act_comp)["logits"]
+
+        logits = X_main + self.C * X_comp
+
+        if getattr(self, 'shap', False):
+            return logits
+        return {"logits": logits}
 
     def update_fc(self, nb_classes: int) -> None:
         self.fc.update_fc(nb_classes)
@@ -1017,23 +1059,40 @@ class DSALNet(ACILNet):
         super().__init__(args, buffer_size, gamma_main, pretrained, device, dtype)
 
     def set_shap(self, mode):
-        super().set_shap(mode)
+        self.shap = mode
+        for param in self.parameters():
+            param.requires_grad = mode
+        if hasattr(self, 'convnet'):
+            for param in self.convnet.parameters():
+                param.requires_grad = mode
 
-    def forward(self, X: torch.Tensor) -> Dict[str, torch.Tensor]:
-        if self.shap:
-            X = self.buffer(self.convnet(X)["features"])
-            X_main = self.fc(self.activation_main(X))["logits"]
-            X_comp = self.fc_comp(self.activation_comp(X))["logits"]
-            out = {"logits": X_main + self.C * X_comp}
-            return out['logits']
-        else:
-            with torch.no_grad():
-                X = self.buffer(self.convnet(X)["features"])
-                X_main = self.fc(self.activation_main(X))["logits"]
-                X_comp = self.fc_comp(self.activation_comp(X))["logits"]
-                return {"logits": X_main + self.C * X_comp}
+    # In ACILNet & DSALNet
+    def forward(self, X: torch.Tensor):
+        feats = self.convnet(X)["features"]
+        buf_out = self.buffer(feats)
+        
+        # Ensure buf_out is (B, 8192)
+        if buf_out.shape[-1] != self.buffer_size:
+            W = getattr(self.buffer, 'W', getattr(self.buffer, 'weight', None))
+            if W is not None:
+                if W.shape[0] == feats.shape[-1]:
+                    buf_out = feats @ W.to(device=feats.device, dtype=feats.dtype)
+                elif W.shape[1] == feats.shape[-1]:
+                    buf_out = feats @ W.t().to(device=feats.device, dtype=feats.dtype)
 
-    @torch.no_grad()
+        act_main = self.activation_main(buf_out) if hasattr(self, 'activation_main') else torch.relu(buf_out)
+        act_comp = self.activation_comp(buf_out) if hasattr(self, 'activation_comp') else torch.tanh(buf_out)
+
+        X_main = self.fc(act_main)["logits"]
+        X_comp = self.fc_comp(act_comp)["logits"]
+
+        logits = X_main + self.C * X_comp
+
+        if getattr(self, 'shap', False):
+            return logits
+        return {"logits": logits}
+
+    #@torch.no_grad()
     def fit(self, X: torch.Tensor, y: torch.Tensor) -> None:
         num_classes = max(self.fc.out_features, int(y.max().item()) + 1)
         Y_main = torch.nn.functional.one_hot(y, num_classes=num_classes)
@@ -1138,22 +1197,26 @@ class TagFexNet(nn.Module):
         self.shap = mode
 
     def forward(self, x):
-        x.to(self._device)
+        # Assign tensor back to variable so it actually moves to GPU
+        device = next(self.parameters()).device if list(self.parameters()) else self._device
+        x = x.to(device)
+        
         ts_outs = [convnet(x) for convnet in self.convnets]
         features = [ts_out["features"] for ts_out in ts_outs]
         features = torch.cat(features, 1)
 
-        # out = self.fc(features)  # {logics: self.fc(features)}
+        # Bypass non-essential projection and attention layers when calculating SHAP
+        if getattr(self, 'shap', False):
+            logits = self.fc(features)
+            return logits["logits"] if isinstance(logits, dict) else logits
+
         out = {}
         out["logits"] = self.fc(features)
         aux_logits = self.aux_fc(features[:, -self.out_dim:])
-
         out.update({"aux_logits": aux_logits, "features": features})
 
-        ta_fmap = self.ta_net(x)['fmaps'][-1]  # (bs, C, H, W)
-        ta_feature = ta_fmap.flatten(2).permute(0, 2, 1).mean(1)  # (bs, H*W, C) -mean-> (bs, C)
-        # print(ta_feature)
-        # assert 0
+        ta_fmap = self.ta_net(x)['fmaps'][-1]
+        ta_feature = ta_fmap.flatten(2).permute(0, 2, 1).mean(1)
         embedding = self.projector(ta_feature)
 
         out.update({
@@ -1163,7 +1226,7 @@ class TagFexNet(nn.Module):
 
         if self.trans_classifier is not None:
             ts_feature = ts_outs[-1]["fmaps"][-1].flatten(2).permute(0, 2, 1)
-            ta_features = ta_fmap.flatten(2).permute(0, 2, 1)  # (bs, H*W, C)
+            ta_features = ta_fmap.flatten(2).permute(0, 2, 1)
             merged_feature = self.ts_attn(ta_features.detach(), ts_feature).mean(1)
             trans_logits = self.trans_classifier(merged_feature)
             out.update(trans_logits=trans_logits)
@@ -1172,8 +1235,7 @@ class TagFexNet(nn.Module):
             predicted_feature = self.predictor(ta_feature)
             out.update(predicted_feature=predicted_feature)
 
-        if self.shap: return out["logits"]
-        else: return out
+        return out
         """
         {
             'ta_feature': ta_feature,
