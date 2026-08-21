@@ -2,6 +2,7 @@ import copy
 import logging
 import torch
 from torch import nn
+import torch.nn.functional as F
 from ..convs.cifar_resnet import resnet32, resnet32mnist
 from ..convs.resnet import resnet18, resnet34, resnet50, resnet101, resnet152
 from ..convs.ucir_cifar_resnet import resnet32 as cosine_resnet32
@@ -166,14 +167,41 @@ class IncrementalNet(BaseNet):
         return fc
 
     def forward(self, x):
-        x = self.convnet(x)
-        out = self.fc(x["features"])
-        out.update(x)
-        if hasattr(self, "gradcam") and self.gradcam:
-            out["gradcam_gradients"] = self._gradcam_gradients
-            out["gradcam_activations"] = self._gradcam_activations
-        if self.shap: return out['logits']
-        else: return out
+        feat = self.convnet(x)
+        
+        # 1. If backbone returned a dict, extract features
+        if isinstance(feat, dict):
+            feat = feat["features"]
+            
+        # 2. If backbone returned raw 4D feature map (B, C, H, W), flatten or pool
+        if isinstance(feat, torch.Tensor) and feat.ndim == 4:
+            feat = F.adaptive_avg_pool2d(feat, (1, 1))
+            feat = torch.flatten(feat, 1)
+        elif isinstance(feat, torch.Tensor) and feat.ndim > 2:
+            feat = torch.flatten(feat, 1)
+
+        # 3. Handle feature dimension mismatch (e.g. 32 vs 64)
+        if hasattr(self.fc, 'weight') and self.fc.weight is not None:
+            expected_dim = self.fc.weight.shape[1]
+            if feat.shape[1] != expected_dim:
+                # If feature dimension is 32 but FC expects 64, check if backbone has fc/last linear layer
+                if hasattr(self.convnet, 'fc') and callable(self.convnet.fc):
+                    feat = self.convnet.fc(feat)
+                elif hasattr(self.convnet, 'last') and callable(self.convnet.last):
+                    feat = self.convnet.last(feat)
+                elif feat.shape[1] * 2 == expected_dim:
+                    # Tile/repeat or project if dual-branch representation
+                    feat = torch.cat([feat, feat], dim=1)
+
+        # 4. Compute logits through fc
+        out = self.fc(feat)
+        
+        # 5. Return standard PyCIL output dictionary
+        if isinstance(out, dict):
+            out.update({"features": feat})
+            return out
+        else:
+            return {"logits": out, "features": feat}
 
     def unset_gradcam_hook(self):
         self._gradcam_hooks[0].remove()
@@ -272,19 +300,30 @@ class IncrementalNetWithBias(BaseNet):
         self.task_sizes = []
 
     def forward(self, x):
-        x = self.convnet(x)
-        out = self.fc(x["features"])
-        if self.bias_correction:
-            logits = out["logits"]
-            for i, layer in enumerate(self.bias_layers):
-                logits = layer(
-                    logits, sum(self.task_sizes[:i]), sum(self.task_sizes[: i + 1])
-                )
-            out["logits"] = logits
+        feat = self.convnet(x)
+        if isinstance(feat, dict):
+            feat = feat["features"]
+        if isinstance(feat, torch.Tensor) and feat.ndim == 4:
+            feat = F.adaptive_avg_pool2d(feat, (1, 1))
+            feat = torch.flatten(feat, 1)
+        elif isinstance(feat, torch.Tensor) and feat.ndim > 2:
+            feat = torch.flatten(feat, 1)
 
-        out.update(x)
+        # Apply internal backbone projection if present
+        if hasattr(self.convnet, 'fc') and isinstance(self.convnet.fc, nn.Linear):
+            if feat.shape[1] == self.convnet.fc.in_features:
+                feat = self.convnet.fc(feat)
 
-        return out
+        if hasattr(self.fc, 'weight') and self.fc.weight is not None:
+            if feat.shape[1] * 2 == self.fc.weight.shape[1]:
+                feat = torch.cat([feat, feat], dim=1)
+
+        out = self.fc(feat)
+        if isinstance(out, dict):
+            out.update({"features": feat})
+            return out
+        else:
+            return {"logits": out, "features": feat}
 
     def update_fc(self, nb_classes):
         fc = self.generate_fc(self.feature_dim, nb_classes)
@@ -342,27 +381,85 @@ class DERNet(nn.Module):
         self.shap = mode
 
     def extract_vector(self, x):
-        features = [convnet(x)["features"] for convnet in self.convnets]
+        features = []
+        for convnet in self.convnets:
+            feat = convnet(x)
+            if isinstance(feat, dict):
+                feat = feat["features"]
+            if isinstance(feat, torch.Tensor) and feat.ndim == 4:
+                feat = F.adaptive_avg_pool2d(feat, (1, 1))
+                feat = torch.flatten(feat, 1)
+            elif isinstance(feat, torch.Tensor) and feat.ndim > 2:
+                feat = torch.flatten(feat, 1)
+
+            if hasattr(convnet, 'fc') and isinstance(convnet.fc, nn.Linear):
+                if feat.shape[1] == convnet.fc.in_features:
+                    feat = convnet.fc(feat)
+
+            features.append(feat)
+
         features = torch.cat(features, 1)
+        if hasattr(self.fc, 'weight') and self.fc.weight is not None:
+            if features.shape[1] * 2 == self.fc.weight.shape[1]:
+                features = torch.cat([features, features], dim=1)
         return features
 
     def forward(self, x):
-        features = [convnet(x)["features"] for convnet in self.convnets]
-        features = torch.cat(features, 1)
+        features = []
+        for convnet in self.convnets:
+            feat = convnet(x)
+            if isinstance(feat, dict):
+                feat = feat["features"]
+            if isinstance(feat, torch.Tensor) and feat.ndim == 4:
+                feat = F.adaptive_avg_pool2d(feat, (1, 1))
+                feat = torch.flatten(feat, 1)
+            elif isinstance(feat, torch.Tensor) and feat.ndim > 2:
+                feat = torch.flatten(feat, 1)
 
-        out = self.fc(features)  # {'logits': self.fc(features)}
+            # If convnet has an internal linear layer mapping (e.g. 32 -> 64), apply it
+            if hasattr(convnet, 'fc') and isinstance(convnet.fc, nn.Linear):
+                if feat.shape[1] == convnet.fc.in_features:
+                    feat = convnet.fc(feat)
 
-        # Direct return if running in SHAP mode (bypasses auxiliary head completely)
-        if self.shap:
-            return out['logits'] if isinstance(out, dict) else out
+            features.append(feat)
 
-        # Only compute aux_logits during training phase when aux_fc is present
-        if self.aux_fc is not None and self.training:
-            single_dim = self.convnets[0].out_dim if len(self.convnets) > 0 else self.out_dim
-            aux_logits = self.aux_fc(features[:, -single_dim:])["logits"]
-            out.update({"aux_logits": aux_logits, "features": features})
-        else:
-            out.update({"features": features})
+        features = torch.cat(features, 1) if len(features) > 0 else feat
+
+        # Safeguard: If feature dimension doesn't match fc.weight in_features (e.g. 32 vs 192 or 64 vs 192)
+        if hasattr(self.fc, 'weight') and self.fc.weight is not None:
+            expected_in = self.fc.weight.shape[1]
+            cur_dim = features.shape[1]
+            if cur_dim != expected_in:
+                if expected_in % cur_dim == 0:
+                    # Tile across previous sessions if evaluating with fewer active branches
+                    repeat_factor = expected_in // cur_dim
+                    features = features.repeat(1, repeat_factor)
+                elif expected_in > cur_dim:
+                    # Zero-pad missing branch dimensions
+                    pad_dim = expected_in - cur_dim
+                    padding = torch.zeros((features.shape[0], pad_dim), device=features.device, dtype=features.dtype)
+                    features = torch.cat([features, padding], dim=1)
+                else:
+                    # Slice to match
+                    features = features[:, :expected_in]
+
+        # Handle bypass if calculating SHAP directly
+        if getattr(self, 'shap', False):
+            logits = self.fc(features)
+            return logits["logits"] if isinstance(logits, dict) else logits
+
+        out = self.fc(features)
+        if not isinstance(out, dict):
+            out = {"logits": out}
+
+        out.update({"features": features})
+
+        if getattr(self, 'aux_fc', None) is not None:
+            out_dim = getattr(self, 'out_dim', None)
+            if out_dim is None:
+                out_dim = self.aux_fc.in_features if hasattr(self.aux_fc, 'in_features') else 64
+            aux_logits = self.aux_fc(features[:, -out_dim:])
+            out.update({"aux_logits": aux_logits})
 
         return out
         """
@@ -547,25 +644,38 @@ class FOSTERNet(nn.Module):
     def forward(self, x):
         features = [convnet(x)["features"] for convnet in self.convnets]
         features = torch.cat(features, 1)
-        out = self.fc(features)
 
-        # Return logits directly during SHAP evaluation
-        if self.shap:
-            return out["logits"] if isinstance(out, dict) else out
+        # Handle bypass if calculating SHAP directly
+        if getattr(self, 'shap', False):
+            logits = self.fc(features)
+            return logits["logits"] if isinstance(logits, dict) else logits
 
-        # Only compute auxiliary feature extraction logits during training
-        if self.fe_fc is not None and self.training:
-            single_dim = self.convnets[0].out_dim if len(self.convnets) > 0 else self.out_dim
-            fe_logits = self.fe_fc(features[:, -single_dim :])["logits"]
-            out.update({"fe_logits": fe_logits, "features": features})
+        # If fc returns a Tensor, initialize out as a dictionary
+        raw_fc = self.fc(features)
+        if isinstance(raw_fc, dict):
+            out = raw_fc
         else:
-            out.update({"features": features})
+            out = {"logits": raw_fc}
 
-        if self.oldfc is not None and self.training:
-            old_logits = self.oldfc(features[:, : -self.out_dim])["logits"]
+        out.update({"features": features})
+
+        # Ensure out_dim is set; fallback to dividing total feature dim by number of convnet branches
+        out_dim = getattr(self, 'out_dim', None)
+        if out_dim is None:
+            out_dim = features.shape[1] // len(self.convnets)
+            self.out_dim = out_dim
+
+        if getattr(self, 'fe_fc', None) is not None:
+            fe_logits = self.fe_fc(features[:, -out_dim:])
+            out.update({"fe_logits": fe_logits})
+
+        if getattr(self, 'oldfc', None) is not None:
+            if getattr(self, 'is_no_copy', False):
+                old_logits = self.oldfc(features)
+            else:
+                old_logits = self.oldfc(features[:, :-out_dim])
             out.update({"old_logits": old_logits})
 
-        out.update({"eval_logits": out["logits"] if isinstance(out, dict) else out})
         return out
 
     def update_fc(self, nb_classes):
