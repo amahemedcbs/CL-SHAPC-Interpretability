@@ -4,7 +4,7 @@ from utils.model_parameters import get_algorithm_args
 import os
 
 
-shap_value_filepath_root = 'analysis/'
+shap_value_filepath_root = '/content/drive/MyDrive/CL-SHAPC-Interpretability/shapvalues/'
 
 class SHAPArgs:
     def __init__(self, algorithm, dataset):
@@ -14,7 +14,7 @@ class SHAPArgs:
         self.algorithm_args = get_algorithm_args(self.algorithm, self.dataset_name)
 
 def create_shap_value_filepath(shapArgs, first_last_only=True):
-    total_samples = shapArgs.dataset_params.num_task * shapArgs.dataset_params.shap_samples * shapArgs.dataset_params.class_per_task
+    total_samples = shapArgs.dataset_params.num_class * shapArgs.dataset_params.shap_samples
 
     if not os.path.isdir(f"{shap_value_filepath_root}{shapArgs.algorithm}/{shapArgs.dataset_name}"):
         os.makedirs(f"{shap_value_filepath_root}{shapArgs.algorithm}/{shapArgs.dataset_name}")
