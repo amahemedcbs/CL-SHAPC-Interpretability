@@ -170,12 +170,22 @@ class AnalyticLinear(torch.nn.Linear, metaclass=ABCMeta):
         weight = torch.zeros((in_features, 0), **factory_kwargs)
         self.register_buffer("weight", weight)
 
-    @torch.no_grad()
+    def set_shap(self, mode: bool):
+        if hasattr(self, 'weight') and isinstance(self.weight, torch.Tensor):
+            self.weight.requires_grad_(mode)
+
     def forward(self, X: torch.Tensor) -> Dict[str, torch.Tensor]:
-        X = X.to(self.weight)
-        if self.bias:
-            X = torch.cat((X, torch.ones(X.shape[0], 1).to(X)), dim=-1)
-        return {"logits": X @ self.weight}
+        if self.weight is not None:
+            W = self.weight
+            if X.dtype != W.dtype:
+                X = X.to(W.dtype)
+            if X.device != W.device:
+                X = X.to(W.device)
+            if self.bias:
+                bias_col = torch.ones((X.shape[0], 1), dtype=X.dtype, device=X.device)
+                X = torch.cat((X, bias_col), dim=-1)
+            return {"logits": X @ W}
+        return {"logits": X}
 
     @property
     def in_features(self) -> int:
