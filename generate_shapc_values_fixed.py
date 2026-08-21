@@ -1,20 +1,21 @@
+import os
 import numpy as np
 from tqdm import tqdm
 import scipy.io
 
-from utils.setup_args import SHAPArgs, create_shap_value_filepath, create_shapc_savepath
+from setup_args_fixed import SHAPArgs, create_shap_value_filepath, create_shapc_savepath
 
 
 def normalize_shap_value(shap_val):
     # If the input was (1, C, H, W), the output will be (1, C, H, W).
     # We want (H, W, C) for a single image for simpler indexing later.
-    shap_val.squeeze()
-    if shap_val.ndim == 4 and shap_val.shape[0] == 1:
-        shap_val = np.transpose(shap_val[0], (1, 2, 0))  # From (C, H, W) to (H, W, C)
-    elif shap_val.ndim == 3: #and shap_val.shape[0] == background_data.shape[1]:  # This means it's (C, H, W)
+    shap_val = np.array(shap_val)
+    while shap_val.ndim > 3 and shap_val.shape[0] == 1:
+        shap_val = shap_val[0]
+    if shap_val.ndim == 3 and shap_val.shape[0] in [1, 3]:  # This means it's (C, H, W)
         shap_val = np.transpose(shap_val, (1, 2, 0))  # From (C, H, W) to (H, W, C)
     # Handle grayscale if C=1, imshow expects (H,W) or (H,W,1)
-    if shap_val.shape[-1] == 1:
+    if shap_val.ndim == 3 and shap_val.shape[-1] == 1:
         shap_val = shap_val.squeeze(-1)  # Convert (H,W,1) to (H,W)
 
     # Perform Min-Max Normalization as described in the paper
@@ -25,9 +26,9 @@ def normalize_shap_value(shap_val):
     if shap_val.ndim == 2:  # Grayscale (H, W)
         min_val, max_val = shap_val.min(), shap_val.max()
         if max_val - min_val > 1e-6:  # Avoid division by zero
-            normalized_shap_val_np = (shap_val - min_val) / (max_val - min_val)
+            shap_val_normalized = (shap_val - min_val) / (max_val - min_val)
         else:
-            normalized_shap_val_np = np.zeros_like(shap_val)  # All values same, map to 0
+            shap_val_normalized = np.zeros_like(shap_val)  # All values same, map to 0
     else:  # Multi-channel (H, W, C)
         for c in range(shap_val.shape[-1]):
             channel_data = shap_val[..., c]
@@ -129,8 +130,8 @@ def _calculate_single_channel_shapc(s_tau, m_tau, s_t, m_t):
 if __name__ == "__main__":
 
     #algorithms = ["iTAML", "RPSnet", "DGR", "foster", "memo", "der", "icarl", "dsal", "tagfex", "xder"]
-    algorithms = ["der"]
-    dataset = "cifar10"
+    algorithms = ["der","foster","tagfex","icarl","memo","ds-al"]
+    dataset = "dermamnist"
 
 
     if len(algorithms) > 1 and dataset != "mnist" and "DGR" in algorithms:
@@ -142,12 +143,29 @@ if __name__ == "__main__":
 
         num_sessions = shapArgs.dataset_params.num_task
         cls_per_task = shapArgs.dataset_params.class_per_task
-        init_cls = shapArgs.dataset_params.init_cls
+        init_cls = getattr(shapArgs.dataset_params, 'init_cls', 3 if dataset == "dermamnist" else cls_per_task)
 
         first_last_only = True
         all_samples = False
-        filepath = create_shap_value_filepath(shapArgs, first_last_only) + ".npy"
-        savepath = create_shapc_savepath(shapArgs, first_last_only, all_samples)
+
+        # Input SHAP filepath
+        raw_filepath = create_shap_value_filepath(shapArgs, first_last_only)
+        if dataset == "dermamnist" and not raw_filepath.endswith("_1750"):
+            base_dir = os.path.dirname(raw_filepath)
+            filepath = os.path.join(base_dir, "shap_values_first_last_1750.npy")
+        else:
+            filepath = raw_filepath if raw_filepath.endswith(".npy") else raw_filepath + ".npy"
+
+        # Output SHAPC .mat savepath in Google Drive (explicitly named 1750 for dermamnist)
+        drive_base = "/content/drive/MyDrive/CL-SHAPC-Interpretability/shapcvalues"
+        save_dir = os.path.join(drive_base, algorithm, dataset)
+        os.makedirs(save_dir, exist_ok=True)
+        if dataset == "dermamnist":
+            savepath = os.path.join(save_dir, "shapc_vals_first_last_1750.mat")
+        else:
+            savepath = create_shapc_savepath(shapArgs, first_last_only, all_samples)
+            if not savepath.endswith(".mat"):
+                savepath += ".mat"
 
 
         # Load the SHAP Values
@@ -158,7 +176,7 @@ if __name__ == "__main__":
             shap_dict[f'{i}'] = shap_values_loaded[()][f'{i}']
 
         shapc_dict = {}
-        for sample in tqdm(range(num_imgs), desc="Progress"):
+        for sample in tqdm(range(num_imgs), desc=f"Progress ({alg})"):
 
             if shap_dict[f'{sample}']['true_label'] < init_cls:
                 start_sess = 0
@@ -207,3 +225,4 @@ if __name__ == "__main__":
                     shapc_dict[f'sc{ses}{last_task}'][f'sample{sample}'] = shapc_value
 
         scipy.io.savemat(savepath, shapc_dict)
+        print(f"Saved: {savepath}")
