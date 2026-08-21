@@ -84,11 +84,28 @@ class RandomBuffer(torch.nn.Linear, Buffer):
     def set_shap(self, mode):
         self.shap = mode
 
-    def forward(self, X: torch.Tensor) -> torch.Tensor:
-        if self.shap:
-            X = X.to(self.weight)
-            return self.activation(super().forward(X))
-        else:
-            with torch.no_grad():
-                X = X.to(self.weight)
-                return self.activation(super().forward(X))
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        W = getattr(self, 'W', getattr(self, 'weight', None))
+        
+        if W is not None:
+            # Ensure matching device and data type
+            if x.dtype != W.dtype:
+                x = x.to(W.dtype)
+            if x.device != W.device:
+                x = x.to(W.device)
+            
+            # Check orientation: project from 64 -> 8192
+            if W.shape[0] == x.shape[-1]:       # W is (64, 8192)
+                out = x @ W
+            elif W.shape[1] == x.shape[-1]:     # W is (8192, 64) -> Transpose to (64, 8192)
+                out = x @ W.t()
+            else:
+                out = x
+
+            if hasattr(self, 'bias') and self.bias is not None:
+                out = out + self.bias
+            if hasattr(self, 'activation') and self.activation is not None:
+                out = self.activation(out)
+            return out
+
+        return x
