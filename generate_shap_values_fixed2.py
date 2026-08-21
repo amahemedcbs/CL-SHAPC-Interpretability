@@ -1,21 +1,22 @@
+import os
+import sys
 import numpy as np
 import shap
 import torch
 from torch.utils.data import Subset
 from tqdm import tqdm
+import torch.nn as nn
 
 # Custom Imports
-from utils.setup_args import SHAPArgs, create_shap_value_filepath
-from utils.load_models import load_model, load_meta_models
+from setup_args_fixed import SHAPArgs, create_shap_value_filepath
+from utils.load_models_copy import load_model, load_meta_models
 from utils.model_parameters import pycil_algs
 
 import utils.shap_dataloader as sdl
 from models.RPSnet.rps_net import generate_path
 
-
-
-algorithm = "der"
-dataset = "cifar10"
+algorithm = "tagfex"
+dataset = "dermamnist"
 shapArgs = SHAPArgs(algorithm, dataset)
 
 '''
@@ -25,11 +26,17 @@ dataset = sys.argv[2]
 #'''
 
 first_last_only = True
+
+# --- Set and create exact Google Drive directory path ---
 filepath = create_shap_value_filepath(shapArgs, first_last_only)
+drive_save_dir = os.path.dirname(filepath)
+os.makedirs(drive_save_dir, exist_ok=True)
+print(f"Saving output to: {filepath}.npy")
 
 print(f"Alg: {algorithm}\nDataset: {dataset}\nFirst/Last: {first_last_only}")
-num_tasks = shapArgs.dataset_params.num_task
-cls_per_task = shapArgs.dataset_params.class_per_task
+num_tasks = getattr(shapArgs.dataset_params, 'num_task', getattr(shapArgs.dataset_params, 'num_tasks', 3))
+cls_per_task = getattr(shapArgs.dataset_params, 'class_per_task', getattr(shapArgs.dataset_params, 'cls_per_task', 2))
+init_cls = getattr(shapArgs.dataset_params, 'init_cls', cls_per_task)
 
 # Configures models depending on the algorithm chosen
 if algorithm == "iTAML":
@@ -50,9 +57,7 @@ else:
     elif algorithm in pycil_algs:
         for model in models: model.set_shap(True)
     elif algorithm == "xder":
-        #for model in models: model.set_shap(True)
         pass
-
 
 sal_dataloader = sdl.ShapDataloader(shapArgs)
 
@@ -66,15 +71,14 @@ for i in range(num_tasks):
     elif dataset == "imagenet200":
         sal_imgs, sal_labels, _, STD, MEAN = sal_dataloader.load_data(range(i * 20, (i * 20) + 20), 20, batch_size=10000)
     else:
-        ###---Updated to take initial classes learned into account---###
         if i == 0:
-            sal_imgs, sal_labels, _, STD, MEAN = sal_dataloader.load_data(range(shapArgs.dataset_params.init_cls),
-                                                                          shapArgs.dataset_params.shap_samples, batch_size=10000)
+            cls_range = range(0, init_cls)
         else:
-            sal_imgs, sal_labels, _, STD, MEAN = sal_dataloader.load_data(range((shapArgs.dataset_params.init_cls-cls_per_task)+i*cls_per_task,
-                                                                            shapArgs.dataset_params.init_cls+(i*cls_per_task)),
-                                                                            shapArgs.dataset_params.shap_samples, batch_size=10000)
-        ###----------------------------------------------------------###
+            cls_range = range(init_cls + (i - 1) * cls_per_task, init_cls + i * cls_per_task)
+            
+        sal_imgs, sal_labels, _, STD, MEAN = sal_dataloader.load_data(cls_range,
+                                                                      shapArgs.dataset_params.shap_samples, 
+                                                                      batch_size=10000)
     print("Len of sal_imgs:", len(sal_imgs))
     if i == 0:
         test_imgs, test_labels = sal_imgs, sal_labels
@@ -87,7 +91,6 @@ if algorithm == "RPSnet" and dataset == "mnist":
     test_imgs = test_imgs.detach().numpy().reshape(-1, 784)
     test_imgs = torch.from_numpy(test_imgs)
 
-
 # 1. Generate 100 random indices
 indices = np.random.choice(len(train_set), 100, replace=False)
 
@@ -96,40 +99,117 @@ small_train_set = Subset(train_set, indices)
 
 # Get background data for shap explainer
 if algorithm == "RPSnet" and dataset == "mnist":
-    background_data = torch.cat([x[0].unsqueeze(0).reshape(-1, 784) for x in small_train_set])  # Getting a sample
+    background_data = torch.cat([x[0].unsqueeze(0).reshape(-1, 784) for x in small_train_set])
 else:
-    background_data = torch.cat([img.unsqueeze(0) for (*_, img, lbl) in small_train_set])  # Getting a sample
-background_data = shap.sample(background_data, 100) # Taking 100 random samples
+    background_data = torch.cat([img.unsqueeze(0) for (*_, img, lbl) in small_train_set])
+background_data = shap.sample(background_data, 100)
 
-#Create the explainer for each model
+
+# ==============================================================================
+# Enable Full Autograd Graph for DS-AL & Analytic Models
+# ==============================================================================
+for model in models:
+    model.eval()  # Keep eval mode for batchnorm/dropout
+    model.set_shap(True)
+
+    # 1. Enable gradients across all standard parameters
+    for param in model.parameters():
+        param.requires_grad_(True)
+
+    # 2. Specifically unfreeze backbone convnet
+    if hasattr(model, 'convnet'):
+        for p in model.convnet.parameters():
+            p.requires_grad_(True)
+
+    # 3. Enable gradients for RandomBuffer projection matrix
+    if hasattr(model, 'buffer'):
+        for attr in ['W', 'weight']:
+            if hasattr(model.buffer, attr):
+                val = getattr(model.buffer, attr)
+                if isinstance(val, torch.Tensor):
+                    val.requires_grad_(True)
+
+    # 4. Enable gradients for RecursiveLinear analytic weights
+    for fc_attr in ['fc', 'fc_comp']:
+        if hasattr(model, fc_attr):
+            fc_obj = getattr(model, fc_attr)
+            if hasattr(fc_obj, 'weight') and isinstance(fc_obj.weight, torch.Tensor):
+                fc_obj.weight.requires_grad_(True)
+
+def prepare_model_for_shap(model):
+    model.eval()
+    if hasattr(model, "set_shap"):
+        model.set_shap(True)
+    
+    # 1. Unfreeze all standard parameters & convert to float32
+    for p in model.parameters():
+        p.requires_grad_(True)
+        
+    # 2. Specifically convert RandomBuffer projection matrix to active nn.Parameter
+    if hasattr(model, "buffer"):
+        for attr in ["W", "weight"]:
+            if hasattr(model.buffer, attr):
+                val = getattr(model.buffer, attr)
+                if isinstance(val, torch.Tensor):
+                    # Convert to float32 parameter with grad enabled
+                    param = nn.Parameter(val.detach().to(torch.float32), requires_grad=True)
+                    setattr(model.buffer, attr, param)
+                    
+    # 3. Specifically convert RecursiveLinear weights (main & comp) to active nn.Parameter
+    for fc_attr in ["fc", "fc_comp"]:
+        if hasattr(model, fc_attr):
+            fc_obj = getattr(model, fc_attr)
+            if hasattr(fc_obj, "weight") and isinstance(fc_obj.weight, torch.Tensor):
+                param = nn.Parameter(fc_obj.weight.detach().to(torch.float32), requires_grad=True)
+                fc_obj.weight = param
+
+    # 4. Set entire model to float32
+    model.to(torch.float32)
+    return model
+
+# Prepare all loaded session models
+models = [prepare_model_for_shap(m) for m in models]
+
+
+# Now instantiate explainers
+explainers = [shap.GradientExplainer(models[i], background_data) for i in range(len(models))]
+                    
+
+# Create the explainer for each model
 explainers = [shap.GradientExplainer(models[i], background_data) for i in range(len(models))]
 
 shap_dict = {}
-all_shap_values = []
-all_indexes = []
-sample = 0
+
+def get_sample_task(lbl, init_c, inc_c):
+    if lbl < init_c:
+        return 0
+    return 1 + (lbl - init_c) // inc_c
 
 for sample in tqdm(range(len(test_imgs)), desc="Progress"):
     shap_dict[f'{sample}'] = {}
-    sample_task = test_labels[sample] // cls_per_task
+    lbl = test_labels[sample].item() if isinstance(test_labels[sample], torch.Tensor) else int(test_labels[sample])
+    sample_task = get_sample_task(lbl, init_cls, cls_per_task)
+
     for e in range(len(explainers)):
         if first_last_only:
-            if algorithm == "iTAML": boolean_statement = (e == sample_task or e == num_tasks-1+sample_task)
-            else: boolean_statement = (e == sample_task or e == num_tasks-1)
+            if algorithm == "iTAML":
+                boolean_statement = (e == sample_task or e == num_tasks - 1 + sample_task)
+            else:
+                boolean_statement = (e == sample_task or e == num_tasks - 1)
         else:
-            boolean_statement = test_labels[sample] // cls_per_task <= e
+            boolean_statement = sample_task <= e
 
         if boolean_statement:
-            #print("Shape:", test_imgs.shape)
-            #print("Sample Shape:", test_imgs[sample].unsqueeze(0).shape)
             shap_values, indexes = explainers[e].shap_values(test_imgs[sample].unsqueeze(0), ranked_outputs=1)
             shap_dict[f'{sample}'][f'ses{e}'] = {'shap_values': shap_values, 'idxs': indexes}
-            shap_dict[f'{sample}']['true_label'] = test_labels[sample].item()
+            shap_dict[f'{sample}']['true_label'] = lbl
         else:
             continue
 
-    # Intermittent saving in case of crash
-    np.save(filepath, shap_dict)
+    # Intermittent saving to Google Drive every 50 samples or in case of interruption
+    if sample % 50 == 0:
+        np.save(filepath, shap_dict)
 
-# Final save shap values to filepath
+# Final save directly to Google Drive
 np.save(filepath, shap_dict)
+print(f"[SUCCESS] Finished! SHAP values saved to: {filepath}.npy")
