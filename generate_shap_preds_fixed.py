@@ -5,8 +5,8 @@ import os
 import torch
 
 # Custom Imports
-from utils.setup_args import SHAPArgs, create_shap_value_filepath, create_preds_savepath
-from utils.load_models import load_model, load_meta_models, generate_predictions
+from setup_args_fixed import SHAPArgs, create_shap_value_filepath, create_preds_savepath
+from utils.load_models_fixed import load_model, load_meta_models, generate_predictions
 from utils.model_parameters import pycil_algs
 
 import utils.shap_dataloader as sdl
@@ -14,8 +14,8 @@ from models.RPSnet.rps_net import generate_path
 
 
 
-algorithm = "der"
-dataset = "cifar10"
+algorithm = "tagfex"
+dataset = "octmnist"
 shapArgs = SHAPArgs(algorithm, dataset)
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
@@ -65,12 +65,38 @@ for i in range(num_tasks):
 #print("Len of sal_imgs:", len(test_imgs))
 test_imgs, test_labels = test_imgs.to(device), test_labels.to(device)
 
-samples = range(shap_samples*(num_class-cls_per_task))
+# Load the saved preds, if possible
+save_dir = f"/content/drive/MyDrive/CL-SHAPC-Interpretability/preds/{algorithm}/{dataset}"
+os.makedirs(save_dir, exist_ok=True)
+preds_savepath = os.path.join(save_dir, f"{algorithm}_{dataset}_preds.mat")
+
+if os.path.isfile(preds_savepath):
+    loaded_preds = scipy.io.loadmat(preds_savepath, simplify_cells=True)
+    keys_to_remove = ['__header__', '__version__', '__globals__']
+    pred_dict = {key: value for key, value in loaded_preds.items() if key not in keys_to_remove}
+else:
+    pred_dict = {}
+
+# Fix ds-al name formatting for saving
+if algorithm == "ds-al":
+    algorithm = "dsal"
+
+if f'{algorithm}' not in pred_dict: pred_dict[f'{algorithm}'] = {}
+
+# Preload session models to avoid disk I/O inside loop
+loaded_models = {}
+for s in range(num_tasks):
+    loaded_models[s] = load_model(algorithm, dataset, s, shapArgs=shapArgs).to(device)
+
+samples = range(min(len(test_imgs), len(shap_dict)))
 
 for sample in samples:
     test_sample = shap_dict[f'{sample}']
     test_sess = list(test_sample.keys())
-    test_sess.remove(test_sess[1])
+    if 'true_label' in test_sess:
+        test_sess.remove('true_label')
+    elif len(test_sess) > 1 and test_sess[1] not in ['ses0', 'ses1', 'ses2', 'ses3', 'ses4']:
+        test_sess.remove(test_sess[1])
     #print(test_sess)
     ses = int(test_sess[0][-1])
 
@@ -79,7 +105,7 @@ for sample in samples:
     # Get test image
     test_img = test_imgs[sample].unsqueeze(0)
     test_label = test_labels[sample]
-    models = [load_model(algorithm, dataset, i, shapArgs=shapArgs).to(device) for i in [int(test_sess[0][-1]),int(test_sess[-1][-1])]]
+    models = [loaded_models[int(test_sess[0][-1])], loaded_models[int(test_sess[-1][-1])]]
 
     # Generate predictions
     if algorithm == "RPSnet":
@@ -99,23 +125,10 @@ for sample in samples:
     print(f"Sample {sample}: {preds}")
 
     # Store predictions
-
-    # Load the saved preds, if possible
-    if os.path.isfile(preds_savepath):
-        loaded_preds = scipy.io.loadmat(preds_savepath, simplify_cells=True)
-        keys_to_remove = ['__header__', '__version__', '__globals__']
-        pred_dict = {key: value for key, value in loaded_preds.items() if key not in keys_to_remove}
-    else:
-        pred_dict = {}
-
-    # Fix ds-al name formatting for saving
-    if algorithm == "ds-al":
-        algorithm = "dsal"
-
-    if f'{algorithm}' not in pred_dict: pred_dict[f'{algorithm}'] = {}
     if f'sample{sample}' not in pred_dict[f'{algorithm}']: pred_dict[f'{algorithm}'][f'sample{sample}'] = {}
     pred_dict[f'{algorithm}'][f'sample{sample}'][f'pred_{test_sess[0]}'] = preds[0].item()
     pred_dict[f'{algorithm}'][f'sample{sample}'][f'pred_{test_sess[-1]}'] = preds[1].item()
 
-    # Save shap values to filepath
-    scipy.io.savemat(preds_savepath, pred_dict)
+# Save shap values to filepath
+scipy.io.savemat(preds_savepath, pred_dict)
+print(f"[SUCCESS] Saved predictions to: {preds_savepath}")
