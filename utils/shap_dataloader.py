@@ -11,7 +11,7 @@ import medmnist
 from medmnist import INFO
 
 from utils.model_parameters import pycil_algs
-from utils.setup_args import SHAPArgs
+from setup_args_fixed import SHAPArgs
 
 
 class ShapDataloader:
@@ -24,10 +24,18 @@ class ShapDataloader:
 
     def get_indices(self, dataset, class_name):
         indices = []
-        for i in range(len(dataset.targets)):
-            for j in class_name:
-                if dataset.targets[i] == j:
-                    indices.append(i)
+        targets = dataset.targets
+        if isinstance(targets, torch.Tensor):
+            targets = targets.cpu().numpy()
+        elif not isinstance(targets, np.ndarray):
+            targets = np.array(targets)
+            
+        targets = targets.squeeze().tolist()
+        class_name_list = list(class_name)
+        
+        for i, t in enumerate(targets):
+            if int(t) in class_name_list:
+                indices.append(i)
         return indices
 
     def load_data(self, desired_classes, imgs_per_class, shuffle=None, batch_size=256):
@@ -137,16 +145,18 @@ class ShapDataloader:
 
         *_, images, labels = next(iter(shap_dataloader))
 
-        # Order images and labels by class
+        # Order images and labels by class safely
         shap_idx = []
         shap_labels = []
-        for i in range(len(desired_classes)):
-            num = 0
-            while len(shap_idx) < imgs_per_class * (i + 1):
-                if labels[num] == desired_classes[i]:
-                    shap_idx.append(num)
-                    shap_labels.append(desired_classes[i])
-                num += 1
+        
+        labels_list = [int(l) for l in labels.tolist()] if isinstance(labels, torch.Tensor) else [int(l) for l in labels]
+        desired_classes_list = [int(c) for c in desired_classes]
+
+        for desired_cls in desired_classes_list:
+            cls_matches = [idx for idx, l in enumerate(labels_list) if l == desired_cls]
+            selected = cls_matches[:imgs_per_class]
+            shap_idx.extend(selected)
+            shap_labels.extend([desired_cls] * len(selected))
 
         shap_imgs = images[shap_idx]
 
