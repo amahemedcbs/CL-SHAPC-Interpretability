@@ -149,7 +149,19 @@ class ShapDataloader:
         shap_idx = []
         shap_labels = []
         
-        labels_list = [int(l) for l in labels.tolist()] if isinstance(labels, torch.Tensor) else [int(l) for l in labels]
+        # Flatten (N, 1) or nested labels to 1D before converting to integers
+        if isinstance(labels, torch.Tensor):
+            flat_targets = labels.squeeze().cpu().numpy()
+        elif isinstance(labels, np.ndarray):
+            flat_targets = labels.squeeze()
+        else:
+            flat_targets = np.array(labels).squeeze()
+
+        # Guard against zero-dim scalar if batch size is 1
+        if flat_targets.ndim == 0:
+            flat_targets = np.array([flat_targets])
+
+        labels_list = [int(l) for l in flat_targets.tolist()] 
         desired_classes_list = [int(c) for c in desired_classes]
 
         for desired_cls in desired_classes_list:
