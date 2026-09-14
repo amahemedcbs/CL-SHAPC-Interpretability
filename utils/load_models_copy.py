@@ -91,11 +91,11 @@ def load_model(algorithm, dataset, ses, shapArgs=None):
 
   if algorithm in pycil_algs:
     model_path = os.path.join(
-        DRIVE_BASE_DIR, algorithm, dataset, f"{algorithm}_ses_{ses}.pth"
+        DRIVE_BASE_DIR, algorithm, dataset, f"{algorithm}_{dataset}_{ses}.pth"
     )
     if not os.path.exists(model_path):
       model_path = (
-          f"savedmodels/{algorithm}/{dataset}/{algorithm}_ses_{ses}.pth"
+          f"savedmodels/{algorithm}/{dataset}/{algorithm}_{dataset}_{ses}.pth"
       )
 
     if not os.path.exists(model_path):
